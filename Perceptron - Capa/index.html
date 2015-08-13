@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8" />
+	<title>Perceptron - Capa</title>
+</head>
+
+<body>
+	
+	<script src='../Perceptron/ProcesadorSinaptico.js'></script>
+	<script src='../Perceptron/Perceptron.js'></script>
+
+<script>
+var perceptron = new Perceptron();
+
+// .addDatos( [ 0, 0, 0 ], 0 ) // 0
+// .addDatos( [ 0, 0, 1 ], 1 ) // 1
+// .addDatos( [ 0, 1, 0 ], 1 ) // 2
+// .addDatos( [ 0, 1, 1 ], 1 ) // 3
+// .addDatos( [ 1, 0, 0 ], 1 ) // 4
+// .addDatos( [ 1, 0, 1 ], 1 ) // 5
+
+perceptron
+	.addDatos([
+		[ 0, 0, 0, 1 ],
+		[ 0, 0, 1, 1 ],
+		[ 0, 1, 1, 1 ],
+		[ 1, 1, 1, 0 ]
+	], [ 0, 1, 1, 1 ])
+.aprender();
+
+console.log( perceptron, perceptron.procesar([ 1, 1, 1, 0 ]) );
+</script>
+
+</body>
+</html>

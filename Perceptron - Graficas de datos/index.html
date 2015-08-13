@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8" />
+	<title>Perceptron Graficas</title>
+
+	<link rel="stylesheet" href="http://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+
+	<style>
+.ct-chart {
+	width: 90%;
+	height: 600px;
+	border: 1px solid #ccc;
+}
+
+.tooltip {
+	position: absolute;
+	display: inline-block;
+	min-width: 5em;
+	padding: .5em;
+	background: #F4Cc3D;
+	color: #453D3F;
+	font-weight: 700;
+	text-align: center;
+	pointer-events: none;
+	z-index: 1;
+}
+
+
+.ct-series-a .ct-line {
+	stroke: #4FC174;
+	stroke-width: 3px;
+}
+
+.ct-series-a .ct-point {
+	stroke: #558FC3;
+	stroke-width: 15px;
+	/*stroke-linecap: square;*/
+}
+	</style>
+	
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="http://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+</head>
+
+<body>
+	<div class="chart">
+		<div class="ct-chart"></div>
+	</div>
+
+	<script src='../Perceptron/ProcesadorSinaptico.js'></script>
+	<script src='../Perceptron/Perceptron.js'></script>
+<script>
+var pesosChart = new Chartist.Line( '.ct-chart', {
+		labels: [ 0 ],
+			
+		series: [{
+			name: 'Peso',
+			data: [ 0 ]
+		}, {
+			name: 'Linea del peso',
+			data: [ 0 ]
+		}]
+	}, {
+		series: {
+			'Peso': {
+				lineSmooth: false,
+			},
+			'Linea del peso': {
+				lineSmooth: false,
+			}
+		}
+	});
+
+var $chart = $( '.ct-chart' );
+
+var $toolTip = $chart
+	.append('<div class="tooltip"></div>')
+	.find('.tooltip')
+	.hide();
+
+$chart.on('mouseenter', '.ct-point', function() {
+	var $point = $( this ),
+		value = $point.attr( 'ct:value' ),
+		seriesName = $point.parent().attr( 'ct:series-name' );
+
+	$toolTip.html( seriesName + '<br>' + value ).show();
+});
+
+$chart.on( 'mouseleave', '.ct-point', function() {
+	$toolTip.hide();
+});
+
+$chart.on( 'mousemove', function(event) {
+	$toolTip.css({
+		left: ( event.offsetX || event.originalEvent.layerX ) - $toolTip.width() / 2 - 5,
+		top: ( event.offsetY || event.originalEvent.layerY ) - $toolTip.height() - 20
+	});
+});
+
+
+/**
+ * PERCETRON
+ */
+var perceptron = new Perceptron();
+
+perceptron
+	.funcBack( funcBack )
+	.addDatos( [ 0, 0 ], 0 )
+	.addDatos( [ 0, 1 ], 1 )
+	.addDatos( [ 1, 0 ], 1 )
+	.addDatos( [ 1, 1 ], 1 )
+.aprender();
+
+function funcBack( info ) {
+	var dataChart = pesosChart.data,
+		labelInit = dataChart.labels[ dataChart.labels.length - 1 ],
+		pesos = info._pesos,
+
+		lineaDePesos = [];
+
+	for( var i = 1, len = pesos.length; i <= len; i++ ) {
+		dataChart.labels.push( labelInit + i );
+	}
+
+	lineaDePesos.push( pesos[ 0 ], null, null );
+	
+	dataChart.series[ 0 ].data = dataChart.series[ 0 ].data.concat( pesos );
+	dataChart.series[ 1 ].data = dataChart.series[ 1 ].data.concat( lineaDePesos );
+
+	pesosChart.update({
+		labels: dataChart.labels,
+		series: dataChart.series
+	});
+}
+
+console.log( perceptron, perceptron.procesar( [ 1, 1, 1 ] ) );
+</script>
+
+</body>
+</html>
