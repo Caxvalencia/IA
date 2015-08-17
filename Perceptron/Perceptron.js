@@ -7,6 +7,9 @@ var Perceptron = ( function( ProcesadorSinaptico ) {
 		this.hasError = false;
 		this.procesadorSinaptico = [];
 
+		this.counterLimitCalls = 0;
+		this.LIMIT_CALLS = 10000;
+
 		this._pesos = null;
 		this._funcBack = function() {};
 	}
@@ -69,8 +72,18 @@ var Perceptron = ( function( ProcesadorSinaptico ) {
 			}
 		}
 
-		if( this.hasError )
+		if( this.hasError ) {
+			this.counterLimitCalls++;
+
+			if( this.counterLimitCalls >= this.LIMIT_CALLS ) {
+				this.counterLimitCalls = 0;
+				return this;
+			}
+
 			return this.aprender();
+		}
+
+		return this;
 	};
 
 	Perceptron.prototype.procesar = function( datos ) {

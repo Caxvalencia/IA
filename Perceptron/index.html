@@ -11,17 +11,59 @@
 	<script src='Perceptron.js'></script>
 
 <script>
-var perceptron = new Perceptron();
-
-perceptron
-	.addDatos( [ 0, 0, 0, 1 ], 0 )
-	.addDatos( [ 0, 0, 1, 1 ], 1 )
-	.addDatos( [ 0, 1, 1, 1 ], 1 )
-	.addDatos( [ 1, 1, 1, 0 ], 1 )
+/**
+ * Funcion AND
+ */
+var func_AND = new Perceptron();
+func_AND
+	.addDatos([ 0, 0 ], 0 )
+	.addDatos([ 0, 1 ], 0 )
+	.addDatos([ 1, 0 ], 0 )
+	.addDatos([ 1, 1 ], 1 )
 .aprender();
 
-console.log( perceptron, perceptron.procesar([ 1, 1, 1 ]) );
-</script>
+console.log( 'AND' + '\n',
+	[ 0, 0 ], '->', func_AND.procesar([ 0, 0 ]) + '\n',
+	[ 0, 1 ], '->', func_AND.procesar([ 0, 1 ]) + '\n',
+	[ 1, 0 ], '->', func_AND.procesar([ 1, 0 ]) + '\n',
+	[ 1, 1 ], '->', func_AND.procesar([ 1, 1 ]) + '\n'
+);
 
+
+/**
+ * Funcion OR
+ */
+var func_OR = new Perceptron();
+func_OR
+	.addDatos([ 0, 0 ], 0 ).aprender()
+	.addDatos([ 0, 1 ], 1 ).aprender()
+	.addDatos([ 1, 0 ], 1 ).aprender()
+	.addDatos([ 1, 1 ], 1 ).aprender();
+
+console.log( 'OR' + '\n',
+	[ 0, 0 ], '->', func_OR.procesar([ 0, 0 ]) + '\n',
+	[ 0, 1 ], '->', func_OR.procesar([ 0, 1 ]) + '\n',
+	[ 1, 0 ], '->', func_OR.procesar([ 1, 0 ]) + '\n',
+	[ 1, 1 ], '->', func_OR.procesar([ 1, 1 ]) + '\n'
+);
+
+
+/**
+ * Funcion XOR
+ */
+var func_XOR = new Perceptron();
+func_XOR
+	.addDatos([ 0, 0 ], 0 ).aprender()
+	.addDatos([ 0, 1 ], 1 ).aprender()
+	.addDatos([ 1, 0 ], 1 ).aprender()
+	.addDatos([ 1, 1 ], 0 ).aprender();
+
+console.log( 'XOR' + '\n',
+	[ 0, 0 ], '->', func_XOR.procesar([ 0, 0 ]) + '\n',
+	[ 0, 1 ], '->', func_XOR.procesar([ 0, 1 ]) + '\n',
+	[ 1, 0 ], '->', func_XOR.procesar([ 1, 0 ]) + '\n',
+	[ 1, 1 ], '->', func_XOR.procesar([ 1, 1 ]) + '\n'
+);
+</script>
 </body>
 </html>
