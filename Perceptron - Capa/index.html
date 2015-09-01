@@ -11,25 +11,27 @@
 	<script src='../Perceptron/Perceptron.js'></script>
 
 <script>
-var perceptron = new Perceptron();
+/**
+ * Funcion XOR
+ */
+var XOR = [
+	[ 0, 0 ],
+	[ 0, 1 ],
+	[ 1, 0 ],
+	[ 1, 1 ]
+];
+var y = [ 0, 1, 1, 0 ];
 
-// .addDatos( [ 0, 0, 0 ], 0 ) // 0
-// .addDatos( [ 0, 0, 1 ], 1 ) // 1
-// .addDatos( [ 0, 1, 0 ], 1 ) // 2
-// .addDatos( [ 0, 1, 1 ], 1 ) // 3
-// .addDatos( [ 1, 0, 0 ], 1 ) // 4
-// .addDatos( [ 1, 0, 1 ], 1 ) // 5
+var func_XOR = new Perceptron();
+//Mejores resultados cuando se le enseña secencialmente, no por este metodo
+func_XOR.addDatos( XOR, y ).aprender();
 
-perceptron
-	.addDatos([
-		[ 0, 0, 0, 1 ],
-		[ 0, 0, 1, 1 ],
-		[ 0, 1, 1, 1 ],
-		[ 1, 1, 1, 0 ]
-	], [ 0, 1, 1, 1 ])
-.aprender();
-
-console.log( perceptron, perceptron.procesar([ 1, 1, 1, 0 ]) );
+console.log( 'XOR' + '\n',
+	[ 0, 0 ], '->', func_XOR.procesar([ 0, 0 ]) + '\n',
+	[ 0, 1 ], '->', func_XOR.procesar([ 0, 1 ]) + '\n',
+	[ 1, 0 ], '->', func_XOR.procesar([ 1, 0 ]) + '\n',
+	[ 1, 1 ], '->', func_XOR.procesar([ 1, 1 ]) + '\n'
+);
 </script>
 
 </body>
