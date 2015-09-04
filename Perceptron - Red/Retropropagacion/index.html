@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8" />
+	<title>Perceptron - Capa</title>
+</head>
+
+<body>
+	
+	<script src='../../Perceptron/ProcesadorSinaptico.js'></script>
+	<script src='../../Perceptron/Perceptron.js'></script>
+	<script src='Retropropagacion.js'></script>
+
+<script>
+/**
+ * Funcion XOR
+ */
+var XOR = [
+	[ 0, 0 ],
+	[ 0, 1 ],
+	[ 1, 0 ],
+	[ 1, 1 ]
+];
+var y = [ 0, 1, 1, 0 ];
+
+var func_XOR = new Perceptron();
+//Mejores resultados cuando se le enseña secencialmente, no por este metodo
+func_XOR.addDatos( XOR, y ).aprender();
+
+console.log( 'XOR' + '\n',
+	[ 0, 0 ], '->', func_XOR.procesar([ 0, 0 ]) + '\n',
+	[ 0, 1 ], '->', func_XOR.procesar([ 0, 1 ]) + '\n',
+	[ 1, 0 ], '->', func_XOR.procesar([ 1, 0 ]) + '\n',
+	[ 1, 1 ], '->', func_XOR.procesar([ 1, 1 ]) + '\n',
+
+	func_XOR
+);
+</script>
+
+</body>
+</html>
