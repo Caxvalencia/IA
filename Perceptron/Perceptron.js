@@ -11,6 +11,7 @@ var Perceptron = ( function( ProcesadorSinaptico ) {
 		this.LIMIT_ERRORS = 10000;
 
 		this._pesos = null;
+		this._funcionActivacion = null;
 		this._funcBack = function() {};
 	}
 
@@ -39,10 +40,11 @@ var Perceptron = ( function( ProcesadorSinaptico ) {
 		if( datos[ 0 ] !== undefined )
 			if( datos[ 0 ][ 0 ] !== undefined ) {
 				for( var i = 0; i < datos.length; i++ ) {
-					this.procesadorSinaptico.push( new ProcesadorSinaptico( datos[ i ], salida[ i ] ) );
+					this.procesadorSinaptico.push( new ProcesadorSinaptico( datos[ i ], salida[ i ], this._funcionActivacion ) );
 				}
 			} else
-				this.procesadorSinaptico.push( new ProcesadorSinaptico( datos, salida ) );
+				this.procesadorSinaptico.push( new ProcesadorSinaptico( datos, salida, this._funcionActivacion ) );
+		
 		return this;
 	};
 
@@ -87,8 +89,8 @@ var Perceptron = ( function( ProcesadorSinaptico ) {
 		return this;
 	};
 
-	Perceptron.prototype.procesar = function( datos ) {
-		var procesadorSinaptico = new ProcesadorSinaptico( datos, null );
+	Perceptron.prototype.procesar = function( datos, funcionActivacion ) {
+		var procesadorSinaptico = new ProcesadorSinaptico( datos, null, funcionActivacion );
 		procesadorSinaptico.calcularSinapsis( this._pesos );
 
 		return procesadorSinaptico.salida();
@@ -109,6 +111,11 @@ var Perceptron = ( function( ProcesadorSinaptico ) {
 		}
 
 		return this._pesos;
+	};
+
+	Perceptron.prototype.funcionActivacion = function( funcionActivacion ) {
+		this._funcionActivacion = funcionActivacion;
+		return this;
 	};
 
 	return Perceptron;

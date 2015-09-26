@@ -2,26 +2,31 @@ var ProcesadorSinaptico = ( function() {
 	/**
 	 * @construtor
 	 */
-	function ProcesadorSinaptico( datos, salidaDeseada ) {
+	function ProcesadorSinaptico( datos, salidaDeseada, funcionActivacion ) {
 		this.factorAprendizaje = 0.5;
 		this.umbral = 1;
 
-		this.datos = [ this.umbral ].concat( datos );
+		this.datos = datos ? [ this.umbral ].concat( datos ) : [ this.umbral ];
 		this.salidaDeseada = salidaDeseada;
 		this.sinapsis = 0;
 		this.error = 0;
+		this.funcionActivacion = funcionActivacion;
 	}
 
 	/**
 	 * Metodos privados
 	 */
-	ProcesadorSinaptico.prototype.salida = function() {
-		return this.sinapsis >= 0 ? 1 : 0;
-	};
 
 	/**
 	 * Metodos publicos
 	 */
+	ProcesadorSinaptico.prototype.salida = function() {
+		if( !this.funcionActivacion ) return this.sinapsis >= 0 ? 1 : 0;
+		
+		//Funcion de activacion sigmoidal binaria
+		if( this.funcionActivacion === 'sigmoidal' ) return 1 / ( 1 + Math.pow( Math.E, -this.sinapsis ) );
+	};
+
 	ProcesadorSinaptico.prototype.reajustarPesos = function( pesos ) {
 		var len = pesos.length, i;
 		
@@ -41,12 +46,21 @@ var ProcesadorSinaptico = ( function() {
 		return this;
 	};
 
-	ProcesadorSinaptico.prototype.calcularError = function( funcActivacion ) {
+	ProcesadorSinaptico.prototype.calcularError = function() {
 		this.error = this.salidaDeseada - this.salida();
 		return this;
 	};
 
-	ProcesadorSinaptico.prototype.addProcesadorSinaptico = function( funcActivacion ) {
+	/**
+	 * Getters y setters
+	 */
+	ProcesadorSinaptico.prototype.setDatos = function( datos ) {
+		this.datos = datos;
+		return this;
+	};
+
+	ProcesadorSinaptico.prototype.setSalidaDeseada = function( salidaDeseada ) {
+		this.salidaDeseada = salidaDeseada;
 		return this;
 	};
 
