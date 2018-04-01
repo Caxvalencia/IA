@@ -6,13 +6,12 @@
         "noUnusedParameters": true,
         "noUnusedLocals": true,
         "sourceMap": true,
-        "module": "es6",
+        "module": "commonjs",
         "lib": ["es6"],
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "target": "es5",
-        "jsx": "react",
-        "allowJs": true
+        "jsx": "react"
     },
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "demo", "dist"]
 }
