@@ -5,7 +5,7 @@ export class Perceptron {
     rangoPesos: { MIN: number; MAX: number };
     factorAprendizaje: number;
 
-    construtor() {
+    constructor() {
         this.factorAprendizaje = 0.5;
         this.rangoPesos = { MIN: -5, MAX: 4.9 };
         this.pesos = null;

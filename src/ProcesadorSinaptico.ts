@@ -7,7 +7,7 @@ export class ProcesadorSinaptico {
     umbral: number;
     factorAprendizaje: number;
 
-    construtor(datos, salidaDeseada, funcionActivacion) {
+    constructor(datos, salidaDeseada, funcionActivacion) {
         this.factorAprendizaje = 0.5;
         this.umbral = 1;
 
