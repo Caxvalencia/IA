@@ -1,0 +1,33 @@
+{
+  "name": "artificial-intelligence",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "dev": "npm run development",
+    "development": "cross-env NODE_ENV=development webpack --progress --hide-modules --config=webpack.config.js",
+    "watch": "cross-env NODE_ENV=development webpack --watch --progress --hide-modules --config=webpack.config.js",
+    "prod": "npm run production",
+    "production": "cross-env NODE_ENV=production webpack --progress --hide-modules --config=webpack.config.js",
+    "demo": "http-server demo/ -p 6969"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chai": "^3.5.2",
+    "@types/mocha": "^2.2.44",
+    "@types/sinon": "^2.2.1",
+    "chai": "^3.5.0",
+    "cross-env": "^5.1.4",
+    "http-server": "^0.11.1",
+    "mocha": "^3.3.0",
+    "mocha-typescript": "^1.1.2",
+    "sinon": "^2.2.0",
+    "source-map-support": "^0.4.15",
+    "ts-loader": "^4.0.1",
+    "typescript": "^2.7.2",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12"
+  }
+}
