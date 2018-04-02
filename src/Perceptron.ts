@@ -1,11 +1,12 @@
 import { ProcesadorSinaptico } from './ProcesadorSinaptico';
 
+export const LIMIT_ERRORS: number = 10000;
+
 export class Perceptron {
-    LIMIT_ERRORS: number;
     counterErrors: number;
     procesadorSinaptico: ProcesadorSinaptico[];
     hasError: boolean;
-    pesos: any;
+    weight: any;
     rangoPesos: { MIN: number; MAX: number };
 
     private funcBack: () => void;
@@ -17,9 +18,8 @@ export class Perceptron {
         this.procesadorSinaptico = [];
 
         this.counterErrors = 0;
-        this.LIMIT_ERRORS = 10000;
 
-        this.pesos = null;
+        this.weight = null;
         this.funcionActivacion = null;
         this.funcBack = () => {};
     }
@@ -55,8 +55,8 @@ export class Perceptron {
             return;
         }
 
-        if (!this.pesos) {
-            this.asignarPesos();
+        if (!this.weight) {
+            this.assignWeights();
         }
 
         let procesadorSinaptico = null;
@@ -67,12 +67,12 @@ export class Perceptron {
         for (let i = 0; i < len; i++) {
             procesadorSinaptico = this.procesadorSinaptico[i];
 
-            procesadorSinaptico.calcularSinapsis(this.pesos);
+            procesadorSinaptico.calcularSinapsis(this.weight);
             procesadorSinaptico.calcularError();
 
             if (procesadorSinaptico.error !== 0) {
                 this.hasError = true;
-                procesadorSinaptico.reajustarPesos(this.pesos);
+                procesadorSinaptico.reajustarPesos(this.weight);
                 this.funcBack();
             }
         }
@@ -80,7 +80,7 @@ export class Perceptron {
         if (this.hasError) {
             this.counterErrors++;
 
-            if (this.counterErrors >= this.LIMIT_ERRORS) {
+            if (this.counterErrors >= LIMIT_ERRORS) {
                 this.counterErrors = 0;
 
                 throw Error('Maximum error limit reached');
@@ -101,17 +101,17 @@ export class Perceptron {
             funcionActivacion
         );
 
-        procesadorSinaptico.calcularSinapsis(this.pesos);
+        procesadorSinaptico.calcularSinapsis(this.weight);
 
         return procesadorSinaptico.salida();
     }
 
-    getPesos() {
-        return this.pesos;
+    getWeight() {
+        return this.weight;
     }
 
-    setPesos(pesosSinapticos) {
-        this.pesos = pesosSinapticos;
+    setWeight(weight) {
+        this.weight = weight;
 
         return this;
     }
@@ -122,7 +122,7 @@ export class Perceptron {
         return this;
     }
 
-    private asignarPesos() {
+    private assignWeights() {
         let len = this.procesadorSinaptico[0].datos.length;
         let pesos = new Array(len);
         let rango = this.rangoPesos.MAX - this.rangoPesos.MIN;
@@ -135,7 +135,7 @@ export class Perceptron {
             }
         }
 
-        this.setPesos(pesos);
+        this.setWeight(pesos);
         this.funcBack();
     }
 }
