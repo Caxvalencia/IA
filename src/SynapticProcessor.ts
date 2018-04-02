@@ -1,65 +1,65 @@
 export class SynapticProcessor {
-    funcionActivacion: any;
+    activationFunction: string;
     error: number;
-    sinapsis: number;
-    salidaDeseada: any;
-    datos: number[];
-    umbral: number;
-    factorAprendizaje: number;
+    synapse: number;
+    expectedOutput: any;
+    data: number[];
+    threshold: number;
+    learningFactor: number;
 
-    constructor(datos, salidaDeseada, funcionActivacion) {
-        this.factorAprendizaje = 0.5;
-        this.umbral = 1;
+    constructor(data, expectedOutput, activationFunction) {
+        this.learningFactor = 0.5;
+        this.threshold = 1;
 
-        this.salidaDeseada = salidaDeseada;
-        this.sinapsis = 0;
+        this.expectedOutput = expectedOutput;
+        this.synapse = 0;
         this.error = 0;
-        this.funcionActivacion = funcionActivacion;
+        this.activationFunction = activationFunction;
 
-        this.setDatos(datos);
+        this.setDatos(data);
     }
 
     salida() {
-        if (!this.funcionActivacion) {
-            return this.sinapsis >= 0 ? 1 : 0;
+        if (!this.activationFunction) {
+            return this.synapse >= 0 ? 1 : 0;
         }
 
         //Funcion de activacion sigmoidal binaria
-        if (this.funcionActivacion === 'sigmoidal') {
-            return 1 / (1 + Math.pow(Math.E, -this.sinapsis));
+        if (this.activationFunction === 'sigmoidal') {
+            return 1 / (1 + Math.pow(Math.E, -this.synapse));
         }
     }
 
     reajustarPesos(pesos) {
         for (let i = 0; i < pesos.length; i++) {
-            pesos[i] += this.factorAprendizaje * this.error * this.datos[i];
+            pesos[i] += this.learningFactor * this.error * this.data[i];
         }
     }
 
     calcularSinapsis(pesos) {
-        this.sinapsis = 0;
+        this.synapse = 0;
 
         for (let i = 0; i < pesos.length; i++) {
-            this.sinapsis += this.datos[i] * pesos[i];
+            this.synapse += this.data[i] * pesos[i];
         }
 
         return this;
     }
 
     calcularError() {
-        this.error = this.salidaDeseada - this.salida();
+        this.error = this.expectedOutput - this.salida();
 
         return this;
     }
 
     setDatos(datos) {
-        this.datos = datos ? [this.umbral].concat(datos) : [this.umbral];
+        this.data = datos ? [this.threshold].concat(datos) : [this.threshold];
 
         return this;
     }
 
     setSalidaDeseada(salidaDeseada) {
-        this.salidaDeseada = salidaDeseada;
+        this.expectedOutput = salidaDeseada;
 
         return this;
     }

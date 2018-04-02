@@ -123,7 +123,7 @@ export class Perceptron {
     }
 
     private assignWeights() {
-        let len = this.synapticProcessor[0].datos.length;
+        let len = this.synapticProcessor[0].data.length;
         let pesos = new Array(len);
         let rango = this.rangeWeight.MAX - this.rangeWeight.MIN;
 
