@@ -1,21 +1,21 @@
-import { ProcesadorSinaptico } from './ProcesadorSinaptico';
+import { SynapticProcessor } from './SynapticProcessor';
 
 export const LIMIT_ERRORS: number = 10000;
 
 export class Perceptron {
     counterErrors: number;
-    procesadorSinaptico: ProcesadorSinaptico[];
+    synapticProcessor: SynapticProcessor[];
     hasError: boolean;
     weight: any;
-    rangoPesos: { MIN: number; MAX: number };
+    rangeWeight: { MIN: number; MAX: number };
 
     private funcBack: () => void;
     private funcionActivacion: any;
 
     constructor() {
-        this.rangoPesos = { MIN: -5, MAX: 4.9 };
+        this.rangeWeight = { MIN: -5, MAX: 4.9 };
         this.hasError = false;
-        this.procesadorSinaptico = [];
+        this.synapticProcessor = [];
 
         this.counterErrors = 0;
 
@@ -30,16 +30,16 @@ export class Perceptron {
         }
 
         if (datos[0][0] === undefined) {
-            this.procesadorSinaptico.push(
-                new ProcesadorSinaptico(datos, salida, this.funcionActivacion)
+            this.synapticProcessor.push(
+                new SynapticProcessor(datos, salida, this.funcionActivacion)
             );
 
             return this;
         }
 
         for (let i = 0; i < datos.length; i++) {
-            this.procesadorSinaptico.push(
-                new ProcesadorSinaptico(
+            this.synapticProcessor.push(
+                new SynapticProcessor(
                     datos[i],
                     salida[i],
                     this.funcionActivacion
@@ -51,7 +51,7 @@ export class Perceptron {
     }
 
     aprender() {
-        if (this.procesadorSinaptico.length === 0) {
+        if (this.synapticProcessor.length === 0) {
             return;
         }
 
@@ -59,20 +59,20 @@ export class Perceptron {
             this.assignWeights();
         }
 
-        let procesadorSinaptico = null;
-        let len = this.procesadorSinaptico.length;
+        let synapticProcessor = null;
+        let len = this.synapticProcessor.length;
 
         this.hasError = false;
 
         for (let i = 0; i < len; i++) {
-            procesadorSinaptico = this.procesadorSinaptico[i];
+            synapticProcessor = this.synapticProcessor[i];
 
-            procesadorSinaptico.calcularSinapsis(this.weight);
-            procesadorSinaptico.calcularError();
+            synapticProcessor.calcularSinapsis(this.weight);
+            synapticProcessor.calcularError();
 
-            if (procesadorSinaptico.error !== 0) {
+            if (synapticProcessor.error !== 0) {
                 this.hasError = true;
-                procesadorSinaptico.reajustarPesos(this.weight);
+                synapticProcessor.reajustarPesos(this.weight);
                 this.funcBack();
             }
         }
@@ -95,15 +95,15 @@ export class Perceptron {
     }
 
     procesar(datos, funcionActivacion?) {
-        let procesadorSinaptico = new ProcesadorSinaptico(
+        let synapticProcessor = new SynapticProcessor(
             datos,
             null,
             funcionActivacion
         );
 
-        procesadorSinaptico.calcularSinapsis(this.weight);
+        synapticProcessor.calcularSinapsis(this.weight);
 
-        return procesadorSinaptico.salida();
+        return synapticProcessor.salida();
     }
 
     getWeight() {
@@ -123,14 +123,14 @@ export class Perceptron {
     }
 
     private assignWeights() {
-        let len = this.procesadorSinaptico[0].datos.length;
+        let len = this.synapticProcessor[0].datos.length;
         let pesos = new Array(len);
-        let rango = this.rangoPesos.MAX - this.rangoPesos.MIN;
+        let rango = this.rangeWeight.MAX - this.rangeWeight.MIN;
 
         for (let i = 0; i < len; i++) {
             while (!pesos[i]) {
                 pesos[i] = parseFloat(
-                    (Math.random() * rango + this.rangoPesos.MIN).toFixed(4)
+                    (Math.random() * rango + this.rangeWeight.MIN).toFixed(4)
                 );
             }
         }

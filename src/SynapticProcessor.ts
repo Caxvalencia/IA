@@ -1,4 +1,4 @@
-export class ProcesadorSinaptico {
+export class SynapticProcessor {
     funcionActivacion: any;
     error: number;
     sinapsis: number;
