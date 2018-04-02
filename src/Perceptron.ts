@@ -1,129 +1,141 @@
+import { ProcesadorSinaptico } from './ProcesadorSinaptico';
+
 export class Perceptron {
+    LIMIT_ERRORS: number;
+    counterErrors: number;
+    procesadorSinaptico: ProcesadorSinaptico[];
     hasError: boolean;
-    info: any[];
     pesos: any;
     rangoPesos: { MIN: number; MAX: number };
-    factorAprendizaje: number;
+
+    private funcBack: () => void;
+    private funcionActivacion: any;
 
     constructor() {
-        this.factorAprendizaje = 0.5;
         this.rangoPesos = { MIN: -5, MAX: 4.9 };
-        this.pesos = null;
-        this.info = [];
         this.hasError = false;
+        this.procesadorSinaptico = [];
+
+        this.counterErrors = 0;
+        this.LIMIT_ERRORS = 10000;
+
+        this.pesos = null;
+        this.funcionActivacion = null;
+        this.funcBack = () => {};
     }
 
-    /**
-     * Metodos privados
-     */
-    salidaObtenida(sinapsis) {
-        return sinapsis >= 0 ? 1 : 0;
-    }
-
-    asignarPesos() {
-        this.pesos = new Array(this.info[0].datos.length);
-
-        var len = this.pesos.length,
-            i,
-            rango = this.rangoPesos.MAX - this.rangoPesos.MIN;
-
-        for (i = 0; i < len; i++) {
-            while (!this.pesos[i])
-                this.pesos[i] = parseFloat(
-                    (Math.random() * rango + this.rangoPesos.MIN).toFixed(4)
-                );
-        }
-    }
-
-    reajustarPesos(info) {
-        var len = this.pesos.length,
-            i;
-
-        for (i = 0; i < len; i++) {
-            this.pesos[i] =
-                this.pesos[i] +
-                this.factorAprendizaje * info.error * info.datos[i];
-        }
-    }
-
-    calcularSinapsis(info) {
-        var len = this.pesos.length,
-            i;
-        info.sinapsis = 0;
-
-        for (i = 0; i < len; i++) {
-            info.sinapsis += info.datos[i] * this.pesos[i];
-        }
-
-        return this;
-    }
-
-    calcularError(info) {
-        info.error = info.salida - this.salidaObtenida(info.sinapsis);
-        return this;
-    }
-
-    /**
-     * Metodos publicos
-     */
     addDatos(datos, salida) {
-        datos = [1].concat(datos);
+        if (datos[0] === undefined) {
+            return this;
+        }
 
-        this.info.push({
-            datos: datos,
-            salida: salida,
-            sinapsis: 0,
-            error: 0
-        });
+        if (datos[0][0] === undefined) {
+            this.procesadorSinaptico.push(
+                new ProcesadorSinaptico(datos, salida, this.funcionActivacion)
+            );
+
+            return this;
+        }
+
+        for (let i = 0; i < datos.length; i++) {
+            this.procesadorSinaptico.push(
+                new ProcesadorSinaptico(
+                    datos[i],
+                    salida[i],
+                    this.funcionActivacion
+                )
+            );
+        }
 
         return this;
     }
 
     aprender() {
-        if (this.info.length === 0) return;
+        if (this.procesadorSinaptico.length === 0) {
+            return;
+        }
 
-        if (!this.pesos) this.asignarPesos();
+        if (!this.pesos) {
+            this.asignarPesos();
+        }
 
-        var info = null,
-            i,
-            len = this.info.length;
+        let procesadorSinaptico = null;
+        let len = this.procesadorSinaptico.length;
 
         this.hasError = false;
 
-        for (i = 0; i < len; i++) {
-            info = this.info[i];
-            this.calcularSinapsis(info);
-            this.calcularError(info);
+        for (let i = 0; i < len; i++) {
+            procesadorSinaptico = this.procesadorSinaptico[i];
 
-            if (info.error !== 0) {
+            procesadorSinaptico.calcularSinapsis(this.pesos);
+            procesadorSinaptico.calcularError();
+
+            if (procesadorSinaptico.error !== 0) {
                 this.hasError = true;
-                this.reajustarPesos(info);
+                procesadorSinaptico.reajustarPesos(this.pesos);
+                this.funcBack();
             }
         }
 
-        if (this.hasError) return this.aprender();
+        if (this.hasError) {
+            this.counterErrors++;
+
+            if (this.counterErrors >= this.LIMIT_ERRORS) {
+                this.counterErrors = 0;
+
+                throw Error('Maximum error limit reached');
+            }
+
+            return this.aprender();
+        }
+
+        this.counterErrors = 0;
+
+        return this;
     }
 
-    procesar(datos) {
-        datos = [1].concat(datos);
+    procesar(datos, funcionActivacion?) {
+        let procesadorSinaptico = new ProcesadorSinaptico(
+            datos,
+            null,
+            funcionActivacion
+        );
 
-        var info = {
-            datos: datos,
-            salida: null,
-            sinapsis: 0,
-            error: 0
-        };
+        procesadorSinaptico.calcularSinapsis(this.pesos);
 
-        this.calcularSinapsis(info);
-        this.calcularError(info);
-
-        return this.salidaObtenida(info.sinapsis);
+        return procesadorSinaptico.salida();
     }
 
-    /**
-     * Getters y setters
-     */
     getPesos() {
         return this.pesos;
+    }
+
+    setPesos(pesosSinapticos) {
+        this.pesos = pesosSinapticos;
+
+        return this;
+    }
+
+    setFuncionActivacion(funcionActivacion) {
+        this.funcionActivacion = funcionActivacion;
+
+        return this;
+    }
+
+    private asignarPesos() {
+        let len = this.procesadorSinaptico[0].datos.length;
+        let pesos = new Array(len);
+        let rango = this.rangoPesos.MAX - this.rangoPesos.MIN;
+
+        for (let i = 0; i < len; i++) {
+            while (!pesos[i]) {
+                pesos[i] = parseFloat(
+                    (Math.random() * rango + this.rangoPesos.MIN).toFixed(4)
+                );
+            }
+        }
+
+        this.setPesos(pesos);
+        this.funcBack();
     }
 }

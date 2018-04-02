@@ -16,7 +16,7 @@ export class ProcesadorSinaptico {
         this.error = 0;
         this.funcionActivacion = funcionActivacion;
 
-        this.setDatos(datos);        
+        this.setDatos(datos);
     }
 
     salida() {
