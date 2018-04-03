@@ -19,7 +19,7 @@ export class PerceptronTest {
         data.forEach(data => {
             assert.equal(
                 data[1],
-                perceptron.procesar(data[0]),
+                perceptron.process(data[0]),
                 data[0] + ' -> ' + data[1]
             );
         });
@@ -37,7 +37,7 @@ export class PerceptronTest {
         data.forEach(data => {
             assert.equal(
                 data[1],
-                perceptron.procesar(data[0]),
+                perceptron.process(data[0]),
                 data[0] + ' -> ' + data[1]
             );
         });

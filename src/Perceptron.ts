@@ -93,7 +93,7 @@ export class Perceptron {
         return this;
     }
 
-    procesar(data, activationFunction?) {
+    process(data, activationFunction?) {
         let synapticProcessor = new SynapticProcessor(
             data,
             null,
