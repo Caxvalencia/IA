@@ -13,7 +13,7 @@ export class PerceptronTest {
         let data = [[[0, 0], 0], [[0, 1], 0], [[1, 0], 0], [[1, 1], 1]];
 
         data.forEach(data => {
-            perceptron.addDatos(data[0], data[1]).aprender();
+            perceptron.addDatos(data[0], data[1]).learn();
         });
 
         data.forEach(data => {
@@ -31,7 +31,7 @@ export class PerceptronTest {
         let data = [[[0, 0], 0], [[0, 1], 1], [[1, 0], 1], [[1, 1], 1]];
 
         data.forEach(data => {
-            perceptron.addDatos(data[0], data[1]).aprender();
+            perceptron.addDatos(data[0], data[1]).learn();
         });
 
         data.forEach(data => {
@@ -50,7 +50,7 @@ export class PerceptronTest {
 
         assert.throws(() => {
             data.forEach(data => {
-                perceptron.addDatos(data[0], data[1]).aprender();
+                perceptron.addDatos(data[0], data[1]).learn();
             });
         });
     }

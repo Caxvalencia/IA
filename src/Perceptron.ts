@@ -10,7 +10,7 @@ export class Perceptron {
     rangeWeight: { MIN: number; MAX: number };
 
     private funcBack: () => void;
-    private funcionActivacion: any;
+    private activationFunction: any;
 
     constructor() {
         this.rangeWeight = { MIN: -5, MAX: 4.9 };
@@ -20,7 +20,7 @@ export class Perceptron {
         this.counterErrors = 0;
 
         this.weight = null;
-        this.funcionActivacion = null;
+        this.activationFunction = null;
         this.funcBack = () => {};
     }
 
@@ -31,7 +31,7 @@ export class Perceptron {
 
         if (datos[0][0] === undefined) {
             this.synapticProcessor.push(
-                new SynapticProcessor(datos, salida, this.funcionActivacion)
+                new SynapticProcessor(datos, salida, this.activationFunction)
             );
 
             return this;
@@ -42,7 +42,7 @@ export class Perceptron {
                 new SynapticProcessor(
                     datos[i],
                     salida[i],
-                    this.funcionActivacion
+                    this.activationFunction
                 )
             );
         }
@@ -50,7 +50,7 @@ export class Perceptron {
         return this;
     }
 
-    aprender() {
+    learn() {
         if (this.synapticProcessor.length === 0) {
             return;
         }
@@ -60,11 +60,10 @@ export class Perceptron {
         }
 
         let synapticProcessor: SynapticProcessor = null;
-        let len = this.synapticProcessor.length;
 
         this.hasError = false;
 
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i < this.synapticProcessor.length; i++) {
             synapticProcessor = this.synapticProcessor[i];
 
             synapticProcessor.calculateSynapses(this.weight);
@@ -86,7 +85,7 @@ export class Perceptron {
                 throw Error('Maximum error limit reached');
             }
 
-            return this.aprender();
+            return this.learn();
         }
 
         this.counterErrors = 0;
@@ -94,11 +93,11 @@ export class Perceptron {
         return this;
     }
 
-    procesar(datos, funcionActivacion?) {
+    procesar(data, activationFunction?) {
         let synapticProcessor = new SynapticProcessor(
-            datos,
+            data,
             null,
-            funcionActivacion
+            activationFunction
         );
 
         synapticProcessor.calculateSynapses(this.weight);
@@ -116,8 +115,8 @@ export class Perceptron {
         return this;
     }
 
-    setFuncionActivacion(funcionActivacion) {
-        this.funcionActivacion = funcionActivacion;
+    setActivationFunction(activationFunction) {
+        this.activationFunction = activationFunction;
 
         return this;
     }
