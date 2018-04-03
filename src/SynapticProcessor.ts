@@ -1,3 +1,4 @@
+import { sigmoidal } from './activation-functions/sigmoidal.function';
 export class SynapticProcessor {
     activationFunction: string;
     error: number;
@@ -26,7 +27,7 @@ export class SynapticProcessor {
 
         //Funcion de activacion sigmoidal binaria
         if (this.activationFunction === 'sigmoidal') {
-            return 1 / (1 + Math.pow(Math.E, -this.synapse));
+            return sigmoidal(this.synapse);
         }
     }
 
