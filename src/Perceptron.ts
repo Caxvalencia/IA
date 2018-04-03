@@ -24,24 +24,24 @@ export class Perceptron {
         this.funcBack = () => {};
     }
 
-    addDatos(datos, salida) {
-        if (datos[0] === undefined) {
+    addData(data, output) {
+        if (data[0] === undefined) {
             return this;
         }
 
-        if (datos[0][0] === undefined) {
+        if (data[0][0] === undefined) {
             this.synapticProcessor.push(
-                new SynapticProcessor(datos, salida, this.activationFunction)
+                new SynapticProcessor(data, output, this.activationFunction)
             );
 
             return this;
         }
 
-        for (let i = 0; i < datos.length; i++) {
+        for (let i = 0; i < data.length; i++) {
             this.synapticProcessor.push(
                 new SynapticProcessor(
-                    datos[i],
-                    salida[i],
+                    data[i],
+                    output[i],
                     this.activationFunction
                 )
             );
