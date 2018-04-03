@@ -17,50 +17,47 @@ export class SynapticProcessor {
         this.error = 0;
         this.activationFunction = activationFunction;
 
-        this.setDatos(data);
+        this.setData(data);
     }
 
-    salida() {
-        if (!this.activationFunction) {
-            return this.synapse >= 0 ? 1 : 0;
-        }
-
-        //Funcion de activacion sigmoidal binaria
+    output() {
         if (this.activationFunction === 'sigmoidal') {
             return sigmoidal(this.synapse);
         }
+
+        return this.synapse >= 0 ? 1 : 0;
     }
 
-    reajustarPesos(pesos) {
-        for (let i = 0; i < pesos.length; i++) {
-            pesos[i] += this.learningFactor * this.error * this.data[i];
+    recalculateWeights(weight) {
+        for (let i = 0; i < weight.length; i++) {
+            weight[i] += this.learningFactor * this.error * this.data[i];
         }
     }
 
-    calcularSinapsis(pesos) {
+    calculateSynapses(weight) {
         this.synapse = 0;
 
-        for (let i = 0; i < pesos.length; i++) {
-            this.synapse += this.data[i] * pesos[i];
+        for (let i = 0; i < weight.length; i++) {
+            this.synapse += this.data[i] * weight[i];
         }
 
         return this;
     }
 
-    calcularError() {
-        this.error = this.expectedOutput - this.salida();
+    calculateError() {
+        this.error = this.expectedOutput - this.output();
 
         return this;
     }
 
-    setDatos(datos) {
-        this.data = datos ? [this.threshold].concat(datos) : [this.threshold];
+    setData(data) {
+        this.data = data ? [this.threshold].concat(data) : [this.threshold];
 
         return this;
     }
 
-    setSalidaDeseada(salidaDeseada) {
-        this.expectedOutput = salidaDeseada;
+    setExpectedOutput(expectedOutput) {
+        this.expectedOutput = expectedOutput;
 
         return this;
     }

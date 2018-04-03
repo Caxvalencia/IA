@@ -59,7 +59,7 @@ export class Perceptron {
             this.assignWeights();
         }
 
-        let synapticProcessor = null;
+        let synapticProcessor: SynapticProcessor = null;
         let len = this.synapticProcessor.length;
 
         this.hasError = false;
@@ -67,12 +67,12 @@ export class Perceptron {
         for (let i = 0; i < len; i++) {
             synapticProcessor = this.synapticProcessor[i];
 
-            synapticProcessor.calcularSinapsis(this.weight);
-            synapticProcessor.calcularError();
+            synapticProcessor.calculateSynapses(this.weight);
+            synapticProcessor.calculateError();
 
             if (synapticProcessor.error !== 0) {
                 this.hasError = true;
-                synapticProcessor.reajustarPesos(this.weight);
+                synapticProcessor.recalculateWeights(this.weight);
                 this.funcBack();
             }
         }
@@ -101,9 +101,9 @@ export class Perceptron {
             funcionActivacion
         );
 
-        synapticProcessor.calcularSinapsis(this.weight);
+        synapticProcessor.calculateSynapses(this.weight);
 
-        return synapticProcessor.salida();
+        return synapticProcessor.output();
     }
 
     getWeight() {
