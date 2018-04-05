@@ -1,4 +1,5 @@
 import { sigmoidal } from './activation-functions/sigmoidal.function';
+
 export class SynapticProcessor {
     activationFunction: string;
     error: number;
@@ -8,19 +9,22 @@ export class SynapticProcessor {
     threshold: number;
     learningFactor: number;
 
-    constructor(data, expectedOutput, activationFunction) {
+    constructor(data, expectedOutput, activationFunction: string) {
         this.learningFactor = 0.5;
         this.threshold = 1;
 
-        this.expectedOutput = expectedOutput;
         this.synapse = 0;
         this.error = 0;
         this.activationFunction = activationFunction;
 
+        this.setExpectedOutput(expectedOutput);
         this.setData(data);
     }
 
-    output() {
+    /**
+     * @returns {number}
+     */
+    output(): number {
         if (this.activationFunction === 'sigmoidal') {
             return sigmoidal(this.synapse);
         }
@@ -28,17 +32,24 @@ export class SynapticProcessor {
         return this.synapse >= 0 ? 1 : 0;
     }
 
-    recalculateWeights(weight) {
-        for (let i = 0; i < weight.length; i++) {
-            weight[i] += this.learningFactor * this.error * this.data[i];
+    /**
+     * @param {number[]} weights
+     */
+    recalculateWeights(weights: number[]) {
+        for (let i = 0; i < weights.length; i++) {
+            weights[i] += this.learningFactor * this.error * this.data[i];
         }
     }
 
-    calculateSynapses(weight) {
+    /**
+     * @param {number[]} weights 
+     * @returns  
+     */
+    calculateSynapses(weights: number[]) {
         this.synapse = 0;
 
-        for (let i = 0; i < weight.length; i++) {
-            this.synapse += this.data[i] * weight[i];
+        for (let i = 0; i < weights.length; i++) {
+            this.synapse += this.data[i] * weights[i];
         }
 
         return this;
