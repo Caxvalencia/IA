@@ -1,4 +1,4 @@
-import { SynapticProcessor } from './SynapticProcessor';
+import { SynapticProcessor } from './synaptic-processor';
 
 export const LIMIT_ERRORS: number = 10000;
 

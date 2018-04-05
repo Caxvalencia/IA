@@ -1,3 +1,3 @@
-import { Perceptron } from './Perceptron';
+import { Perceptron } from './perceptron';
 
 export { Perceptron };

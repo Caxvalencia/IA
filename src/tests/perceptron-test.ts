@@ -3,7 +3,7 @@
 import { assert } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
-import { Perceptron } from '../Perceptron';
+import { Perceptron } from '../perceptron';
 
 @suite
 export class PerceptronTest {
