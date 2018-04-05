@@ -6,21 +6,18 @@ export class Perceptron {
     counterErrors: number;
     synapticProcessor: SynapticProcessor[];
     hasError: boolean;
-    weight: any;
+    weights: number[];
     rangeWeight: { MIN: number; MAX: number };
 
     private funcBack: () => void;
-    private activationFunction: any;
+    private activationFunction: string;
 
     constructor() {
         this.rangeWeight = { MIN: -5, MAX: 4.9 };
-        this.hasError = false;
         this.synapticProcessor = [];
-
         this.counterErrors = 0;
-
-        this.weight = null;
-        this.activationFunction = null;
+        this.hasError = false;
+        this.weights = null;
         this.funcBack = () => {};
     }
 
@@ -55,7 +52,7 @@ export class Perceptron {
             return;
         }
 
-        if (!this.weight) {
+        if (!this.weights) {
             this.assignWeights();
         }
 
@@ -66,12 +63,12 @@ export class Perceptron {
         for (let i = 0; i < this.synapticProcessor.length; i++) {
             synapticProcessor = this.synapticProcessor[i];
 
-            synapticProcessor.calculateSynapses(this.weight);
+            synapticProcessor.calculateSynapses(this.weights);
             synapticProcessor.calculateError();
 
             if (synapticProcessor.error !== 0) {
                 this.hasError = true;
-                synapticProcessor.recalculateWeights(this.weight);
+                synapticProcessor.recalculateWeights(this.weights);
                 this.funcBack();
             }
         }
@@ -100,41 +97,37 @@ export class Perceptron {
             activationFunction
         );
 
-        synapticProcessor.calculateSynapses(this.weight);
+        synapticProcessor.calculateSynapses(this.weights);
 
         return synapticProcessor.output();
     }
 
-    getWeight() {
-        return this.weight;
-    }
-
-    setWeight(weight) {
-        this.weight = weight;
+    setWeights(weights) {
+        this.weights = weights;
 
         return this;
     }
 
-    setActivationFunction(activationFunction) {
+    setActivationFunction(activationFunction: string) {
         this.activationFunction = activationFunction;
 
         return this;
     }
 
     private assignWeights() {
-        let len = this.synapticProcessor[0].data.length;
-        let pesos = new Array(len);
-        let rango = this.rangeWeight.MAX - this.rangeWeight.MIN;
+        let dataSize = this.synapticProcessor[0].data.length;
+        let weights = new Array<number>(dataSize);
+        let range = this.rangeWeight.MAX - this.rangeWeight.MIN;
 
-        for (let i = 0; i < len; i++) {
-            while (!pesos[i]) {
-                pesos[i] = parseFloat(
-                    (Math.random() * rango + this.rangeWeight.MIN).toFixed(4)
+        for (let i = 0; i < dataSize; i++) {
+            while (!weights[i]) {
+                weights[i] = parseFloat(
+                    (Math.random() * range + this.rangeWeight.MIN).toFixed(4)
                 );
             }
         }
 
-        this.setWeight(pesos);
+        this.setWeights(weights);
         this.funcBack();
     }
 }
