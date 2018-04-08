@@ -9,16 +9,16 @@ export class Perceptron {
     weights: number[];
     rangeWeight: { MIN: number; MAX: number };
 
-    private funcBack: () => void;
+    public funcBack: () => void;
     private activationFunction: string;
 
-    constructor() {
+    constructor(callback?) {
         this.rangeWeight = { MIN: -5, MAX: 4.9 };
         this.synapticProcessor = [];
         this.counterErrors = 0;
         this.hasError = false;
         this.weights = null;
-        this.funcBack = () => {};
+        this.funcBack = callback || (() => {});
     }
 
     addData(data, output) {
