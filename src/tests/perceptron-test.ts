@@ -10,7 +10,13 @@ export class PerceptronTest {
     @test
     public testAND() {
         let perceptron = new Perceptron();
-        let data = [[[0, 0], 0], [[0, 1], 0], [[1, 0], 0], [[1, 1], 1]];
+        let data: any = [
+            // data and output
+            [[0, 0], 0],
+            [[0, 1], 0],
+            [[1, 0], 0],
+            [[1, 1], 1]
+        ];
 
         data.forEach(data => {
             perceptron.addData(data[0], data[1]).learn();
@@ -28,7 +34,13 @@ export class PerceptronTest {
     @test
     public testOR() {
         let perceptron = new Perceptron();
-        let data = [[[0, 0], 0], [[0, 1], 1], [[1, 0], 1], [[1, 1], 1]];
+        let data: any = [
+            // data and output
+            [[0, 0], 0],
+            [[0, 1], 1],
+            [[1, 0], 1],
+            [[1, 1], 1]
+        ];
 
         data.forEach(data => {
             perceptron.addData(data[0], data[1]).learn();
@@ -46,11 +58,17 @@ export class PerceptronTest {
     @test
     public testFailXOR() {
         let perceptron = new Perceptron();
-        let data = [[[0, 0], 1], [[0, 1], 0], [[1, 0], 0], [[1, 1], 1]];
+        let data: any = [
+            // data and output
+            [[0, 0], 1],
+            [[0, 1], 0],
+            [[1, 0], 0],
+            [[1, 1], 1]
+        ];
 
         assert.throws(() => {
-            data.forEach(data => {
-                perceptron.addData(data[0], data[1]).learn();
+            data.forEach(_data => {
+                perceptron.addData(_data[0], _data[1]).learn();
             });
         });
     }
