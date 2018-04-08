@@ -162,4 +162,4 @@ var Backpropagation = ( function( Neurona ) {
 	};
 
 	return Backpropagation;
-})( Neurona );
+})( Neuron );

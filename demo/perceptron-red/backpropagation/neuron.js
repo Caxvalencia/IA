@@ -1,8 +1,8 @@
-var Neurona = ( function() {
+var Neuron = ( function() {
 	/**
 	 * @construtor
 	 */
-	function Neurona( _isOculta, datos ) {
+	function Neuron( _isOculta, datos ) {
 		this.factorAprendizaje = 0.5;
 		this._isOculta = _isOculta;
 
@@ -21,7 +21,7 @@ var Neurona = ( function() {
 	/**
 	 * Metodos privados
 	 */
-	Neurona.prototype.crearPeso = function() {
+	Neuron.prototype.crearPeso = function() {
 		var rangoPesos = { MIN: -5, MAX: 4.9 },
 			peso = 0,
 			rango = rangoPesos.MAX - rangoPesos.MIN;
@@ -32,7 +32,7 @@ var Neurona = ( function() {
 		return peso;
 	};
 
-	Neurona.prototype.crearPesos = function() {
+	Neuron.prototype.crearPesos = function() {
 		var i,
 			len = this._datos.length,
 			pesos = new Array( len );
@@ -46,7 +46,7 @@ var Neurona = ( function() {
 		return this;
 	};
 
-	Neurona.prototype.calcularSinapsis = function() {
+	Neuron.prototype.calcularSinapsis = function() {
 		var len = this._pesos.length, i;
 		this.sinapsis = 0;
 
@@ -60,7 +60,7 @@ var Neurona = ( function() {
 	/**
 	 * Metodos publicos
 	 */
-	Neurona.prototype.retropropagar = function() {
+	Neuron.prototype.retropropagar = function() {
 		// Error en las capas ocultas
 		this.neuronasEntrada.forEach( function( neurona, idx ) {
 			neurona.calcularErrorOculto( idx );
@@ -71,7 +71,7 @@ var Neurona = ( function() {
 		}
 	};
 
-	Neurona.prototype.reajustarPesos = function() {
+	Neuron.prototype.reajustarPesos = function() {
 		var len = this._pesos.length, i;
 		
 		for( i = 0; i < len; i++ ) {
@@ -79,18 +79,18 @@ var Neurona = ( function() {
 		}
 	};
 
-	Neurona.prototype.salida = function() {
+	Neuron.prototype.salida = function() {
 		//Funcion de activacion sigmoidal binaria
 		return 1 / ( 1 + Math.pow( Math.E, -this.sinapsis ) );
 	};
 
-	Neurona.prototype.calcularError = function( salidaDeseada ) {
+	Neuron.prototype.calcularError = function( salidaDeseada ) {
 		var salidaObtenida = this.salida();
 		this.error = ( salidaDeseada - salidaObtenida ) * ( 1 - salidaObtenida ) * salidaObtenida;
 		return this;
 	};
 
-	Neurona.prototype.calcularErrorOculto = function( idx ) {
+	Neuron.prototype.calcularErrorOculto = function( idx ) {
 		var salidaObtenida = this.salida(),
 			sumatoriaError = 0;
 
@@ -105,12 +105,12 @@ var Neurona = ( function() {
 	/**
 	 * Getters y setters
 	 */
-	Neurona.prototype.setFactorAprendizaje = function( factor ) {
+	Neuron.prototype.setFactorAprendizaje = function( factor ) {
 		this.factorAprendizaje = factor;
 		return this;
 	}
 
-	Neurona.prototype.setDatos = function( datos ) {
+	Neuron.prototype.setDatos = function( datos ) {
 		if( datos ) {
 			this._datos = [].concat( datos );
 			this._datos.push( this.umbral );
@@ -119,5 +119,5 @@ var Neurona = ( function() {
 		return this;
 	};
 
-	return Neurona;
+	return Neuron;
 })();
