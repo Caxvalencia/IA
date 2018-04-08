@@ -4,63 +4,62 @@
 
 <style>
 #perceptron {
-	width: 100%;
-	height: 100%;
-	border: 1px solid #ccc;
-	cursor: pointer;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    cursor: pointer;
 }
 </style>
 
-	<link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
 </head>
 
 <body>
-	<div class="containter">
-		<div class="row">
-			<div class="col-md-8">
-				<div class="panel panel-default">
-					<div class="col-md-9">
-						<canvas id="perceptron" resize></canvas>
-					</div>
+    <div class="containter">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="col-md-9">
+                        <canvas id="perceptron" resize></canvas>
+                    </div>
 
-					<div class="col-md-3">
-						<div class="table-responsive" style='height: 500px; overflow: auto;'>
-							<table class='table table-hover' style='cursor: pointer;'>
-								<thead>
-									<th>X<sub>1</sub></th>
-									<th>X<sub>2</sub></th>
-									<th>Y</th>
-								</thead>
+                    <div class="col-md-3">
+                        <div class="table-responsive" style='height: 500px; overflow: auto;'>
+                            <table class='table table-hover' style='cursor: pointer;'>
+                                <thead>
+                                    <th>X<sub>1</sub></th>
+                                    <th>X<sub>2</sub></th>
+                                    <th>Y</th>
+                                </thead>
 
-								<tbody class='view-data'></tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                                <tbody class='view-data'></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<script src='js/jquery-2.1.4.min.js'></script>
-	<script src='js/bootstrap.min.js'></script>
-	
-	<script src="../../dist/bundle.js"></script>
-
-	<script src="js/paper-full.min.js"></script>
+    <script src='js/jquery-2.1.4.min.js'></script>
+    <script src='js/bootstrap.min.js'></script>
+    
+    <script src="../../dist/bundle.js"></script>
+    <script src="js/paper-full.min.js"></script>
 
 <script type="text/paperscript" canvas="perceptron">
 view.scrollBy( -view.center.x, -view.center.y );
 
 new Path.Line({
-	from: new Point( -view.size._width, view.center.y ),
-	to: new Point( view.size._width, view.center.y ),
-	strokeColor: 'black'
+    from: new Point( -view.size._width, view.center.y ),
+    to: new Point( view.size._width, view.center.y ),
+    strokeColor: 'black'
 });
 
 new Path.Line({
-	from: [ view.center.x, -view.size._height ],
-	to: [ view.center.x, view.size._height ],
-	strokeColor: 'black'
+    from: [ view.center.x, -view.size._height ],
+    to: [ view.center.x, view.size._height ],
+    strokeColor: 'black'
 });
 
 var perceptron = new Perceptron();
@@ -70,61 +69,62 @@ var perceptron = new Perceptron();
 tool.distanceThreshold = 10;
 
 function fronteraDesicion( pesos, x ) {
-	return [ x, -( x * pesos[ 1 ] / pesos[ 2 ] + pesos[ 0 ] / pesos[ 2 ] ) ];
+    return [ x, -( x * pesos[ 1 ] / pesos[ 2 ] + pesos[ 0 ] / pesos[ 2 ] ) ];
 }
 
 function onMouseDown( event ) {
-	var point = event.point;
+    var point = event.point;
 
-	// Create a new path every time the mouse is clicked
-	var circle = new Path.Circle({
-		center: point,
-		radius: 4
-	});
+    // Create a new path every time the mouse is clicked
+    var circle = new Path.Circle({
+        center: point,
+        radius: 4
+    });
 
-	var data = {
-		bgClass: 'danger',
-		value: 0
-	};
+    var data = {
+        bgClass: 'danger',
+        value: 0
+    };
 
-	if( Key.isDown( 'control' ) ) {
-		circle.fillColor = '#00a';
-		data.bgClass = 'info';
-		data.value = perceptron.procesar([ point.x, point.y ]);
+    if( Key.isDown( 'control' ) ) {
+        circle.fillColor = '#00a';
+        data.bgClass = 'info';
+        data.value = perceptron.process([ point.x, point.y ]);
 
-	} else if( Key.isDown( 'shift' ) ) {
-		circle.fillColor = 'green';
-		data.bgClass = 'success';
-		data.value = 1;
+    } else if( Key.isDown( 'shift' ) ) {
+        circle.fillColor = 'green';
+        data.bgClass = 'success';
+        data.value = 1;
 
-	} else {
-		circle.fillColor = 'red';
-	}
+    } else {
+        circle.fillColor = 'red';
+    }
 
-	// circle.on( 'doubleclick', function( event ) { console.log( event )
-	// 	this.remove();
-	// });
+    // circle.on( 'doubleclick', function( event ) { console.log( event )
+    // 	this.remove();
+    // });
 
-	if( data.bgClass !== 'info' )
-		perceptron.addDatos([ point.x, point.y ], data.value ).aprender();
+    if( data.bgClass !== 'info' ) {
+        perceptron.addData([ point.x, point.y ], data.value ).learn();
+    }
 
-	var line = new Path();
-	line.add( fronteraDesicion( perceptron._pesos, -500 ) ); //view.size._width
-	line.add( fronteraDesicion( perceptron._pesos, 500 ) );
-	line.strokeColor = 'blue';
-	line.removeOnDown();
+    var line = new Path();
+    line.add( fronteraDesicion( perceptron.weights, -500 ) ); //view.size._width
+    line.add( fronteraDesicion( perceptron.weights, 500 ) );
+    line.strokeColor = 'blue';
+    line.removeOnDown();
 
-	console.log( perceptron._pesos );
+    console.log( perceptron.weights );
 
-	var dataHTML = [
-		'<tr class=' + data.bgClass + '>',
-			'<td>' + point.x + '</td>',
-			'<td>' + point.y + '</td>',
-			'<td>' + data.value + '</td>',
-		'</tr>'
-	];
+    var dataHTML = [
+        '<tr class=' + data.bgClass + '>',
+            '<td>' + point.x + '</td>',
+            '<td>' + point.y + '</td>',
+            '<td>' + data.value + '</td>',
+        '</tr>'
+    ];
 
-	$( '.view-data' ).append( dataHTML.join( '' ) );
+    $( '.view-data' ).append( dataHTML.join( '' ) );
 }
 </script>
 
