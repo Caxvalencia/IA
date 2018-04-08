@@ -9,7 +9,7 @@ export class SynapticProcessor {
     threshold: number;
     learningFactor: number;
 
-    constructor(data, expectedOutput, activationFunction: string) {
+    constructor(data: any[], expectedOutput, activationFunction: string) {
         this.learningFactor = 0.5;
         this.threshold = 1;
 
@@ -42,8 +42,8 @@ export class SynapticProcessor {
     }
 
     /**
-     * @param {number[]} weights 
-     * @returns  
+     * @param {number[]} weights
+     * @returns
      */
     calculateSynapses(weights: number[]) {
         this.synapse = 0;
@@ -61,8 +61,9 @@ export class SynapticProcessor {
         return this;
     }
 
-    setData(data) {
-        this.data = data ? [this.threshold].concat(data) : [this.threshold];
+    setData(data: any[]) {
+        data.push(this.threshold);
+        this.data = data;
 
         return this;
     }
