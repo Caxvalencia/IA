@@ -61,29 +61,28 @@ $chart.on('mousemove', function(event) {
 /**
  * PERCETRON
  */
-var perceptron = new Perceptron();
+var perceptron = new Perceptron(funcBack);
 
 perceptron
-    .funcBack(funcBack)
-    .addDatos([0, 0], 0)
-    .addDatos([0, 1], 1)
-    .addDatos([1, 0], 1)
-    .addDatos([1, 1], 1)
-    .aprender();
+    .addData([0, 0], 0)
+    .addData([0, 1], 1)
+    .addData([1, 0], 1)
+    .addData([1, 1], 1)
+    .learn();
 
 function funcBack(info) {
-    var dataChart = pesosChart.data,
-        labelInit = dataChart.labels[dataChart.labels.length - 1],
-        pesos = info._pesos,
-        lineaDePesos = [];
+    let dataChart = pesosChart.data;
+    let labelInit = dataChart.labels[dataChart.labels.length - 1];
+    let weights = this.weights;
+    let lineaDePesos = [];
 
-    for (var i = 1, len = pesos.length; i <= len; i++) {
+    for (let i = 1, len = weights.length; i <= len; i++) {
         dataChart.labels.push(labelInit + i);
     }
 
-    lineaDePesos.push(pesos[0], null, null);
+    lineaDePesos.push(weights[0], null, null);
 
-    dataChart.series[0].data = dataChart.series[0].data.concat(pesos);
+    dataChart.series[0].data = dataChart.series[0].data.concat(weights);
     dataChart.series[1].data = dataChart.series[1].data.concat(lineaDePesos);
 
     pesosChart.update({
@@ -92,4 +91,4 @@ function funcBack(info) {
     });
 }
 
-console.log(perceptron, perceptron.procesar([1, 1, 1]));
+console.log(perceptron, perceptron.process([1, 1, 1]));
