@@ -21,7 +21,7 @@ export class Perceptron {
         this.funcBack = callback || (() => {});
     }
 
-    addData(data, output) {
+    addData(data: any[], output) {
         if (data[0] === undefined) {
             return this;
         }
@@ -114,17 +114,25 @@ export class Perceptron {
         return this;
     }
 
+    private createWeight() {
+        let weight = 0;
+        let range = this.rangeWeight.MAX - this.rangeWeight.MIN;
+
+        while (!weight) {
+            weight = parseFloat(
+                (Math.random() * range + this.rangeWeight.MIN).toFixed(4)
+            );
+        }
+
+        return weight;
+    }
+
     private assignWeights() {
         let dataSize = this.synapticProcessor[0].data.length;
         let weights = new Array<number>(dataSize);
-        let range = this.rangeWeight.MAX - this.rangeWeight.MIN;
 
         for (let i = 0; i < dataSize; i++) {
-            while (!weights[i]) {
-                weights[i] = parseFloat(
-                    (Math.random() * range + this.rangeWeight.MIN).toFixed(4)
-                );
-            }
+            weights[i] = this.createWeight();
         }
 
         this.setWeights(weights);
