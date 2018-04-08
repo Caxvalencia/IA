@@ -73,4 +73,10 @@ export class SynapticProcessor {
 
         return this;
     }
+
+    setLearningFactor(learningFactor) {
+        this.learningFactor = learningFactor;
+
+        return this;
+    }
 }
