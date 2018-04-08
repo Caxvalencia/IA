@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8" />
-	<title>Retropropagacion - Capa</title>
+	<title>Backpropagation - Capa</title>
 </head>
 
 <body>
 	
 	<script src='Neurona.js'></script>
-	<script src='Retropropagacion.js'></script>
+	<script src='backpropagation.js'></script>
 
 <script>
 /**
@@ -21,7 +21,7 @@ var XOR = [
 	{ 'valor': [ 1, 1 ], 'salida': 0 }
 ];
 
-var func_XOR = new Retropropagacion();
+var func_XOR = new Backpropagation();
 
 func_XOR
 	.addCapa( 2 ) // Entrada o primer capa oculta

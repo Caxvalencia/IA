@@ -1,10 +1,10 @@
-var Retropropagacion = ( function( Neurona ) {
+var Backpropagation = ( function( Neurona ) {
 	"use strict";
 
 	/**
 	 * @construtor
 	 */
-	function Retropropagacion() {
+	function Backpropagation() {
 		this.capas = [];
 		this.factorAprendizaje = 0.25;
 		this.error = 0;
@@ -17,7 +17,7 @@ var Retropropagacion = ( function( Neurona ) {
 	/**
 	 * Metodos privados
 	 */
-	Retropropagacion.prototype.propagarDatos = function( datos ) {
+	Backpropagation.prototype.propagarDatos = function( datos ) {
 		var salidas = [],
 			datosValor = datos.valor;
 
@@ -49,7 +49,7 @@ var Retropropagacion = ( function( Neurona ) {
 	/**
 	 * Metodos publicos
 	 */
-	Retropropagacion.prototype.aprender = function( datos ) {
+	Backpropagation.prototype.aprender = function( datos ) {
 		var _aprender = function( self ) {
 			const indiceUltimaCapa = self.capas.length - 1;
 			var sumaErrores = 0;
@@ -96,7 +96,7 @@ var Retropropagacion = ( function( Neurona ) {
 		return this;
 	};
 
-	Retropropagacion.prototype.addCapa = function( cantNeuronas ) {
+	Backpropagation.prototype.addCapa = function( cantNeuronas ) {
 		var self = this,
 			i,
 			capa = [],
@@ -126,7 +126,7 @@ var Retropropagacion = ( function( Neurona ) {
 		return self;
 	};
 
-	Retropropagacion.prototype.addNeurona = function( capa, posicion ) {
+	Backpropagation.prototype.addNeurona = function( capa, posicion ) {
 		var neurona = new Neurona();
 		neurona.setFactorAprendizaje( self.factorAprendizaje );
 
@@ -134,7 +134,7 @@ var Retropropagacion = ( function( Neurona ) {
 		else this.capas[ capa ].push( neurona );
 	};
 
-	Retropropagacion.prototype.procesar = function( datos ) {
+	Backpropagation.prototype.procesar = function( datos ) {
 		var salidas = [];
 
 		this.capas.forEach( function( capa ) {
@@ -156,10 +156,10 @@ var Retropropagacion = ( function( Neurona ) {
 		});
 	};
 
-	Retropropagacion.prototype.setError = function( error ) {
+	Backpropagation.prototype.setError = function( error ) {
 		this.error = error;
 		return this;
 	};
 
-	return Retropropagacion;
+	return Backpropagation;
 })( Neurona );
