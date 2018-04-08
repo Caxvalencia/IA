@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<style>
-#perceptron {
-    width: 100%;
-    height: 100%;
-    border: 1px solid #ccc;
-    cursor: pointer;
-}
-</style>
+    <style>
+        #perceptron {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+    </style>
 
     <link rel="stylesheet" href="css/bootstrap.min.css" />
 </head>
@@ -17,7 +18,7 @@
 <body>
     <div class="containter">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="col-md-9">
                         <canvas id="perceptron" resize></canvas>
@@ -27,14 +28,39 @@
                         <div class="table-responsive" style='height: 500px; overflow: auto;'>
                             <table class='table table-hover' style='cursor: pointer;'>
                                 <thead>
-                                    <th>X<sub>1</sub></th>
-                                    <th>X<sub>2</sub></th>
+                                    <th>X
+                                        <sub>1</sub>
+                                    </th>
+                                    <th>X
+                                        <sub>2</sub>
+                                    </th>
                                     <th>Y</th>
                                 </thead>
 
                                 <tbody class='view-data'></tbody>
                             </table>
                         </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <h3>
+                            <p>
+                                <code>Clic</code>: Add point
+                                <span style="color: red">red</span>
+                            </p>
+
+                            <p>
+                                <code>Shift</code> +
+                                <code>Clic</code>: Add point
+                                <span style="color: green">green</span>
+                            </p>
+
+                            <p>
+                                <code>Ctrl</code> +
+                                <code>Clic</code>: Add point of test
+                                <span style="color: #00a;">blue</span>
+                            </p>
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -43,11 +69,11 @@
 
     <script src='js/jquery-2.1.4.min.js'></script>
     <script src='js/bootstrap.min.js'></script>
-    
+
     <script src="../../dist/bundle.js"></script>
     <script src="js/paper-full.min.js"></script>
 
-<script type="text/paperscript" canvas="perceptron">
+    <script type="text/paperscript" canvas="perceptron">
 view.scrollBy( -view.center.x, -view.center.y );
 
 new Path.Line({
@@ -124,9 +150,10 @@ function onMouseDown( event ) {
         '</tr>'
     ];
 
-    $( '.view-data' ).append( dataHTML.join( '' ) );
+    $( '.view-data' ).prepend( dataHTML.join( '' ) );
 }
 </script>
 
 </body>
+
 </html>
