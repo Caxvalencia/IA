@@ -1,3 +1,4 @@
 import { Perceptron } from './perceptron';
+import { Backpropagation } from './backpropagation';
 
-export { Perceptron };
+export { Perceptron, Backpropagation };
