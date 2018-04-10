@@ -22,16 +22,9 @@ export class Perceptron {
     }
 
     addData(data: any[], output) {
-        if (data[0] === undefined) {
-            return this;
-        }
-
         if (data[0][0] === undefined) {
-            this.synapticProcessor.push(
-                new SynapticProcessor(data, output, this.activationFunction)
-            );
-
-            return this;
+            data = [data];
+            output = [output];
         }
 
         for (let i = 0; i < data.length; i++) {
@@ -90,11 +83,11 @@ export class Perceptron {
         return this;
     }
 
-    process(data, activationFunction?) {
+    process(data) {
         let synapticProcessor = new SynapticProcessor(
             data,
             null,
-            activationFunction
+            this.activationFunction
         );
 
         synapticProcessor.calculateSynapses(this.weights);
