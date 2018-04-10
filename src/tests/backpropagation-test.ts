@@ -22,7 +22,7 @@ export class PerceptronTest {
         func_XOR
             .addLayer(2) // Entrada o primer capa oculta
             .addLayer(1) // Salida o ultima capa
-            .aprender(XOR);
+            .learn(XOR);
 
         var results = [
             func_XOR.process([0, 0])[0],
@@ -31,7 +31,7 @@ export class PerceptronTest {
             func_XOR.process([1, 1])[0]
         ];
 
-        assert.isTrue(results[0] === 0, [0, 0] + '->' + results[0]);
+        assert.isTrue(results[0] === 0, [0, 0] + ' -> ' + results[0]);
 
         // console.log('XOR' + '\n',
         //     , , '\n',

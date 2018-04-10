@@ -58,17 +58,17 @@ export class Backpropagation {
     /**
      * Metodos publicos
      */
-    aprender(datos) {
-        let _aprender = function(self) {
-            const indiceUltimaCapa = self.capas.length - 1;
-            let sumaErrores = 0;
+    learn(datas) {
+        let learnCallback = () => {
+            const indexLastLayer = this.layers.length - 1;
+            let sumErrors = 0;
 
-            datos.forEach(dato => {
+            datas.forEach(data => {
                 // Forwardpropagation
-                self.propagarDatos(dato);
+                this.propagarDatos(data);
 
                 // Backpropagation
-                self.capas[indiceUltimaCapa].forEach(function(neurona: Neuron) {
+                this.layers[indexLastLayer].forEach((neurona: Neuron) => {
                     //Solo con una neurona tenemos acceso a todas las otras
                     neurona.retropropagar();
 
@@ -76,20 +76,20 @@ export class Backpropagation {
                 });
 
                 //Reajustar pesos
-                self.capas.forEach(function(capa) {
-                    capa.forEach(function(neurona: Neuron) {
+                this.layers.forEach(capa => {
+                    capa.forEach((neurona: Neuron) => {
                         neurona.reajustarPesos();
-                        sumaErrores += Math.pow(neurona.error, 2);
+                        sumErrors += Math.pow(neurona.error, 2);
                     });
                 });
 
-                sumaErrores *= 0.5;
+                sumErrors *= 0.5;
             });
 
-            self.setError(sumaErrores);
+            this.setError(sumErrors);
         };
 
-        _aprender(this);
+        learnCallback();
 
         while (this.error > 0.0001) {
             this.counterErrors++;
@@ -99,7 +99,7 @@ export class Backpropagation {
                 return this;
             }
 
-            _aprender(this);
+            learnCallback();
         }
 
         this.counterErrors = 0;
