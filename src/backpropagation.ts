@@ -7,7 +7,7 @@ export class Backpropagation {
     funcionActivacion: string;
     error: number;
     factorAprendizaje: number;
-    layers: any[];
+    layers: Neuron[][];
 
     /**
      * @construtor
@@ -22,32 +22,29 @@ export class Backpropagation {
         this.LIMIT_ERRORS = 100000;
     }
 
-    /**
-     * Metodos privados
-     */
-    propagarDatos(datos) {
+    forwardPropagationData(data) {
         let outputs = [];
-        let datosValor = datos.valor;
+        let values = data.valor;
 
-        this.layers.forEach(capa => {
+        this.layers.forEach((layer: Neuron[]) => {
             if (outputs.length > 0) {
-                datosValor = outputs;
+                values = outputs;
                 outputs = [];
             }
 
-            capa.forEach((neurona: Neuron) => {
-                neurona.setData(datosValor);
+            layer.forEach((neuron: Neuron) => {
+                neuron.setData(values);
 
-                if (!neurona.weights) {
-                    neurona.assignWeights();
+                if (!neuron.weights) {
+                    neuron.assignWeights();
                 }
 
-                neurona.calculateSynapses();
+                neuron.calculateSynapses();
 
-                if (neurona.outputNeurons.length > 0) {
-                    outputs.push(neurona.output());
+                if (neuron.outputNeurons.length > 0) {
+                    outputs.push(neuron.output());
                 } else {
-                    neurona.calculateError(datos.salida);
+                    neuron.calculateError(data.salida);
                 }
             });
         });
@@ -55,9 +52,6 @@ export class Backpropagation {
         return this;
     }
 
-    /**
-     * Metodos publicos
-     */
     learn(datas) {
         let learnCallback = () => {
             const indexLastLayer = this.layers.length - 1;
@@ -65,7 +59,7 @@ export class Backpropagation {
 
             datas.forEach(data => {
                 // Forwardpropagation
-                this.propagarDatos(data);
+                this.forwardPropagationData(data);
 
                 this.layers[indexLastLayer].forEach((neurona: Neuron) => {
                     //Solo con una neurona tenemos acceso a todas las otras
