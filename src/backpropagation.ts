@@ -157,12 +157,7 @@ export class Backpropagation {
             }
 
             layer.forEach((neuron: Neuron) => {
-                outputs.push(
-                    neuron
-                        .setData(data)
-                        .calculateSynapses()
-                        .output()
-                );
+                outputs.push(neuron.process(data));
             });
         });
 
