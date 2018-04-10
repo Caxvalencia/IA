@@ -1,4 +1,4 @@
-import { Perceptron as Neurona } from './perceptron';
+import { Neuron } from './neuron';
 
 'use strict';
 export class Backpropagation {
@@ -35,10 +35,12 @@ export class Backpropagation {
                 salidas = [];
             }
 
-            capa.forEach(function(neurona) {
-                neurona.setDatos(datosValor);
+            capa.forEach(function(neurona: Neuron) {
+                neurona.addData(datosValor);
 
-                if (!neurona._pesos) neurona.crearPesos();
+                if (!neurona.weights) {
+                    neurona.assignWeights();
+                }
 
                 neurona.calcularSinapsis();
 
@@ -62,13 +64,14 @@ export class Backpropagation {
             var sumaErrores = 0;
 
             datos.forEach(function(dato) {
-                // Propagacion
+                // Forwardpropagation
                 self.propagarDatos(dato);
 
-                // Retropropagacion
-                self.capas[indiceUltimaCapa].forEach(function(neurona) {
+                // Backpropagation
+                self.capas[indiceUltimaCapa].forEach(function(neurona: Neuron) {
                     //Solo con una neurona tenemos acceso a todas las otras
                     neurona.retropropagar();
+                    
                     return false;
                 });
 
@@ -100,26 +103,25 @@ export class Backpropagation {
         }
 
         this.counterErrors = 0;
+
         return this;
     }
 
     addCapa(cantNeuronas) {
-        var self = this,
-            i,
-            capa = [],
-            tieneCapas = self.capas.length > 0;
+        let capa: Neuron[] = [];
+        let tieneCapas: boolean = this.capas.length > 0;
 
-        for (i = 0; i < cantNeuronas; i++) {
-            capa[i] = new Neurona(tieneCapas);
-            capa[i].setFactorAprendizaje(self.factorAprendizaje);
+        for (let i = 0; i < cantNeuronas; i++) {
+            capa[i] = new Neuron(tieneCapas);
+            capa[i].setLearningFactor(this.factorAprendizaje);
         }
 
-        var indiceNuevaCapa = self.capas.push(capa) - 1;
-        var capaAnterior = self.capas[indiceNuevaCapa - 1];
+        var indiceNuevaCapa = this.capas.push(capa) - 1;
+        var capaAnterior = this.capas[indiceNuevaCapa - 1];
 
         // Verificar si existe capa anterior
         if (capaAnterior) {
-            // Apuntar con cada neurona de la nueva capa a la anterior
+            // Apuntar con cada Neuron de la nueva capa a la anterior
             capa.forEach(function(neurona) {
                 neurona.neuronasEntrada = capaAnterior;
             });
@@ -130,43 +132,49 @@ export class Backpropagation {
             });
         }
 
-        return self;
+        return this;
     }
 
     addNeurona(capa, posicion) {
-        var neurona = new Neurona();
-        // neurona.setFactorAprendizaje(self.factorAprendizaje);
+        var neurona = new Neuron();
+        neurona.setLearningFactor(this.factorAprendizaje);
 
-        if (posicion) this.capas[capa][posicion] = neurona;
-        else this.capas[capa].push(neurona);
+        if (posicion) {
+            this.capas[capa][posicion] = neurona;
+
+            return;
+        }
+
+        this.capas[capa].push(neurona);
     }
 
-    procesar(datos) {
-        var salidas = [];
+    process(data) {
+        let outputs = [];
 
-        this.capas.forEach(function(capa) {
-            if (salidas.length > 0) {
-                datos = salidas;
-                salidas = [];
+        this.capas.forEach(function(layer) {
+            if (outputs.length > 0) {
+                data = outputs;
+                outputs = [];
             }
 
-            capa.forEach(function(neurona) {
-                salidas.push(
-                    neurona
-                        .setDatos(datos)
+            layer.forEach(function(neuron: Neuron) {
+                outputs.push(
+                    neuron
+                        .addData(data)
                         .calcularSinapsis()
                         .salida()
                 );
             });
         });
 
-        return salidas.map(function(salida) {
-            return Math.round(salida);
+        return outputs.map(output => {
+            return Math.round(output);
         });
     }
 
     setError(error) {
         this.error = error;
+
         return this;
     }
 }
