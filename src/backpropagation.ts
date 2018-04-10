@@ -26,8 +26,8 @@ export class Backpropagation {
      * Metodos privados
      */
     propagarDatos(datos) {
-        var outputs = [],
-            datosValor = datos.valor;
+        let outputs = [];
+        let datosValor = datos.valor;
 
         this.capas.forEach(function(capa) {
             if (outputs.length > 0) {
@@ -59,7 +59,7 @@ export class Backpropagation {
      * Metodos publicos
      */
     aprender(datos) {
-        var _aprender = function(self) {
+        let _aprender = function(self) {
             const indiceUltimaCapa = self.capas.length - 1;
             let sumaErrores = 0;
 
@@ -71,7 +71,7 @@ export class Backpropagation {
                 self.capas[indiceUltimaCapa].forEach(function(neurona: Neuron) {
                     //Solo con una neurona tenemos acceso a todas las otras
                     neurona.retropropagar();
-                    
+
                     return false;
                 });
 
@@ -116,8 +116,8 @@ export class Backpropagation {
             capa[i].setLearningFactor(this.factorAprendizaje);
         }
 
-        var indiceNuevaCapa = this.capas.push(capa) - 1;
-        var capaAnterior = this.capas[indiceNuevaCapa - 1];
+        let indiceNuevaCapa = this.capas.push(capa) - 1;
+        let capaAnterior = this.capas[indiceNuevaCapa - 1];
 
         // Verificar si existe capa anterior
         if (capaAnterior) {
@@ -136,7 +136,7 @@ export class Backpropagation {
     }
 
     addNeurona(capa, posicion) {
-        var neurona = new Neuron();
+        let neurona = new Neuron();
         neurona.setLearningFactor(this.factorAprendizaje);
 
         if (posicion) {
