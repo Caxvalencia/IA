@@ -33,7 +33,6 @@ export class Neuron {
 
     process(data: any[]) {
         let synapticProcessor = new SynapticProcessor(data, null, 'sigmoidal');
-
         synapticProcessor.calculateSynapses(this.weights);
 
         return synapticProcessor.output();
@@ -52,7 +51,7 @@ export class Neuron {
     /**
      * Metodos publicos
      */
-    retropropagar() {
+    backpropagation() {
         // Error en las capas ocultas
         this.inputNeurons.forEach(function(neurona: Neuron, idx) {
             neurona.calculateHiddenError(idx);

@@ -67,10 +67,9 @@ export class Backpropagation {
                 // Forwardpropagation
                 this.propagarDatos(data);
 
-                // Backpropagation
                 this.layers[indexLastLayer].forEach((neurona: Neuron) => {
                     //Solo con una neurona tenemos acceso a todas las otras
-                    neurona.retropropagar();
+                    neurona.backpropagation();
 
                     return false;
                 });
