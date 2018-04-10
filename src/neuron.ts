@@ -82,14 +82,15 @@ export class Neuron {
     }
 
     calculateHiddenError(idx) {
-        var salidaObtenida = this.output(),
-            sumatoriaError = 0;
+        let output = this.output();
+        let sumError = 0;
 
-        this.outputNeurons.forEach(function(neurona: Neuron) {
-            sumatoriaError += neurona.error * neurona.weights[idx];
+        this.outputNeurons.forEach((neurona: Neuron) => {
+            sumError += neurona.error * neurona.weights[idx];
         });
 
-        this.error = sumatoriaError * (1 - salidaObtenida) * salidaObtenida;
+        this.error = sumError * (1 - output) * output;
+
         return this;
     }
 
