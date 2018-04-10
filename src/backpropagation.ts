@@ -7,13 +7,13 @@ export class Backpropagation {
     funcionActivacion: string;
     error: number;
     factorAprendizaje: number;
-    capas: any[];
+    layers: any[];
 
     /**
      * @construtor
      */
     constructor() {
-        this.capas = [];
+        this.layers = [];
         this.factorAprendizaje = 0.25;
         this.error = 0;
         this.funcionActivacion = 'sigmoidal';
@@ -29,7 +29,7 @@ export class Backpropagation {
         let outputs = [];
         let datosValor = datos.valor;
 
-        this.capas.forEach(capa => {
+        this.layers.forEach(capa => {
             if (outputs.length > 0) {
                 datosValor = outputs;
                 outputs = [];
@@ -109,15 +109,15 @@ export class Backpropagation {
 
     addLayer(cantNeuronas) {
         let capa: Neuron[] = [];
-        let tieneCapas: boolean = this.capas.length > 0;
+        let tieneCapas: boolean = this.layers.length > 0;
 
         for (let i = 0; i < cantNeuronas; i++) {
             capa[i] = new Neuron(tieneCapas);
             capa[i].setLearningFactor(this.factorAprendizaje);
         }
 
-        let indiceNuevaCapa = this.capas.push(capa) - 1;
-        let capaAnterior = this.capas[indiceNuevaCapa - 1];
+        let indiceNuevaCapa = this.layers.push(capa) - 1;
+        let capaAnterior = this.layers[indiceNuevaCapa - 1];
 
         // Verificar si existe capa anterior
         if (capaAnterior) {
@@ -140,18 +140,18 @@ export class Backpropagation {
         neurona.setLearningFactor(this.factorAprendizaje);
 
         if (posicion) {
-            this.capas[capa][posicion] = neurona;
+            this.layers[capa][posicion] = neurona;
 
             return;
         }
 
-        this.capas[capa].push(neurona);
+        this.layers[capa].push(neurona);
     }
 
     process(data) {
         let outputs = [];
 
-        this.capas.forEach(layer => {
+        this.layers.forEach(layer => {
             if (outputs.length > 0) {
                 data = outputs;
                 outputs = [];
