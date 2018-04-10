@@ -29,13 +29,13 @@ export class Backpropagation {
         let outputs = [];
         let datosValor = datos.valor;
 
-        this.capas.forEach(function(capa) {
+        this.capas.forEach(capa => {
             if (outputs.length > 0) {
                 datosValor = outputs;
                 outputs = [];
             }
 
-            capa.forEach(function(neurona: Neuron) {
+            capa.forEach((neurona: Neuron) => {
                 neurona.setData(datosValor);
 
                 if (!neurona.weights) {
@@ -63,7 +63,7 @@ export class Backpropagation {
             const indiceUltimaCapa = self.capas.length - 1;
             let sumaErrores = 0;
 
-            datos.forEach(function(dato) {
+            datos.forEach(dato => {
                 // Forwardpropagation
                 self.propagarDatos(dato);
 
@@ -77,7 +77,7 @@ export class Backpropagation {
 
                 //Reajustar pesos
                 self.capas.forEach(function(capa) {
-                    capa.forEach(function(neurona) {
+                    capa.forEach(function(neurona: Neuron) {
                         neurona.reajustarPesos();
                         sumaErrores += Math.pow(neurona.error, 2);
                     });
@@ -122,12 +122,12 @@ export class Backpropagation {
         // Verificar si existe capa anterior
         if (capaAnterior) {
             // Apuntar con cada Neuron de la nueva capa a la anterior
-            capa.forEach(function(neurona) {
+            capa.forEach(neurona => {
                 neurona.inputNeurons = capaAnterior;
             });
 
             // Apuntar con cada neurona de la capa anterior a la nueva capa
-            capaAnterior.forEach(function(neurona) {
+            capaAnterior.forEach(neurona => {
                 neurona.neuronasSalida = capa;
             });
         }
@@ -151,13 +151,13 @@ export class Backpropagation {
     process(data) {
         let outputs = [];
 
-        this.capas.forEach(function(layer) {
+        this.capas.forEach(layer => {
             if (outputs.length > 0) {
                 data = outputs;
                 outputs = [];
             }
 
-            layer.forEach(function(neuron: Neuron) {
+            layer.forEach((neuron: Neuron) => {
                 outputs.push(
                     neuron
                         .setData(data)
