@@ -100,28 +100,28 @@ export class Backpropagation {
         return this;
     }
 
-    addLayer(cantNeuronas) {
-        let capa: Neuron[] = [];
-        let tieneCapas: boolean = this.layers.length > 0;
+    addLayer(numberNeurons) {
+        let layer: Neuron[] = [];
+        let isHidden: boolean = this.layers.length > 0;
 
-        for (let i = 0; i < cantNeuronas; i++) {
-            capa[i] = new Neuron(tieneCapas);
-            capa[i].setLearningFactor(this.factorAprendizaje);
+        for (let i = 0; i < numberNeurons; i++) {
+            layer[i] = new Neuron(isHidden);
+            layer[i].setLearningFactor(this.factorAprendizaje);
         }
 
-        let indiceNuevaCapa = this.layers.push(capa) - 1;
-        let capaAnterior = this.layers[indiceNuevaCapa - 1];
+        let indexNewLayer = this.layers.push(layer) - 1;
+        let beforeLayer = this.layers[indexNewLayer - 1];
 
         // Verificar si existe capa anterior
-        if (capaAnterior) {
+        if (beforeLayer) {
             // Apuntar con cada Neuron de la nueva capa a la anterior
-            capa.forEach(neurona => {
-                neurona.inputNeurons = capaAnterior;
+            layer.forEach((neuron: Neuron) => {
+                neuron.inputNeurons = beforeLayer;
             });
 
             // Apuntar con cada neurona de la capa anterior a la nueva capa
-            capaAnterior.forEach(neurona => {
-                neurona.neuronasSalida = capa;
+            beforeLayer.forEach(neurona => {
+                neurona.outputNeurons = layer;
             });
         }
 
