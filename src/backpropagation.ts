@@ -26,28 +26,28 @@ export class Backpropagation {
      * Metodos privados
      */
     propagarDatos(datos) {
-        var salidas = [],
+        var outputs = [],
             datosValor = datos.valor;
 
         this.capas.forEach(function(capa) {
-            if (salidas.length > 0) {
-                datosValor = salidas;
-                salidas = [];
+            if (outputs.length > 0) {
+                datosValor = outputs;
+                outputs = [];
             }
 
             capa.forEach(function(neurona: Neuron) {
-                neurona.addData(datosValor);
+                neurona.setData(datosValor);
 
                 if (!neurona.weights) {
                     neurona.assignWeights();
                 }
 
-                neurona.calcularSinapsis();
+                neurona.calculateSynapses();
 
-                if (neurona.neuronasSalida.length > 0) {
-                    salidas.push(neurona.salida());
+                if (neurona.outputNeurons.length > 0) {
+                    outputs.push(neurona.output());
                 } else {
-                    neurona.calcularError(datos.salida);
+                    neurona.calculateError(datos.salida);
                 }
             });
         });
@@ -61,7 +61,7 @@ export class Backpropagation {
     aprender(datos) {
         var _aprender = function(self) {
             const indiceUltimaCapa = self.capas.length - 1;
-            var sumaErrores = 0;
+            let sumaErrores = 0;
 
             datos.forEach(function(dato) {
                 // Forwardpropagation
@@ -123,7 +123,7 @@ export class Backpropagation {
         if (capaAnterior) {
             // Apuntar con cada Neuron de la nueva capa a la anterior
             capa.forEach(function(neurona) {
-                neurona.neuronasEntrada = capaAnterior;
+                neurona.inputNeurons = capaAnterior;
             });
 
             // Apuntar con cada neurona de la capa anterior a la nueva capa
@@ -160,9 +160,9 @@ export class Backpropagation {
             layer.forEach(function(neuron: Neuron) {
                 outputs.push(
                     neuron
-                        .addData(data)
-                        .calcularSinapsis()
-                        .salida()
+                        .setData(data)
+                        .calculateSynapses()
+                        .output()
                 );
             });
         });

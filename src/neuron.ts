@@ -1,70 +1,39 @@
 export class Neuron {
-    _datos: any[];
-    umbral: number;
-    neuronasEntrada: any[];
-    neuronasSalida: any[];
+    data: any[];
+    threshold: number;
+    inputNeurons: any[];
+    outputNeurons: any[];
     error: number;
-    sinapsis: number;
+    synapse: number;
     weights: any;
     learningFactor: number;
-    _isOculta: any;
+    isHidden: boolean;
+    rangeWeight: { MIN: number; MAX: number };
 
     /**
      * @construtor
      */
-    constructor(isHidden = false, data?) {
+    constructor(isHidden = false) {
+        this.rangeWeight = { MIN: -5, MAX: 4.9 };
         this.learningFactor = 0.5;
-        this._isOculta = isHidden;
+        this.isHidden = isHidden;
 
         this.weights = null;
-        this.sinapsis = 0;
+        this.synapse = 0;
         this.error = 0;
 
-        this.neuronasSalida = [];
-        this.neuronasEntrada = [];
+        this.outputNeurons = [];
+        this.inputNeurons = [];
 
-        this.umbral = 1;
-        this._datos = [];
-        this.addData(data);
+        this.threshold = 1;
+        this.data = [];
     }
 
-    /**
-     * Metodos privados
-     */
-    crearPeso() {
-        var rangoPesos = { MIN: -5, MAX: 4.9 },
-            peso = 0,
-            rango = rangoPesos.MAX - rangoPesos.MIN;
+    calculateSynapses() {
+        this.synapse = 0;
 
-        while (!peso)
-            peso = parseFloat(
-                (Math.random() * rango + rangoPesos.MIN).toFixed(4)
-            );
-
-        return peso;
-    }
-
-    assignWeights() {
-        var i,
-            len = this._datos.length,
-            pesos = new Array(len);
-
-        for (i = 0; i < len; i++) {
-            while (!pesos[i]) pesos[i] = this.crearPeso();
-        }
-
-        this.weights = pesos;
-
-        return this;
-    }
-
-    calcularSinapsis() {
-        var len = this.weights.length,
-            i;
-        this.sinapsis = 0;
-
-        for (i = 0; i < len; i++) {
-            this.sinapsis += this._datos[i] * this.weights[i];
+        for (let i = 0; i < this.weights.length; i++) {
+            this.synapse += this.data[i] * this.weights[i];
         }
 
         return this;
@@ -75,12 +44,12 @@ export class Neuron {
      */
     retropropagar() {
         // Error en las capas ocultas
-        this.neuronasEntrada.forEach(function(neurona, idx) {
-            neurona.calcularErrorOculto(idx);
+        this.inputNeurons.forEach(function(neurona: Neuron, idx) {
+            neurona.calculateHiddenError(idx);
         });
 
-        if (this.neuronasEntrada.length > 0) {
-            this.neuronasEntrada[0].retropropagar();
+        if (this.inputNeurons.length > 0) {
+            this.inputNeurons[0].retropropagar();
         }
     }
 
@@ -91,17 +60,17 @@ export class Neuron {
         for (i = 0; i < len; i++) {
             this.weights[i] =
                 this.weights[i] +
-                this.learningFactor * this.error * this._datos[i];
+                this.learningFactor * this.error * this.data[i];
         }
     }
 
-    salida() {
+    output() {
         //Funcion de activacion sigmoidal binaria
-        return 1 / (1 + Math.pow(Math.E, -this.sinapsis));
+        return 1 / (1 + Math.pow(Math.E, -this.synapse));
     }
 
-    calcularError(salidaDeseada) {
-        let salidaObtenida = this.salida();
+    calculateError(salidaDeseada) {
+        let salidaObtenida = this.output();
 
         this.error =
             (salidaDeseada - salidaObtenida) *
@@ -111,11 +80,11 @@ export class Neuron {
         return this;
     }
 
-    calcularErrorOculto(idx) {
-        var salidaObtenida = this.salida(),
+    calculateHiddenError(idx) {
+        var salidaObtenida = this.output(),
             sumatoriaError = 0;
 
-        this.neuronasSalida.forEach(function(neurona: Neuron) {
+        this.outputNeurons.forEach(function(neurona: Neuron) {
             sumatoriaError += neurona.error * neurona.weights[idx];
         });
 
@@ -129,11 +98,41 @@ export class Neuron {
         return this;
     }
 
-    addData(datos) {
-        if (datos) {
-            this._datos = [].concat(datos);
-            this._datos.push(this.umbral);
+    setData(data: any[]) {
+        data.push(this.threshold);
+        this.data = data;
+
+        return this;
+    }
+
+    private createWeight() {
+        let weight = 0;
+        let range = this.rangeWeight.MAX - this.rangeWeight.MIN;
+
+        while (!weight) {
+            weight = parseFloat(
+                (Math.random() * range + this.rangeWeight.MIN).toFixed(4)
+            );
         }
+
+        return weight;
+    }
+
+    public assignWeights() {
+        let dataSize = this.data.length;
+        let weights = new Array<number>(dataSize);
+
+        for (let i = 0; i < dataSize; i++) {
+            weights[i] = this.createWeight();
+        }
+
+        this.setWeights(weights);
+
+        return this;
+    }
+
+    setWeights(weights) {
+        this.weights = weights;
 
         return this;
     }
