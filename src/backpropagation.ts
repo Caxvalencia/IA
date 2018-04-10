@@ -107,7 +107,7 @@ export class Backpropagation {
         return this;
     }
 
-    addCapa(cantNeuronas) {
+    addLayer(cantNeuronas) {
         let capa: Neuron[] = [];
         let tieneCapas: boolean = this.capas.length > 0;
 

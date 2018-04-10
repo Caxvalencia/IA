@@ -20,8 +20,8 @@ export class PerceptronTest {
         var func_XOR = new Backpropagation();
 
         func_XOR
-            .addCapa(2) // Entrada o primer capa oculta
-            .addCapa(1) // Salida o ultima capa
+            .addLayer(2) // Entrada o primer capa oculta
+            .addLayer(1) // Salida o ultima capa
             .aprender(XOR);
 
         var results = [
