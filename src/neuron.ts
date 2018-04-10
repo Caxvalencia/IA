@@ -53,12 +53,12 @@ export class Neuron {
      */
     backpropagation() {
         // Error en las capas ocultas
-        this.inputNeurons.forEach(function(neurona: Neuron, idx) {
+        this.inputNeurons.forEach((neurona: Neuron, idx) => {
             neurona.calculateHiddenError(idx);
         });
 
         if (this.inputNeurons.length > 0) {
-            this.inputNeurons[0].retropropagar();
+            this.inputNeurons[0].backpropagation();
         }
     }
 
