@@ -1,3 +1,5 @@
+import { SynapticProcessor } from './synaptic-processor';
+
 export class Neuron {
     data: any[];
     threshold: number;
@@ -29,6 +31,14 @@ export class Neuron {
         this.data = [];
     }
 
+    process(data: any[]) {
+        let synapticProcessor = new SynapticProcessor(data, null, 'sigmoidal');
+
+        synapticProcessor.calculateSynapses(this.weights);
+
+        return synapticProcessor.output();
+    }
+
     calculateSynapses() {
         this.synapse = 0;
 
@@ -54,13 +64,8 @@ export class Neuron {
     }
 
     reajustarPesos() {
-        var len = this.weights.length,
-            i;
-
-        for (i = 0; i < len; i++) {
-            this.weights[i] =
-                this.weights[i] +
-                this.learningFactor * this.error * this.data[i];
+        for (let i = 0; i < this.weights.length; i++) {
+            this.weights[i] += this.learningFactor * this.error * this.data[i];
         }
     }
 
@@ -69,13 +74,9 @@ export class Neuron {
         return 1 / (1 + Math.pow(Math.E, -this.synapse));
     }
 
-    calculateError(salidaDeseada) {
-        let salidaObtenida = this.output();
-
-        this.error =
-            (salidaDeseada - salidaObtenida) *
-            (1 - salidaObtenida) *
-            salidaObtenida;
+    calculateError(expectedOutput) {
+        let output = this.output();
+        this.error = (expectedOutput - output) * (1 - output) * output;
 
         return this;
     }
