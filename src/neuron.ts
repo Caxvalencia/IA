@@ -163,8 +163,8 @@ export class Neuron {
         return weight;
     }
 
-    public assignWeights() {
-        let dataSize = this.data.length;
+    private assignWeights() {
+        let dataSize = this.synapticProcessor[0].data.length;
         let weights = new Array<number>(dataSize);
 
         for (let i = 0; i < dataSize; i++) {
