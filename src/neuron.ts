@@ -2,7 +2,6 @@ import { SynapticProcessor } from './synaptic-processor';
 
 export class Neuron {
     activationFunction: string;
-    data: any[];
     threshold: number;
     inputNeurons: any[];
     outputNeurons: any[];
@@ -31,7 +30,6 @@ export class Neuron {
         this.inputNeurons = [];
 
         this.threshold = 1;
-        this.data = [];
         this.activationFunction = 'sigmoidal';
     }
 
@@ -139,13 +137,6 @@ export class Neuron {
 
     setLearningFactor(learningFactor) {
         this.learningFactor = learningFactor;
-
-        return this;
-    }
-
-    setData(data: any[]) {
-        data.push(this.threshold);
-        this.data = data;
 
         return this;
     }
