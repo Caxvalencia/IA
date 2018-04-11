@@ -12,14 +12,14 @@ export class Neuron {
     learningFactor: number;
     isHidden: boolean;
     rangeWeight: { MIN: number; MAX: number };
-    synapticProcessor: SynapticProcessor[];    
+    synapticProcessor: SynapticProcessor[];
 
     /**
      * @construtor
      */
     constructor(isHidden = false) {
         this.rangeWeight = { MIN: -5, MAX: 4.9 };
-        this.synapticProcessor = [];        
+        this.synapticProcessor = [];
         this.learningFactor = 0.5;
         this.isHidden = isHidden;
 
@@ -112,8 +112,16 @@ export class Neuron {
     }
 
     output() {
-        //Funcion de activacion sigmoidal binaria
-        return 1 / (1 + Math.pow(Math.E, -this.synapse));
+        let output = [];
+        let synapticProcessor: SynapticProcessor = null;
+
+        for (let i = 0; i < this.synapticProcessor.length; i++) {
+            synapticProcessor = this.synapticProcessor[i];
+
+            output.push(synapticProcessor.output());
+        }
+
+        return output;
     }
 
     calculateHiddenError(idx) {
