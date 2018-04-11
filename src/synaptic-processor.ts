@@ -61,6 +61,13 @@ export class SynapticProcessor {
         return this;
     }
 
+    calculateErrorDerivated() {
+        let output = this.output();
+        this.error = (this.expectedOutput - output) * (1 - output) * output;
+
+        return this;
+    }
+
     setData(data: any[]) {
         data.push(this.threshold);
         this.data = data;
