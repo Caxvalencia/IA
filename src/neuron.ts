@@ -60,16 +60,6 @@ export class Neuron {
         return synapticProcessor.output();
     }
 
-    calculateSynapses() {
-        this.synapse = 0;
-
-        for (let i = 0; i < this.weights.length; i++) {
-            this.synapse += this.data[i] * this.weights[i];
-        }
-
-        return this;
-    }
-
     /**
      * Metodos publicos
      */
