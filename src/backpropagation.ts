@@ -22,9 +22,9 @@ export class Backpropagation {
         this.LIMIT_ERRORS = 100000;
     }
 
-    forwardPropagationData(data) {
+    forwardPropagationData(data: {input: any, output: any}) {
         let outputs = [];
-        let values = data.valor;
+        let values = data.input;
 
         this.layers.forEach((layer: Neuron[]) => {
             if (outputs.length > 0) {
@@ -44,7 +44,7 @@ export class Backpropagation {
                 if (neuron.outputNeurons.length > 0) {
                     outputs.push(neuron.output());
                 } else {
-                    neuron.calculateError(data.salida);
+                    neuron.calculateError(data.output);
                 }
             });
         });
