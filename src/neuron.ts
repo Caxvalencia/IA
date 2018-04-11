@@ -32,6 +32,7 @@ export class Neuron {
 
         this.threshold = 1;
         this.data = [];
+        this.activationFunction = 'sigmoidal';
     }
 
     addData(data: any[], output?) {
@@ -67,14 +68,18 @@ export class Neuron {
         for (let i = 0; i < this.synapticProcessor.length; i++) {
             synapticProcessor = this.synapticProcessor[i];
             synapticProcessor.calculateSynapses(this.weights);
-            synapticProcessor.calculateError();
+            synapticProcessor.calculateErrorDerivated();
         }
 
         return this;
     }
 
     process(data: any[]) {
-        let synapticProcessor = new SynapticProcessor(data, null, 'sigmoidal');
+        let synapticProcessor = new SynapticProcessor(
+            data,
+            null,
+            this.activationFunction
+        );
         synapticProcessor.calculateSynapses(this.weights);
 
         return synapticProcessor.output();
@@ -94,22 +99,21 @@ export class Neuron {
         }
     }
 
-    reajustarPesos() {
-        for (let i = 0; i < this.weights.length; i++) {
-            this.weights[i] += this.learningFactor * this.error * this.data[i];
+    recalculateWeights() {
+        let synapticProcessor: SynapticProcessor = null;
+
+        for (let i = 0; i < this.synapticProcessor.length; i++) {
+            synapticProcessor = this.synapticProcessor[i];
+
+            if (synapticProcessor.error !== 0) {
+                synapticProcessor.recalculateWeights(this.weights);
+            }
         }
     }
 
     output() {
         //Funcion de activacion sigmoidal binaria
         return 1 / (1 + Math.pow(Math.E, -this.synapse));
-    }
-
-    calculateError(expectedOutput) {
-        let output = this.output();
-        this.error = (expectedOutput - output) * (1 - output) * output;
-
-        return this;
     }
 
     calculateHiddenError(idx) {
@@ -120,7 +124,7 @@ export class Neuron {
             sumError += neurona.error * neurona.weights[idx];
         });
 
-        this.error = sumError * (1 - output) * output;
+        this.error = sumError * (1 - output[idx]) * output[idx];
 
         return this;
     }
