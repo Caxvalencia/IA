@@ -53,6 +53,26 @@ export class Neuron {
         return this;
     }
 
+    learn() {
+        if (this.synapticProcessor.length === 0) {
+            return;
+        }
+
+        if (!this.weights) {
+            this.assignWeights();
+        }
+
+        let synapticProcessor: SynapticProcessor = null;
+
+        for (let i = 0; i < this.synapticProcessor.length; i++) {
+            synapticProcessor = this.synapticProcessor[i];
+            synapticProcessor.calculateSynapses(this.weights);
+            synapticProcessor.calculateError();
+        }
+
+        return this;
+    }
+
     process(data: any[]) {
         let synapticProcessor = new SynapticProcessor(data, null, 'sigmoidal');
         synapticProcessor.calculateSynapses(this.weights);
