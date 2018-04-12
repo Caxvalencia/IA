@@ -61,10 +61,10 @@ export class Backpropagation {
                 });
 
                 //Reajustar pesos
-                this.layers.forEach(capa => {
-                    capa.forEach((neurona: Neuron) => {
-                        neurona.reajustarPesos();
-                        sumErrors += Math.pow(neurona.error, 2);
+                this.layers.forEach(layer => {
+                    layer.forEach((neuron: Neuron) => {
+                        sumErrors += Math.pow(neuron.error, 2);
+                        neuron.recalculateWeights();
                     });
                 });
 
