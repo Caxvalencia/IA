@@ -92,13 +92,12 @@ export class Backpropagation {
         return this;
     }
 
-    addLayer(numberNeurons) {
+    addLayer(numberNeurons: number) {
         let layer: Neuron[] = [];
         let isHidden: boolean = this.layers.length > 0;
 
         for (let i = 0; i < numberNeurons; i++) {
             layer[i] = new Neuron(isHidden);
-            layer[i].setLearningFactor(this.factorAprendizaje);
         }
 
         let indexNewLayer = this.layers.push(layer) - 1;
@@ -122,7 +121,6 @@ export class Backpropagation {
 
     addNeurona(capa, posicion) {
         let neurona = new Neuron();
-        neurona.setLearningFactor(this.factorAprendizaje);
 
         if (posicion) {
             this.layers[capa][posicion] = neurona;
