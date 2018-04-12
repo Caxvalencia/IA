@@ -1,15 +1,12 @@
 import { SynapticProcessor } from './synaptic-processor';
 
 export class Neuron {
-    activationFunction: string;
-    threshold: number;
     inputNeurons: Neuron[];
     outputNeurons: Neuron[];
     error: number;
-    synapse: number;
-    weights: any;
-    learningFactor: number;
+    weights: number[];
     isHidden: boolean;
+    activationFunction: string;
     rangeWeight: { MIN: number; MAX: number };
     synapticProcessor: SynapticProcessor[];
 
@@ -19,17 +16,14 @@ export class Neuron {
     constructor(isHidden = false) {
         this.rangeWeight = { MIN: -5, MAX: 4.9 };
         this.synapticProcessor = [];
-        this.learningFactor = 0.5;
         this.isHidden = isHidden;
 
         this.weights = null;
-        this.synapse = 0;
         this.error = 0;
 
         this.outputNeurons = [];
         this.inputNeurons = [];
 
-        this.threshold = 1;
         this.activationFunction = 'sigmoidal';
     }
 
@@ -153,12 +147,6 @@ export class Neuron {
 
     setWeights(weights) {
         this.weights = weights;
-
-        return this;
-    }
-
-    setLearningFactor(learningFactor) {
-        this.learningFactor = learningFactor;
 
         return this;
     }
