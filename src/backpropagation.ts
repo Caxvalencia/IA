@@ -53,14 +53,11 @@ export class Backpropagation {
                 // Forwardpropagation
                 this.forwardPropagationData(data);
 
-                this.layers[indexLastLayer].forEach((neurona: Neuron) => {
+                this.layers[indexLastLayer].forEach((neuron: Neuron) => {
                     //Solo con una neurona tenemos acceso a todas las otras
-                    neurona.backpropagation();
-
-                    return false;
+                    neuron.backpropagation();
                 });
 
-                //Reajustar pesos
                 this.layers.forEach(layer => {
                     layer.forEach((neuron: Neuron) => {
                         sumErrors += Math.pow(neuron.error, 2);
@@ -111,24 +108,24 @@ export class Backpropagation {
             });
 
             // Apuntar con cada neurona de la capa anterior a la nueva capa
-            beforeLayer.forEach(neurona => {
-                neurona.outputNeurons = layer;
+            beforeLayer.forEach((neuron: Neuron) => {
+                neuron.outputNeurons = layer;
             });
         }
 
         return this;
     }
 
-    addNeurona(capa, posicion) {
-        let neurona = new Neuron();
+    addNeuron(layer, position?) {
+        let neuron = new Neuron();
 
-        if (posicion) {
-            this.layers[capa][posicion] = neurona;
+        if (!position) {
+            this.layers[layer].push(neuron);
 
             return;
         }
 
-        this.layers[capa].push(neurona);
+        this.layers[layer][position] = neuron;
     }
 
     process(data) {
