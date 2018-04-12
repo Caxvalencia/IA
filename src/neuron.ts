@@ -61,13 +61,10 @@ export class Neuron {
             this.assignWeights();
         }
 
-        let synapticProcessor: SynapticProcessor = null;
-
-        for (let i = 0; i < this.synapticProcessor.length; i++) {
-            synapticProcessor = this.synapticProcessor[i];
+        this.synapticProcessor.forEach(synapticProcessor => {
             synapticProcessor.calculateSynapses(this.weights);
             synapticProcessor.calculateErrorDerivated();
-        }
+        });
 
         return this;
     }
@@ -98,26 +95,19 @@ export class Neuron {
     }
 
     recalculateWeights() {
-        let synapticProcessor: SynapticProcessor = null;
-
-        for (let i = 0; i < this.synapticProcessor.length; i++) {
-            synapticProcessor = this.synapticProcessor[i];
-
+        this.synapticProcessor.forEach(synapticProcessor => {
             if (synapticProcessor.error !== 0) {
                 synapticProcessor.recalculateWeights(this.weights);
             }
-        }
+        });
     }
 
     output() {
         let output = [];
-        let synapticProcessor: SynapticProcessor = null;
 
-        for (let i = 0; i < this.synapticProcessor.length; i++) {
-            synapticProcessor = this.synapticProcessor[i];
-
+        this.synapticProcessor.forEach(synapticProcessor => {
             output.push(synapticProcessor.output());
-        }
+        });
 
         return output;
     }
@@ -131,12 +121,6 @@ export class Neuron {
         });
 
         this.error = sumError * (1 - output[idx]) * output[idx];
-
-        return this;
-    }
-
-    setLearningFactor(learningFactor) {
-        this.learningFactor = learningFactor;
 
         return this;
     }
@@ -169,6 +153,12 @@ export class Neuron {
 
     setWeights(weights) {
         this.weights = weights;
+
+        return this;
+    }
+
+    setLearningFactor(learningFactor) {
+        this.learningFactor = learningFactor;
 
         return this;
     }
