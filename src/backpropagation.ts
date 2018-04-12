@@ -112,18 +112,6 @@ export class Backpropagation {
         return this;
     }
 
-    addNeuron(layer, position?) {
-        let neuron = new Neuron();
-
-        if (!position) {
-            this.layers[layer].push(neuron);
-
-            return;
-        }
-
-        this.layers[layer][position] = neuron;
-    }
-
     process(data) {
         let outputs = [];
 
