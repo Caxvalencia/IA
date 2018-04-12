@@ -3,8 +3,8 @@ import { SynapticProcessor } from './synaptic-processor';
 export class Neuron {
     activationFunction: string;
     threshold: number;
-    inputNeurons: any[];
-    outputNeurons: any[];
+    inputNeurons: Neuron[];
+    outputNeurons: Neuron[];
     error: number;
     synapse: number;
     weights: any;
@@ -85,8 +85,8 @@ export class Neuron {
      */
     backpropagation() {
         // Error en las capas ocultas
-        this.inputNeurons.forEach((neurona: Neuron, idx) => {
-            neurona.calculateHiddenError(idx);
+        this.inputNeurons.forEach((neuron: Neuron, idx) => {
+            neuron.calculateHiddenError(idx);
         });
 
         if (this.inputNeurons.length > 0) {
@@ -116,8 +116,8 @@ export class Neuron {
         let output = this.output();
         let sumError = 0;
 
-        this.outputNeurons.forEach((neurona: Neuron) => {
-            sumError += neurona.error * neurona.weights[idx];
+        this.outputNeurons.forEach((neuron: Neuron) => {
+            sumError += neuron.error * neuron.weights[idx];
         });
 
         this.error = sumError * (1 - output[idx]) * output[idx];
