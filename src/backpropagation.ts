@@ -90,28 +90,24 @@ export class Backpropagation {
     }
 
     addLayer(numberNeurons: number) {
-        let layer: Neuron[] = [];
-        let isHidden: boolean = this.layers.length > 0;
-
-        for (let i = 0; i < numberNeurons; i++) {
-            layer[i] = new Neuron(isHidden);
-        }
-
+        let layer = this.createLayer(numberNeurons);
         let indexNewLayer = this.layers.push(layer) - 1;
         let beforeLayer = this.layers[indexNewLayer - 1];
 
         // Verificar si existe capa anterior
-        if (beforeLayer) {
-            // Apuntar con cada Neuron de la nueva capa a la anterior
-            layer.forEach((neuron: Neuron) => {
-                neuron.inputNeurons = beforeLayer;
-            });
-
-            // Apuntar con cada neurona de la capa anterior a la nueva capa
-            beforeLayer.forEach((neuron: Neuron) => {
-                neuron.outputNeurons = layer;
-            });
+        if (beforeLayer === undefined) {
+            return this;
         }
+
+        // Apuntar con cada Neuron de la nueva capa a la anterior
+        layer.forEach((neuron: Neuron) => {
+            neuron.inputNeurons = beforeLayer;
+        });
+
+        // Apuntar con cada neurona de la capa anterior a la nueva capa
+        beforeLayer.forEach((neuron: Neuron) => {
+            neuron.outputNeurons = layer;
+        });
 
         return this;
     }
@@ -151,5 +147,16 @@ export class Backpropagation {
         this.error = error;
 
         return this;
+    }
+
+    private createLayer(numberNeurons: number) {
+        let layer: Neuron[] = [];
+        let isHidden: boolean = this.layers.length > 0;
+
+        for (let i = 0; i < numberNeurons; i++) {
+            layer[i] = new Neuron(isHidden);
+        }
+
+        return layer;
     }
 }
