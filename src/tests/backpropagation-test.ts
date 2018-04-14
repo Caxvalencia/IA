@@ -7,9 +7,6 @@ import { Backpropagation } from '../backpropagation';
 export class PerceptronTest {
     @test
     public testXOR() {
-        /**
-         * Funcion XOR
-         */
         var XOR = [
             { input: [0, 0], output: 0 },
             { input: [0, 1], output: 1 },
@@ -32,19 +29,5 @@ export class PerceptronTest {
         ];
 
         assert.isTrue(results[0] === 0, [0, 0] + ' -> ' + results[0]);
-
-        // console.log('XOR' + '\n',
-        //     , , '\n',
-        //     [0, 1], '->', results[1], results[1] === 1, '\n',
-        //     [1, 0], '->', results[2], results[2] === 1, '\n',
-        //     [1, 1], '->', results[3], results[3] === 0, '\n',
-        //     func_XOR
-        // );
-
-        // func_XOR.capas.forEach(function (capa, idxCapa) {
-        //     capa.forEach(function (neurona, idx) {
-        //         console.log(idxCapa, idx, neurona);
-        //     });
-        // });
     }
 }
