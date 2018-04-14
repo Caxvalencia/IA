@@ -79,8 +79,8 @@ export class Neuron {
      */
     backpropagation() {
         // Error en las capas ocultas
-        this.inputNeurons.forEach((neuron: Neuron, idx) => {
-            neuron.calculateHiddenError(idx);
+        this.inputNeurons.forEach((neuron: Neuron) => {
+            neuron.calculateHiddenError();
         });
 
         if (this.inputNeurons.length > 0) {
@@ -96,25 +96,27 @@ export class Neuron {
         });
     }
 
-    output() {
+    output(): number {
         let output = [];
 
         this.synapticProcessor.forEach(synapticProcessor => {
             output.push(synapticProcessor.output());
         });
 
-        return output;
+        return output[0];
     }
 
-    calculateHiddenError(idx) {
-        let output = this.output();
+    calculateHiddenError() {
         let sumError = 0;
+        let output = this.output();
 
         this.outputNeurons.forEach((neuron: Neuron) => {
-            sumError += neuron.error * neuron.weights[idx];
+            neuron.weights.forEach((weight: number) => {
+                sumError += neuron.error * weight;
+            });
         });
 
-        this.error = sumError * (1 - output[idx]) * output[idx];
+        this.error = sumError * (1 - output) * output;
 
         return this;
     }
