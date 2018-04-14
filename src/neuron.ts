@@ -97,13 +97,7 @@ export class Neuron {
     }
 
     output(): number {
-        let output = [];
-
-        this.synapticProcessor.forEach(synapticProcessor => {
-            output.push(synapticProcessor.output());
-        });
-
-        return output[0];
+        return this.synapticProcessor[0].output();
     }
 
     calculateHiddenError() {
