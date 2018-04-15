@@ -27,21 +27,10 @@ export class Neuron {
         this.activationFunction = 'sigmoidal';
     }
 
-    addData(data: any[], output?) {
-        if (data[0][0] === undefined) {
-            data = [data];
-            output = [output];
-        }
-
-        for (let i = 0; i < data.length; i++) {
-            this.synapticProcessor.push(
-                new SynapticProcessor(
-                    data[i],
-                    output[i],
-                    this.activationFunction
-                )
-            );
-        }
+    addData(data: number[], output?) {
+        this.synapticProcessor.push(
+            new SynapticProcessor(data, output, this.activationFunction)
+        );
 
         return this;
     }
