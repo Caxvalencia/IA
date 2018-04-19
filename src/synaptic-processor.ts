@@ -9,7 +9,11 @@ export class SynapticProcessor {
     threshold: number;
     learningFactor: number;
 
-    constructor(data: any[], expectedOutput, activationFunction: string) {
+    constructor(
+        activationFunction: string,
+        data: any[] = null,
+        expectedOutput: any = null
+    ) {
         this.learningFactor = 0.5;
         this.threshold = 1;
 
@@ -63,7 +67,9 @@ export class SynapticProcessor {
 
     calculateErrorDerivated() {
         let output = this.output();
-        this.error = (this.expectedOutput - output) * (1 - output) * output;
+        let errorCommitted = 1 - output;
+
+        this.error = (this.expectedOutput - output) * errorCommitted * output;
 
         return this;
     }
