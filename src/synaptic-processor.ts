@@ -75,6 +75,10 @@ export class SynapticProcessor {
     }
 
     setData(data: any[]) {
+        if(data === null) {
+            return this;
+        }
+
         this.data = data.slice();
         this.data.push(this.threshold);
 
