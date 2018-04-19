@@ -4,7 +4,7 @@ import { suite, test } from 'mocha-typescript';
 import { Backpropagation } from '../backpropagation';
 
 @suite
-export class PerceptronTest {
+export class BackpropagationTest {
     @test
     public testXOR() {
         var data = [
