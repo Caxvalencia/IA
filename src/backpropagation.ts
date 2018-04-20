@@ -22,22 +22,19 @@ export class Backpropagation {
         this.LIMIT_ERRORS = 100000;
     }
 
-    forwardpropagation(data: { input: any; output: any }) {
+    forwardpropagation({ input, output }) {
         let outputs = [];
-        let values = data.input;
+        let data = input;
 
         this.layers.forEach((layer: Neuron[]) => {
             if (outputs.length > 0) {
-                values = outputs;
+                data = outputs;
                 outputs = [];
             }
 
             layer.forEach((neuron: Neuron) => {
-                neuron.addData(values, data.output).learn();
-
-                if (neuron.outputNeurons.length > 0) {
-                    outputs.push(neuron.output());
-                }
+                neuron.addData(data, output).learn();
+                outputs.push(neuron.output());
             });
         });
 
