@@ -22,7 +22,7 @@ export class Backpropagation {
         this.LIMIT_ERRORS = 100000;
     }
 
-    forwardPropagationData(data: { input: any; output: any }) {
+    forwardpropagation(data: { input: any; output: any }) {
         let outputs = [];
         let values = data.input;
 
@@ -51,7 +51,7 @@ export class Backpropagation {
 
             datas.forEach(data => {
                 // Forwardpropagation
-                this.forwardPropagationData(data);
+                this.forwardpropagation(data);
 
                 this.layers[indexLastLayer].forEach((neuron: Neuron) => {
                     //Solo con una neurona tenemos acceso a todas las otras
