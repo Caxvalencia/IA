@@ -1,3 +1,4 @@
+import { ActivationFunctionType } from './activation-functions/activation-function';
 import { SynapticProcessor } from './synaptic-processor';
 
 export const LIMIT_ERRORS: number = 10000;
@@ -11,7 +12,7 @@ export class Perceptron {
     rangeWeight: { MIN: number; MAX: number };
 
     public funcBack: () => void;
-    private activationFunction: string;
+    private activationFunction: ActivationFunctionType;
 
     constructor(callback?) {
         this.rangeWeight = { MIN: -5, MAX: 4.9 };
@@ -85,7 +86,7 @@ export class Perceptron {
         return this;
     }
 
-    setActivationFunction(activationFunction: string) {
+    setActivationFunction(activationFunction: ActivationFunctionType) {
         this.activationFunction = activationFunction;
 
         return this;

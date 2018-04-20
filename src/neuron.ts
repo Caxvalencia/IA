@@ -1,4 +1,5 @@
 import { SynapticProcessor } from './synaptic-processor';
+import { ActivationFunctionType } from './activation-functions/activation-function';
 
 export class Neuron {
     inputNeurons: Neuron[];
@@ -6,7 +7,7 @@ export class Neuron {
     error: number;
     weights: number[];
     isHidden: boolean;
-    activationFunction: string;
+    activationFunction: ActivationFunctionType;
     rangeWeight: { MIN: number; MAX: number };
     synapticProcessor: SynapticProcessor;
 
@@ -25,7 +26,7 @@ export class Neuron {
         this.outputNeurons = [];
         this.inputNeurons = [];
 
-        this.activationFunction = 'sigmoidal';
+        this.activationFunction = ActivationFunctionType.SIGMOIDAL;
         this.synapticProcessor = new SynapticProcessor(this.activationFunction);
         this.dataStack = [];
     }
