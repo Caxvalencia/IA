@@ -1,4 +1,4 @@
-import { sigmoidal } from './activation-functions/sigmoidal.function';
+import { ActivationFunction, ActivationFunctionType } from './activation-functions/activation-function';
 
 export class SynapticProcessor {
     activationFunction: string;
@@ -10,7 +10,7 @@ export class SynapticProcessor {
     learningFactor: number;
 
     constructor(
-        activationFunction: string,
+        activationFunction: ActivationFunctionType,
         data: any[] = null,
         expectedOutput: any = null
     ) {
@@ -29,11 +29,9 @@ export class SynapticProcessor {
      * @returns {number}
      */
     output(): number {
-        if (this.activationFunction === 'sigmoidal') {
-            return sigmoidal(this.synapse);
-        }
-
-        return this.synapse >= 0 ? 1 : 0;
+        return ActivationFunction.process(this.activationFunction)(
+            this.synapse
+        );
     }
 
     /**
@@ -75,7 +73,7 @@ export class SynapticProcessor {
     }
 
     setData(data: any[]) {
-        if(data === null) {
+        if (data === null) {
             return this;
         }
 
