@@ -6,7 +6,6 @@ export class Backpropagation {
     counterErrors: number;
     funcionActivacion: string;
     error: number;
-    factorAprendizaje: number;
     layers: Neuron[][];
 
     /**
@@ -14,12 +13,11 @@ export class Backpropagation {
      */
     constructor() {
         this.layers = [];
-        this.factorAprendizaje = 0.25;
         this.error = 0;
         this.funcionActivacion = 'sigmoidal';
 
         this.counterErrors = 0;
-        this.LIMIT_ERRORS = 100000;
+        this.LIMIT_ERRORS = 10000;
     }
 
     forwardpropagation({ input, output }) {
