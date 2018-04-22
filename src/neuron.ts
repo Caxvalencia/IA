@@ -54,12 +54,10 @@ export class Neuron {
     }
 
     process(data: any[]) {
-        let synapticProcessor = new SynapticProcessor(
-            this.activationFunction,
-            data
-        );
-
-        return synapticProcessor.calculateSynapses(this.weights).output();
+        return this.synapticProcessor
+            .setData(data)
+            .calculateSynapses(this.weights)
+            .output();
     }
 
     /**
