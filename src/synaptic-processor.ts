@@ -1,4 +1,4 @@
-import { sigmoidal } from './activation-functions/sigmoidal.function';
+import { ActivationFunction, ActivationFunctionType } from './activation-functions/activation-function';
 
 export class SynapticProcessor {
     activationFunction: string;
@@ -9,7 +9,11 @@ export class SynapticProcessor {
     threshold: number;
     learningFactor: number;
 
-    constructor(data: any[], expectedOutput, activationFunction: string) {
+    constructor(
+        activationFunction: ActivationFunctionType,
+        data: any[] = null,
+        expectedOutput: any = null
+    ) {
         this.learningFactor = 0.5;
         this.threshold = 1;
 
@@ -25,11 +29,9 @@ export class SynapticProcessor {
      * @returns {number}
      */
     output(): number {
-        if (this.activationFunction === 'sigmoidal') {
-            return sigmoidal(this.synapse);
-        }
-
-        return this.synapse >= 0 ? 1 : 0;
+        return ActivationFunction.process(this.activationFunction)(
+            this.synapse
+        );
     }
 
     /**
@@ -63,12 +65,18 @@ export class SynapticProcessor {
 
     calculateErrorDerivated() {
         let output = this.output();
-        this.error = (this.expectedOutput - output) * (1 - output) * output;
+        let errorCommitted = 1 - output;
+
+        this.error = (this.expectedOutput - output) * errorCommitted * output;
 
         return this;
     }
 
     setData(data: any[]) {
+        if (data === null) {
+            return this;
+        }
+
         this.data = data.slice();
         this.data.push(this.threshold);
 

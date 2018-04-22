@@ -6,7 +6,6 @@ export class Backpropagation {
     counterErrors: number;
     funcionActivacion: string;
     error: number;
-    factorAprendizaje: number;
     layers: Neuron[][];
 
     /**
@@ -14,30 +13,26 @@ export class Backpropagation {
      */
     constructor() {
         this.layers = [];
-        this.factorAprendizaje = 0.25;
         this.error = 0;
         this.funcionActivacion = 'sigmoidal';
 
         this.counterErrors = 0;
-        this.LIMIT_ERRORS = 100000;
+        this.LIMIT_ERRORS = 10000;
     }
 
-    forwardPropagationData(data: { input: any; output: any }) {
+    forwardpropagation({ input, output }) {
         let outputs = [];
-        let values = data.input;
+        let data = input;
 
         this.layers.forEach((layer: Neuron[]) => {
             if (outputs.length > 0) {
-                values = outputs;
+                data = outputs;
                 outputs = [];
             }
 
             layer.forEach((neuron: Neuron) => {
-                neuron.addData(values, data.output).learn();
-
-                if (neuron.outputNeurons.length > 0) {
-                    outputs.push(neuron.output());
-                }
+                neuron.addData(data, output).learn();
+                outputs.push(neuron.output());
             });
         });
 
@@ -51,7 +46,7 @@ export class Backpropagation {
 
             datas.forEach(data => {
                 // Forwardpropagation
-                this.forwardPropagationData(data);
+                this.forwardpropagation(data);
 
                 this.layers[indexLastLayer].forEach((neuron: Neuron) => {
                     //Solo con una neurona tenemos acceso a todas las otras

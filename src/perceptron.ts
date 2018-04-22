@@ -1,67 +1,55 @@
+import { ActivationFunctionType } from './activation-functions/activation-function';
 import { SynapticProcessor } from './synaptic-processor';
 
 export const LIMIT_ERRORS: number = 10000;
 
 export class Perceptron {
+    dataStack: any[];
+
     counterErrors: number;
-    synapticProcessor: SynapticProcessor[];
     hasError: boolean;
     weights: number[];
     rangeWeight: { MIN: number; MAX: number };
 
     public funcBack: () => void;
-    private activationFunction: string;
+    private activationFunction: ActivationFunctionType;
 
     constructor(callback?) {
         this.rangeWeight = { MIN: -5, MAX: 4.9 };
-        this.synapticProcessor = [];
         this.counterErrors = 0;
         this.hasError = false;
         this.weights = null;
         this.funcBack = callback || (() => {});
+
+        this.dataStack = [];
     }
 
     addData(data: any[], output) {
-        if (data[0][0] === undefined) {
-            data = [data];
-            output = [output];
-        }
-
-        for (let i = 0; i < data.length; i++) {
-            this.synapticProcessor.push(
-                new SynapticProcessor(
-                    data[i],
-                    output[i],
-                    this.activationFunction
-                )
-            );
-        }
+        this.dataStack.push([data, output]);
 
         return this;
     }
 
     learn() {
-        if (this.synapticProcessor.length === 0) {
-            return;
-        }
-
         if (!this.weights) {
             this.assignWeights();
         }
 
-        let synapticProcessor: SynapticProcessor = null;
-
         this.hasError = false;
 
-        for (let i = 0; i < this.synapticProcessor.length; i++) {
-            synapticProcessor = this.synapticProcessor[i];
+        let synapticProcessor = new SynapticProcessor(this.activationFunction);
 
-            synapticProcessor.calculateSynapses(this.weights);
-            synapticProcessor.calculateError();
+        for (let i = 0; i < this.dataStack.length; i++) {
+            synapticProcessor
+                .setData(this.dataStack[i][0])
+                .setExpectedOutput(this.dataStack[i][1])
+                .calculateSynapses(this.weights)
+                .calculateError();
 
             if (synapticProcessor.error !== 0) {
-                this.hasError = true;
                 synapticProcessor.recalculateWeights(this.weights);
+
+                this.hasError = true;
                 this.funcBack();
             }
         }
@@ -85,14 +73,11 @@ export class Perceptron {
 
     process(data) {
         let synapticProcessor = new SynapticProcessor(
-            data,
-            null,
-            this.activationFunction
+            this.activationFunction,
+            data
         );
 
-        synapticProcessor.calculateSynapses(this.weights);
-
-        return synapticProcessor.output();
+        return synapticProcessor.calculateSynapses(this.weights).output();
     }
 
     setWeights(weights) {
@@ -101,7 +86,7 @@ export class Perceptron {
         return this;
     }
 
-    setActivationFunction(activationFunction: string) {
+    setActivationFunction(activationFunction: ActivationFunctionType) {
         this.activationFunction = activationFunction;
 
         return this;
@@ -121,7 +106,7 @@ export class Perceptron {
     }
 
     private assignWeights() {
-        let dataSize = this.synapticProcessor[0].data.length;
+        let dataSize = this.dataStack[0][0].length + 1;
         let weights = new Array<number>(dataSize);
 
         for (let i = 0; i < dataSize; i++) {

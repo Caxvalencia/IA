@@ -1,4 +1,5 @@
 import { SynapticProcessor } from './synaptic-processor';
+import { ActivationFunctionType } from './activation-functions/activation-function';
 
 export class Neuron {
     inputNeurons: Neuron[];
@@ -6,16 +7,17 @@ export class Neuron {
     error: number;
     weights: number[];
     isHidden: boolean;
-    activationFunction: string;
+    activationFunction: ActivationFunctionType;
     rangeWeight: { MIN: number; MAX: number };
-    synapticProcessor: SynapticProcessor[];
+    synapticProcessor: SynapticProcessor;
+
+    dataStack: any[];
 
     /**
      * @construtor
      */
     constructor(isHidden = false) {
         this.rangeWeight = { MIN: -5, MAX: 4.9 };
-        this.synapticProcessor = [];
         this.isHidden = isHidden;
 
         this.weights = null;
@@ -24,43 +26,40 @@ export class Neuron {
         this.outputNeurons = [];
         this.inputNeurons = [];
 
-        this.activationFunction = 'sigmoidal';
+        this.activationFunction = ActivationFunctionType.SIGMOIDAL;
+        this.synapticProcessor = new SynapticProcessor(this.activationFunction);
+        this.dataStack = [];
     }
 
     addData(data: number[], output?) {
-        this.synapticProcessor.push(
-            new SynapticProcessor(data, output, this.activationFunction)
-        );
+        this.dataStack.push([data, output]);
 
         return this;
     }
 
     learn() {
-        if (this.synapticProcessor.length === 0) {
-            return;
-        }
-
         if (!this.weights) {
             this.assignWeights();
         }
 
-        this.synapticProcessor.forEach(synapticProcessor => {
-            synapticProcessor.calculateSynapses(this.weights);
-            synapticProcessor.calculateErrorDerivated();
-        });
+        for (let i = 0; i < this.dataStack.length; i++) {
+            this.synapticProcessor
+                .setData(this.dataStack[i][0])
+                .setExpectedOutput(this.dataStack[i][1])
+                .calculateSynapses(this.weights)
+                .calculateErrorDerivated();
+        }
 
         return this;
     }
 
     process(data: any[]) {
         let synapticProcessor = new SynapticProcessor(
-            data,
-            null,
-            this.activationFunction
+            this.activationFunction,
+            data
         );
-        synapticProcessor.calculateSynapses(this.weights);
 
-        return synapticProcessor.output();
+        return synapticProcessor.calculateSynapses(this.weights).output();
     }
 
     /**
@@ -78,15 +77,13 @@ export class Neuron {
     }
 
     recalculateWeights() {
-        this.synapticProcessor.forEach(synapticProcessor => {
-            if (synapticProcessor.error !== 0) {
-                synapticProcessor.recalculateWeights(this.weights);
-            }
-        });
+        if (this.synapticProcessor.error !== 0) {
+            this.synapticProcessor.recalculateWeights(this.weights);
+        }
     }
 
     output(): number {
-        return this.synapticProcessor[0].output();
+        return this.synapticProcessor.output();
     }
 
     calculateHiddenError() {
@@ -95,7 +92,7 @@ export class Neuron {
 
         this.outputNeurons.forEach((neuron: Neuron) => {
             neuron.weights.forEach((weight: number) => {
-                sumError += neuron.error * weight;
+                sumError += neuron.synapticProcessor.error * weight;
             });
         });
 
@@ -118,7 +115,7 @@ export class Neuron {
     }
 
     private assignWeights() {
-        let dataSize = this.synapticProcessor[0].data.length;
+        let dataSize = this.dataStack[0][0].length + 1;
         let weights = new Array<number>(dataSize);
 
         for (let i = 0; i < dataSize; i++) {
