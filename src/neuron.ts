@@ -115,7 +115,7 @@ export class Neuron {
     }
 
     private assignWeights() {
-        let dataSize = this.dataStack[0][0].length + 1;
+        let dataSize = this.dataStack[0][0].length;
         let weights = new Array<number>(dataSize);
 
         for (let i = 0; i < dataSize; i++) {

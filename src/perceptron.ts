@@ -1,7 +1,7 @@
 import { ActivationFunctionType } from './activation-functions/activation-function';
 import { SynapticProcessor } from './synaptic-processor';
 
-export const LIMIT_ERRORS: number = 10000;
+export const LIMIT_ERRORS: number = 8000;
 
 export class Perceptron {
     dataStack: any[];
@@ -106,7 +106,7 @@ export class Perceptron {
     }
 
     private assignWeights() {
-        let dataSize = this.dataStack[0][0].length + 1;
+        let dataSize = this.dataStack[0][0].length;
         let weights = new Array<number>(dataSize);
 
         for (let i = 0; i < dataSize; i++) {
