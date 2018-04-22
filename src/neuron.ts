@@ -1,40 +1,24 @@
-import { SynapticProcessor } from './synaptic-processor';
 import { ActivationFunctionType } from './activation-functions/activation-function';
+import { Perceptron } from './perceptron';
 
-export class Neuron {
+export class Neuron extends Perceptron {
     inputNeurons: Neuron[];
     outputNeurons: Neuron[];
-    error: number;
-    weights: number[];
-    isHidden: boolean;
-    activationFunction: ActivationFunctionType;
-    rangeWeight: { MIN: number; MAX: number };
-    synapticProcessor: SynapticProcessor;
 
-    dataStack: any[];
+    error: number;
+    isHidden: boolean;
 
     /**
      * @construtor
      */
     constructor(isHidden = false) {
-        this.rangeWeight = { MIN: -5, MAX: 4.9 };
-        this.isHidden = isHidden;
+        super(null, ActivationFunctionType.SIGMOIDAL);
 
-        this.weights = null;
+        this.isHidden = isHidden;
         this.error = 0;
 
         this.outputNeurons = [];
         this.inputNeurons = [];
-
-        this.activationFunction = ActivationFunctionType.SIGMOIDAL;
-        this.synapticProcessor = new SynapticProcessor(this.activationFunction);
-        this.dataStack = [];
-    }
-
-    addData(data: number[], output?) {
-        this.dataStack.push([data, output]);
-
-        return this;
     }
 
     learn() {
@@ -53,16 +37,6 @@ export class Neuron {
         return this;
     }
 
-    process(data: any[]) {
-        return this.synapticProcessor
-            .setData(data)
-            .calculateSynapses(this.weights)
-            .output();
-    }
-
-    /**
-     * Metodos publicos
-     */
     backpropagation() {
         // Error en las capas ocultas
         this.inputNeurons.forEach((neuron: Neuron) => {
@@ -95,38 +69,6 @@ export class Neuron {
         });
 
         this.error = sumError * (1 - output) * output;
-
-        return this;
-    }
-
-    private createWeight() {
-        let weight = 0;
-        let range = this.rangeWeight.MAX - this.rangeWeight.MIN;
-
-        while (!weight) {
-            weight = parseFloat(
-                (Math.random() * range + this.rangeWeight.MIN).toFixed(4)
-            );
-        }
-
-        return weight;
-    }
-
-    private assignWeights() {
-        let dataSize = this.dataStack[0][0].length;
-        let weights = new Array<number>(dataSize);
-
-        for (let i = 0; i < dataSize; i++) {
-            weights[i] = this.createWeight();
-        }
-
-        this.setWeights(weights);
-
-        return this;
-    }
-
-    setWeights(weights) {
-        this.weights = weights;
 
         return this;
     }

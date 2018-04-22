@@ -5,24 +5,26 @@ export const LIMIT_ERRORS: number = 8000;
 
 export class Perceptron {
     dataStack: any[];
-
+    weights: number[];
+    
     counterErrors: number;
     hasError: boolean;
-    weights: number[];
+    
     rangeWeight: { MIN: number; MAX: number };
     synapticProcessor: SynapticProcessor;
 
     public funcBack: () => void;
-    private activationFunction: ActivationFunctionType;
+    protected activationFunction: ActivationFunctionType;
 
-    constructor(callback?) {
+    constructor(callback?, activationFunction?: ActivationFunctionType) {
         this.rangeWeight = { MIN: -5, MAX: 4.9 };
         this.counterErrors = 0;
         this.hasError = false;
         this.weights = null;
         this.funcBack = callback || (() => {});
 
-        this.synapticProcessor = new SynapticProcessor(this.activationFunction);
+        this.activationFunction = activationFunction;
+        this.synapticProcessor = new SynapticProcessor(activationFunction);
         this.dataStack = [];
     }
 
@@ -90,7 +92,7 @@ export class Perceptron {
         return this;
     }
 
-    private createWeight() {
+    protected createWeight() {
         let weight = 0;
         let range = this.rangeWeight.MAX - this.rangeWeight.MIN;
 
@@ -103,7 +105,7 @@ export class Perceptron {
         return weight;
     }
 
-    private assignWeights() {
+    protected assignWeights() {
         let dataSize = this.dataStack[0][0].length;
         let weights = new Array<number>(dataSize);
 
@@ -113,5 +115,7 @@ export class Perceptron {
 
         this.setWeights(weights);
         this.funcBack();
+
+        return this;
     }
 }
