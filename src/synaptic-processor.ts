@@ -42,6 +42,7 @@ export class SynapticProcessor {
      * @param {number[]} weights
      */
     recalculateWeights(weights: number[]) {
+        this.updateThreshold();
         this.calculateDelta(this.expectedOutput, this.output());
 
         for (let i = 0; i < weights.length; i++) {
@@ -49,12 +50,16 @@ export class SynapticProcessor {
         }
     }
 
+    updateThreshold(): any {
+        this.threshold -= this.learningFactor * this.error;
+    }
+
     /**
-     * @param {any} expectedOutput 
-     * @param {*} output 
+     * @param {any} expectedOutput
+     * @param {*} output
      * @returns this
      */
-    calculateDelta(expectedOutput, output: any) {
+    calculateDelta(expectedOutput: any, output: any) {
         let error = expectedOutput - output;
         this.delta = this.learningFactor * error;
 
@@ -71,6 +76,8 @@ export class SynapticProcessor {
         for (let i = 0; i < weights.length; i++) {
             this.synapse += this.data[i] * weights[i];
         }
+
+        this.synapse -= this.threshold;
 
         return this;
     }
@@ -96,7 +103,6 @@ export class SynapticProcessor {
         }
 
         this.data = data.slice();
-        this.data.push(this.threshold);
 
         return this;
     }
