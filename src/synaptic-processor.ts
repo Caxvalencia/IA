@@ -1,4 +1,7 @@
-import { ActivationFunction, ActivationFunctionType } from './activation-functions/activation-function';
+import {
+    ActivationFunction,
+    ActivationFunctionType
+} from './activation-functions/activation-function';
 
 export class SynapticProcessor {
     activationFunction: string;
@@ -8,13 +11,14 @@ export class SynapticProcessor {
     data: number[];
     threshold: number;
     learningFactor: number;
+    delta: number;
 
     constructor(
         activationFunction: ActivationFunctionType,
         data: any[] = null,
         expectedOutput: any = null
     ) {
-        this.learningFactor = 0.5;
+        this.learningFactor = 0.25;
         this.threshold = 1;
 
         this.synapse = 0;
@@ -38,9 +42,23 @@ export class SynapticProcessor {
      * @param {number[]} weights
      */
     recalculateWeights(weights: number[]) {
+        this.calculateDelta(this.expectedOutput, this.output());
+
         for (let i = 0; i < weights.length; i++) {
-            weights[i] += this.learningFactor * this.error * this.data[i];
+            weights[i] += this.data[i] * this.delta;
         }
+    }
+
+    /**
+     * @param {any} expectedOutput 
+     * @param {*} output 
+     * @returns this
+     */
+    calculateDelta(expectedOutput, output: any) {
+        let error = expectedOutput - output;
+        this.delta = this.learningFactor * error;
+
+        return this;
     }
 
     /**
