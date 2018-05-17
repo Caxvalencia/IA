@@ -39,24 +39,32 @@ export class Backpropagation {
         return this;
     }
 
+    backpropagation() {
+        const indexOutputLayer = this.layers.length - 1;
+
+        this.layers[indexOutputLayer].forEach((neuron: Neuron) => {
+            neuron.synapticProcessor.calculateError();
+            neuron.synapticProcessor.calculateErrorDerivated(
+                neuron.synapticProcessor.error
+            );
+            neuron.recalculateWeights();
+            neuron.backpropagation();
+
+            this.error = neuron.synapticProcessor.error;
+        });
+    }
+
     learn(datas) {
         let learnCallback = () => {
-            const indexLastLayer = this.layers.length - 1;
             let sumErrors = 0;
 
             datas.forEach(data => {
-                // Forwardpropagation
                 this.forwardpropagation(data);
-
-                this.layers[indexLastLayer].forEach((neuron: Neuron) => {
-                    //Solo con una neurona tenemos acceso a todas las otras
-                    neuron.backpropagation();
-                });
+                this.backpropagation();
 
                 this.layers.forEach(layer => {
                     layer.forEach((neuron: Neuron) => {
                         sumErrors += Math.pow(neuron.error, 2);
-                        neuron.recalculateWeights();
                     });
                 });
 
@@ -68,7 +76,7 @@ export class Backpropagation {
 
         learnCallback();
 
-        while (this.error > 0.0001) {
+        while (this.error > 0.001) {
             this.counterErrors++;
 
             if (this.counterErrors >= this.LIMIT_ERRORS) {
