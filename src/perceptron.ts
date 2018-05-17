@@ -114,6 +114,8 @@ export class Perceptron {
         }
 
         this.setWeights(weights);
+        this.synapticProcessor.threshold = this.createWeight();
+        
         this.funcBack();
 
         return this;

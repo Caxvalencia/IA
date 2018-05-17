@@ -19,8 +19,6 @@ export class SynapticProcessor {
         expectedOutput: any = null
     ) {
         this.learningRate = 0.25;
-        this.threshold = 0.5;
-
         this.error = 0;
         this.activationFunction = activationFunction;
 
