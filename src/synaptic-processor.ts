@@ -10,7 +10,7 @@ export class SynapticProcessor {
     expectedOutput: any;
     data: number[];
     threshold: number;
-    learningFactor: number;
+    learningRate: number;
     delta: number;
 
     constructor(
@@ -18,7 +18,7 @@ export class SynapticProcessor {
         data: any[] = null,
         expectedOutput: any = null
     ) {
-        this.learningFactor = 0.25;
+        this.learningRate = 0.25;
         this.threshold = 0.5;
 
         this.error = 0;
@@ -52,7 +52,7 @@ export class SynapticProcessor {
     }
 
     updateThreshold(error): any {
-        this.threshold -= this.learningFactor * error;
+        this.threshold -= this.learningRate * error;
     }
 
     /**
@@ -61,7 +61,7 @@ export class SynapticProcessor {
      * @returns this
      */
     calculateDelta(error) {
-        this.delta = this.learningFactor * error;
+        this.delta = this.learningRate * error;
 
         return this;
     }
@@ -114,7 +114,7 @@ export class SynapticProcessor {
     }
 
     setLearningFactor(learningFactor) {
-        this.learningFactor = learningFactor;
+        this.learningRate = learningFactor;
 
         return this;
     }

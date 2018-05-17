@@ -52,7 +52,7 @@ export class Neuron extends Perceptron {
 
         for (let i = 0; i < this.weights.length; i++) {
             this.weights[i] +=
-                this.synapticProcessor.learningFactor *
+                this.synapticProcessor.learningRate *
                 this.synapticProcessor.data[i] *
                 this.synapticProcessor.delta;
 
