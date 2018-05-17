@@ -30,8 +30,7 @@ export class Neuron extends Perceptron {
             this.synapticProcessor
                 .setData(this.dataStack[i][0])
                 .setExpectedOutput(this.dataStack[i][1])
-                .calculateSynapses(this.weights)
-                .calculateErrorDerivated();
+                .calculateSynapses(this.weights);
         }
 
         return this;
@@ -39,8 +38,8 @@ export class Neuron extends Perceptron {
 
     backpropagation() {
         // Error en las capas ocultas
-        this.inputNeurons.forEach((neuron: Neuron) => {
-            neuron.calculateHiddenError();
+        this.inputNeurons.forEach((neuron: Neuron, neuronIndex) => {
+            neuron.calculateHiddenError(neuronIndex);
         });
 
         if (this.inputNeurons.length > 0) {
@@ -58,17 +57,16 @@ export class Neuron extends Perceptron {
         return this.synapticProcessor.output();
     }
 
-    calculateHiddenError() {
+    calculateHiddenError(neuronIndex) {
         let sumError = 0;
-        let output = this.output();
 
         this.outputNeurons.forEach((neuron: Neuron) => {
-            neuron.weights.forEach((weight: number) => {
-                sumError += neuron.synapticProcessor.error * weight;
-            });
+            sumError +=
+                neuron.weights[neuronIndex] * neuron.synapticProcessor.delta;
         });
 
-        this.error = sumError * (1 - output) * output;
+        this.synapticProcessor.calculateErrorDerivated(sumError);
+        this.recalculateWeights();
 
         return this;
     }
