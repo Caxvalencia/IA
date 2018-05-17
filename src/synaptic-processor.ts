@@ -88,11 +88,11 @@ export class SynapticProcessor {
         return this;
     }
 
-    calculateErrorDerivated() {
+    calculateErrorDerivated(factorDelta) {
         let output = this.output();
-        let errorCommitted = 1 - output;
+        let errorComplement = output - output * output;
 
-        this.error = (this.expectedOutput - output) * errorCommitted * output;
+        this.delta = factorDelta * errorComplement;
 
         return this;
     }
