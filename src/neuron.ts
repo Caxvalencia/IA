@@ -48,8 +48,15 @@ export class Neuron extends Perceptron {
     }
 
     recalculateWeights() {
-        if (this.synapticProcessor.error !== 0) {
-            this.synapticProcessor.recalculateWeights(this.weights);
+        this.synapticProcessor.updateThreshold(this.synapticProcessor.error);
+
+        for (let i = 0; i < this.weights.length; i++) {
+            this.weights[i] +=
+                this.synapticProcessor.learningFactor *
+                this.synapticProcessor.data[i] *
+                this.synapticProcessor.delta;
+
+            this.weights[i] = parseFloat(this.weights[i].toFixed(4));
         }
     }
 
