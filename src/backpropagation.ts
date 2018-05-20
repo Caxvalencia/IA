@@ -44,13 +44,7 @@ export class Backpropagation {
 
         lastLayer.forEach((neuron: Neuron) => {
             neuron.synapticProcessor.calculateError();
-            neuron.error = Math.abs(neuron.synapticProcessor.error);
-            neuron.synapticProcessor.calculateErrorDerivated(neuron.error);
-
-            if (neuron.error >= 0.0001) {
-                neuron.recalculateWeights();
-            }
-
+            neuron.calculateErrorDerivated(neuron.synapticProcessor.error);
             neuron.backpropagation();
         });
     }
@@ -136,6 +130,10 @@ export class Backpropagation {
             this.layers.forEach(layer => {
                 layer.forEach((neuron: Neuron) => {
                     sumErrors += neuron.error * neuron.error;
+
+                    if (neuron.error >= 0.0001) {
+                        neuron.recalculateWeights();
+                    }
                 });
             });
 
@@ -151,8 +149,8 @@ export class Backpropagation {
         // }
 
         this.setError(parseFloat(sumErrors.toFixed(4)));
-        
-        console.log(this.error, this.counterErrors);        
+
+        console.log(this.error, this.counterErrors);
     }
 
     private createLayer(numberNeurons: number) {
