@@ -56,46 +56,16 @@ export class Backpropagation {
     }
 
     learn(datas: Array<{ input: number[]; output: number }>) {
-        let learnCallback = () => {
-            let sumErrors = 0;
-
-            datas.forEach(data => {
-                this.forwardpropagation(data);
-                this.backpropagation();
-
-                this.layers.forEach(layer => {
-                    layer.forEach((neuron: Neuron) => {
-                        sumErrors += neuron.error * neuron.error;
-                    });
-                });
-
-                sumErrors /= 2;
-            });
-
-            // if (sumErrors >= this.error) {
-            // this.layers.forEach(layer => {
-            //     layer.forEach((neuron: Neuron) => {
-            //         neuron.synapticProcessor.learningRate -= 0.01;
-            //     });
-            // });
-            // }
-
-            this.setError(parseFloat(sumErrors.toFixed(4)));
-        };
-
-        learnCallback();
+        this.runEpoch(datas);
 
         while (this.error > 0.001) {
             this.counterErrors++;
 
-            console.log(this.error, this.counterErrors);
-
             if (this.counterErrors >= this.LIMIT_ERRORS) {
-                // this.counterErrors = 0;
                 return this;
             }
 
-            learnCallback();
+            this.runEpoch(datas);
         }
 
         this.counterErrors = 0;
@@ -129,6 +99,8 @@ export class Backpropagation {
     process(data) {
         let outputs = [];
 
+        console.log(data);
+
         this.layers.forEach(layer => {
             if (outputs.length > 0) {
                 data = outputs;
@@ -140,6 +112,9 @@ export class Backpropagation {
             });
         });
 
+        // return outputs;
+        console.log(outputs);
+
         return outputs.map(output => {
             return Math.round(output);
         });
@@ -149,6 +124,35 @@ export class Backpropagation {
         this.error = error;
 
         return this;
+    }
+
+    private runEpoch(datas: Array<{ input: number[]; output: number }>) {
+        let sumErrors = 0;
+
+        datas.forEach(data => {
+            this.forwardpropagation(data);
+            this.backpropagation();
+
+            this.layers.forEach(layer => {
+                layer.forEach((neuron: Neuron) => {
+                    sumErrors += neuron.error * neuron.error;
+                });
+            });
+
+            sumErrors /= 2;
+        });
+
+        // if (sumErrors >= this.error) {
+        // this.layers.forEach(layer => {
+        //     layer.forEach((neuron: Neuron) => {
+        //         neuron.synapticProcessor.learningRate -= 0.01;
+        //     });
+        // });
+        // }
+
+        this.setError(parseFloat(sumErrors.toFixed(4)));
+        
+        console.log(this.error, this.counterErrors);        
     }
 
     private createLayer(numberNeurons: number) {
