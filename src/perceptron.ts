@@ -28,7 +28,7 @@ export class Perceptron {
         this.dataStack = [];
     }
 
-    addData(data: any[], output) {
+    addData(data: number[], output: number) {
         this.dataStack.push([data, output]);
 
         return this;
@@ -73,7 +73,7 @@ export class Perceptron {
         return this;
     }
 
-    process(data: any[]) {
+    process(data: number[]) {
         return this.synapticProcessor
             .setData(data)
             .calculateSynapses(this.weights)
