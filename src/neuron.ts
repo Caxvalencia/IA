@@ -50,13 +50,11 @@ export class Neuron extends Perceptron {
     }
 
     recalculateWeights() {
-        this.synapticProcessor.updateThreshold(this.error);
-
         for (let i = 0; i < this.weights.length; i++) {
             this.weights[i] +=
                 this.synapticProcessor.learningRate *
                 this.synapticProcessor.data[i] *
-                this.synapticProcessor.delta;
+                this.error;
 
             this.weights[i] = parseFloat(this.weights[i].toFixed(4));
         }
@@ -70,8 +68,7 @@ export class Neuron extends Perceptron {
         let sumError = 0;
 
         this.outputNeurons.forEach((neuron: Neuron) => {
-            sumError +=
-                neuron.weights[neuronIndex] * neuron.synapticProcessor.delta;
+            sumError += neuron.weights[neuronIndex] * neuron.error;
         });
 
         this.calculateErrorDerivated(sumError);
@@ -81,10 +78,10 @@ export class Neuron extends Perceptron {
     }
 
     calculateErrorDerivated(factorDelta) {
-        let output = this.output();
-        let errorComplement = output - output * output;
+        const output = this.output();
+        const errorComplement = output - output * output;
 
-        this.synapticProcessor.delta = factorDelta * errorComplement;
+        this.error = factorDelta * errorComplement;
 
         return this;
     }
