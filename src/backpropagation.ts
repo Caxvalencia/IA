@@ -17,7 +17,7 @@ export class Backpropagation {
         this.funcionActivacion = 'sigmoidal';
 
         this.counterErrors = 0;
-        this.LIMIT_ERRORS = 10000;
+        this.LIMIT_ERRORS = 2500;
     }
 
     forwardpropagation({ input, output }) {
@@ -40,21 +40,22 @@ export class Backpropagation {
     }
 
     backpropagation() {
-        const indexOutputLayer = this.layers.length - 1;
+        const lastLayer = this.layers[this.layers.length - 1];
 
-        this.layers[indexOutputLayer].forEach((neuron: Neuron) => {
+        lastLayer.forEach((neuron: Neuron) => {
             neuron.synapticProcessor.calculateError();
-            neuron.synapticProcessor.calculateErrorDerivated(
-                neuron.synapticProcessor.error
-            );
-            neuron.recalculateWeights();
-            neuron.backpropagation();
+            neuron.error = Math.abs(neuron.synapticProcessor.error);
+            neuron.synapticProcessor.calculateErrorDerivated(neuron.error);
 
-            this.error = neuron.synapticProcessor.error;
+            if (neuron.error >= 0.0001) {
+                neuron.recalculateWeights();
+            }
+
+            neuron.backpropagation();
         });
     }
 
-    learn(datas) {
+    learn(datas: Array<{ input: number[]; output: number }>) {
         let learnCallback = () => {
             let sumErrors = 0;
 
@@ -64,20 +65,30 @@ export class Backpropagation {
 
                 this.layers.forEach(layer => {
                     layer.forEach((neuron: Neuron) => {
-                        sumErrors += Math.pow(neuron.error, 2);
+                        sumErrors += neuron.error * neuron.error;
                     });
                 });
 
-                sumErrors *= 0.5;
+                sumErrors /= 2;
             });
 
-            this.setError(sumErrors);
+            // if (sumErrors >= this.error) {
+            // this.layers.forEach(layer => {
+            //     layer.forEach((neuron: Neuron) => {
+            //         neuron.synapticProcessor.learningRate -= 0.01;
+            //     });
+            // });
+            // }
+
+            this.setError(parseFloat(sumErrors.toFixed(4)));
         };
 
         learnCallback();
 
         while (this.error > 0.001) {
             this.counterErrors++;
+
+            console.log(this.error, this.counterErrors);
 
             if (this.counterErrors >= this.LIMIT_ERRORS) {
                 // this.counterErrors = 0;

@@ -18,7 +18,7 @@ export class SynapticProcessor {
         data: any[] = null,
         expectedOutput: any = null
     ) {
-        this.learningRate = 0.25;
+        this.learningRate = 0.025;
         this.error = 0;
         this.activationFunction = activationFunction;
 
