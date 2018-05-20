@@ -86,15 +86,6 @@ export class SynapticProcessor {
         return this;
     }
 
-    calculateErrorDerivated(factorDelta) {
-        let output = this.output();
-        let errorComplement = output - output * output;
-
-        this.delta = factorDelta * errorComplement;
-
-        return this;
-    }
-
     setData(data: any[]) {
         if (data === null) {
             return this;
