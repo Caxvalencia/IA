@@ -64,6 +64,11 @@ export class Neuron extends Perceptron {
         return this.synapticProcessor.output();
     }
 
+    calculateErrorOfOutput() {
+        this.synapticProcessor.calculateError();
+        this.calculateErrorDerivated(this.synapticProcessor.error);
+    }
+
     calculateHiddenError(neuronIndex) {
         let sumError = 0;
 
@@ -72,7 +77,6 @@ export class Neuron extends Perceptron {
         });
 
         this.calculateErrorDerivated(sumError);
-        // this.recalculateWeights();
 
         return this;
     }

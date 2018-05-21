@@ -43,8 +43,7 @@ export class Backpropagation {
         const lastLayer = this.layers[this.layers.length - 1];
 
         lastLayer.forEach((neuron: Neuron) => {
-            neuron.synapticProcessor.calculateError();
-            neuron.calculateErrorDerivated(neuron.synapticProcessor.error);
+            neuron.calculateErrorOfOutput();
             neuron.backpropagation();
         });
     }
