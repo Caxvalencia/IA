@@ -26,9 +26,9 @@ export class BackpropagationTest {
             [[1, 0], 1],
             [[1, 1], 0]
         ].forEach(dataForTest => {
-            let data = dataForTest[0];
-            let outputExpected = dataForTest[1];
-            let output = XOR.process(data)[0];
+            const data = dataForTest[0];
+            const outputExpected = dataForTest[1];
+            const output = XOR.process(data)[0];
 
             assert.equal(output, outputExpected, data + ' -> ' + output);
         });

@@ -130,7 +130,7 @@ export class Backpropagation {
                 layer.forEach((neuron: Neuron) => {
                     sumErrors += neuron.error * neuron.error;
 
-                    if (neuron.error >= 0.0001) {
+                    if (Math.abs(neuron.error) >= 0.0001) {
                         neuron.recalculateWeights();
                     }
                 });
@@ -138,14 +138,6 @@ export class Backpropagation {
 
             sumErrors /= 2;
         });
-
-        // if (sumErrors >= this.error) {
-        // this.layers.forEach(layer => {
-        //     layer.forEach((neuron: Neuron) => {
-        //         neuron.synapticProcessor.learningRate -= 0.01;
-        //     });
-        // });
-        // }
 
         this.setError(parseFloat(sumErrors.toFixed(4)));
 
