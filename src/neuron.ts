@@ -29,7 +29,7 @@ export class Neuron extends Perceptron {
         for (let i = 0; i < this.dataStack.length; i++) {
             this.synapticProcessor
                 .setData(this.dataStack[i][0])
-                .setExpectedOutput(this.dataStack[i][1])
+                .setOutputExpected(this.dataStack[i][1])
                 .calculateSynapses(this.weights);
         }
 
@@ -66,6 +66,7 @@ export class Neuron extends Perceptron {
 
     calculateErrorOfOutput() {
         this.synapticProcessor.calculateError();
+        this.error = this.synapticProcessor.error;
         this.calculateErrorDerivated(this.synapticProcessor.error);
     }
 

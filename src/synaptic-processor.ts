@@ -7,22 +7,23 @@ export class SynapticProcessor {
     activationFunction: string;
     error: number;
     synapse: number;
-    expectedOutput: any;
     data: number[];
     threshold: number;
     learningRate: number;
     delta: number;
+    private outputExpected: number;
 
     constructor(
         activationFunction: ActivationFunctionType,
-        data: any[] = null,
-        expectedOutput: any = null
+        data: number[] = null,
+        outputExpected: number = null,
+        learningRate: number = 0.7
     ) {
-        this.learningRate = 0.025;
         this.error = 0;
         this.activationFunction = activationFunction;
 
-        this.setExpectedOutput(expectedOutput);
+        this.setLearningFactor(learningRate);
+        this.setOutputExpected(outputExpected);
         this.setData(data);
     }
 
@@ -39,7 +40,7 @@ export class SynapticProcessor {
      * @param {number[]} weights
      */
     recalculateWeights(weights: number[]) {
-        let error = this.expectedOutput - this.output();
+        const error = this.outputExpected - this.output();
 
         this.calculateDelta(error);
         this.updateThreshold();
@@ -81,7 +82,7 @@ export class SynapticProcessor {
     }
 
     calculateError() {
-        this.error = this.expectedOutput - this.output();
+        this.error = this.outputExpected - this.output();
 
         return this;
     }
@@ -96,8 +97,8 @@ export class SynapticProcessor {
         return this;
     }
 
-    setExpectedOutput(expectedOutput) {
-        this.expectedOutput = expectedOutput;
+    setOutputExpected(expectedOutput) {
+        this.outputExpected = expectedOutput;
 
         return this;
     }

@@ -44,7 +44,7 @@ export class Perceptron {
         for (let i = 0; i < this.dataStack.length; i++) {
             this.synapticProcessor
                 .setData(this.dataStack[i][0])
-                .setExpectedOutput(this.dataStack[i][1])
+                .setOutputExpected(this.dataStack[i][1])
                 .calculateSynapses(this.weights)
                 .calculateError();
 
