@@ -145,8 +145,8 @@ export class Backpropagation {
     }
 
     private createLayer(numberNeurons: number) {
-        let layer: Neuron[] = [];
-        let isHidden: boolean = this.layers.length > 0;
+        const layer: Neuron[] = [];
+        const isHidden: boolean = this.layers.length > 0;
 
         for (let i = 0; i < numberNeurons; i++) {
             layer[i] = new Neuron(isHidden);

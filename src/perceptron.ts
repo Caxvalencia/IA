@@ -17,7 +17,7 @@ export class Perceptron {
     protected activationFunction: ActivationFunctionType;
 
     constructor(callback?, activationFunction?: ActivationFunctionType) {
-        this.rangeWeight = { MIN: -5, MAX: 4.9 };
+        this.rangeWeight = { MIN: -0.5, MAX: 0.49 };
         this.counterErrors = 0;
         this.hasError = false;
         this.weights = null;
