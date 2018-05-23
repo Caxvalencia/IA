@@ -6,6 +6,27 @@ import { Backpropagation } from '../backpropagation';
 @suite
 export class BackpropagationTest {
     @test
+    public testOR() {
+        const data = [
+            { input: [0, 0], output: 0 },
+            { input: [0, 1], output: 1 },
+            { input: [1, 0], output: 1 },
+            { input: [1, 1], output: 1 }
+        ];
+
+        const OR = new Backpropagation();
+        OR.addLayer(2)
+            .addLayer(1)
+            .learn(data);
+
+        data.forEach(({input, output}) => {
+            const outputActual = OR.process(input)[0];
+
+            assert.equal(outputActual, output, input + ' -> ' + output);
+        });
+    }
+
+    // @test
     public testXOR() {
         let data = [
             { input: [0, 0], output: 0 },
