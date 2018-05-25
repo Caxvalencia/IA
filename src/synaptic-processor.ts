@@ -37,9 +37,9 @@ export class SynapticProcessor {
     }
 
     /**
-     * @param {number[]} weights
+     * @param {Float32Array} weights 
      */
-    recalculateWeights(weights: number[]) {
+    recalculateWeights(weights: Float32Array) {
         const error = this.outputExpected - this.output();
 
         this.calculateDelta(error);
@@ -66,10 +66,10 @@ export class SynapticProcessor {
     }
 
     /**
-     * @param {number[]} weights
-     * @returns
+     * @param {Float32Array} weights 
+     * @returns  
      */
-    calculateSynapses(weights: number[]) {
+    calculateSynapses(weights: Float32Array) {
         this.synapse = 0;
 
         for (let i = 0; i < weights.length; i++) {

@@ -5,11 +5,11 @@ export const LIMIT_ERRORS: number = 8000;
 
 export class Perceptron {
     dataStack: any[];
-    weights: number[];
-    
+    weights: Float32Array;
+
     counterErrors: number;
     hasError: boolean;
-    
+
     rangeWeight: { MIN: number; MAX: number };
     synapticProcessor: SynapticProcessor;
 
@@ -80,7 +80,7 @@ export class Perceptron {
             .output();
     }
 
-    setWeights(weights) {
+    setWeights(weights: Float32Array) {
         this.weights = weights;
 
         return this;
@@ -106,8 +106,8 @@ export class Perceptron {
     }
 
     protected assignWeights() {
-        let dataSize = this.dataStack[0][0].length;
-        let weights = new Array<number>(dataSize);
+        const dataSize = this.dataStack[0][0].length;
+        const weights = new Float32Array(dataSize);
 
         for (let i = 0; i < dataSize; i++) {
             weights[i] = this.createWeight();
@@ -115,7 +115,7 @@ export class Perceptron {
 
         this.setWeights(weights);
         this.synapticProcessor.threshold = this.createWeight();
-        
+
         this.funcBack();
 
         return this;
