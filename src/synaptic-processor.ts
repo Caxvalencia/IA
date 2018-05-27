@@ -7,7 +7,7 @@ export class SynapticProcessor {
     activationFunction: string;
     error: number;
     synapse: number;
-    data: number[];
+    data: Float32Array;
     threshold: number;
     learningRate: number;
     delta: number;
@@ -15,9 +15,9 @@ export class SynapticProcessor {
 
     constructor(
         activationFunction: ActivationFunctionType,
-        data: number[] = null,
+        data: Float32Array = null,
         outputExpected: number = null,
-        learningRate: number = 0.7
+        learningRate: number = 0.73
     ) {
         this.error = 0;
         this.activationFunction = activationFunction;
@@ -87,7 +87,7 @@ export class SynapticProcessor {
         return this;
     }
 
-    setData(data: number[]) {
+    setData(data: Float32Array) {
         if (data === null) {
             return this;
         }

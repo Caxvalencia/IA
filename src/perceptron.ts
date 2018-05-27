@@ -73,7 +73,7 @@ export class Perceptron {
         return this;
     }
 
-    process(data: number[]) {
+    process(data: Float32Array) {
         return this.synapticProcessor
             .setData(data)
             .calculateSynapses(this.weights)
