@@ -1,23 +1,24 @@
 import { Neuron } from './neuron';
+import { Layer } from './layer';
 
 'use strict';
 export class Backpropagation {
+    layers: Layer;
     LIMIT_ERRORS: number;
     counterErrors: number;
     funcionActivacion: string;
     error: number;
-    layers: Neuron[][];
 
     /**
      * @construtor
      */
     constructor() {
-        this.layers = [];
+        this.layers = new Layer();
         this.error = 0;
         this.funcionActivacion = 'sigmoidal';
 
         this.counterErrors = 0;
-        this.LIMIT_ERRORS = 2500;
+        this.LIMIT_ERRORS = 5000;
     }
 
     forwardpropagation({ input, output }) {
@@ -40,7 +41,7 @@ export class Backpropagation {
     }
 
     backpropagation() {
-        const lastLayer = this.layers[this.layers.length - 1];
+        const lastLayer = this.layers.getLast();
 
         lastLayer.forEach((neuron: Neuron) => {
             neuron.calculateErrorOfOutput();
@@ -67,24 +68,7 @@ export class Backpropagation {
     }
 
     addLayer(numberNeurons: number) {
-        let layer = this.createLayer(numberNeurons);
-        let indexNewLayer = this.layers.push(layer) - 1;
-        let beforeLayer = this.layers[indexNewLayer - 1];
-
-        // Verificar si existe capa anterior
-        if (beforeLayer === undefined) {
-            return this;
-        }
-
-        // Apuntar con cada Neuron de la nueva capa a la anterior
-        layer.forEach((neuron: Neuron) => {
-            neuron.inputNeurons = beforeLayer;
-        });
-
-        // Apuntar con cada neurona de la capa anterior a la nueva capa
-        beforeLayer.forEach((neuron: Neuron) => {
-            neuron.outputNeurons = layer;
-        });
+        this.layers.add(numberNeurons);
 
         return this;
     }
@@ -142,16 +126,5 @@ export class Backpropagation {
         this.setError(parseFloat(sumErrors.toFixed(4)));
 
         console.log(this.error, this.counterErrors);
-    }
-
-    private createLayer(numberNeurons: number) {
-        const layer: Neuron[] = [];
-        const isHidden: boolean = this.layers.length > 0;
-
-        for (let i = 0; i < numberNeurons; i++) {
-            layer[i] = new Neuron(isHidden);
-        }
-
-        return layer;
     }
 }
