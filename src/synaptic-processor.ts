@@ -4,7 +4,7 @@ import {
 } from './activation-functions/activation-function';
 
 export class SynapticProcessor {
-    activationFunction: string;
+    activationFunction: ActivationFunction;
     error: number;
     synapse: number;
     data: Float32Array;
@@ -17,10 +17,10 @@ export class SynapticProcessor {
         activationFunction: ActivationFunctionType,
         data: Float32Array = null,
         outputExpected: number = null,
-        learningRate: number = 0.73
+        learningRate: number = 0.3
     ) {
         this.error = 0;
-        this.activationFunction = activationFunction;
+        this.activationFunction = ActivationFunction.init(activationFunction);
 
         this.setLearningFactor(learningRate);
         this.setOutputExpected(outputExpected);
@@ -31,13 +31,11 @@ export class SynapticProcessor {
      * @returns {number}
      */
     output(): number {
-        return ActivationFunction.process(this.activationFunction)(
-            this.synapse
-        );
+        return this.activationFunction.process(this.synapse);
     }
 
     /**
-     * @param {Float32Array} weights 
+     * @param {Float32Array} weights
      */
     recalculateWeights(weights: Float32Array) {
         const error = this.outputExpected - this.output();
@@ -66,8 +64,8 @@ export class SynapticProcessor {
     }
 
     /**
-     * @param {Float32Array} weights 
-     * @returns  
+     * @param {Float32Array} weights
+     * @returns
      */
     calculateSynapses(weights: Float32Array) {
         this.synapse = 0;
