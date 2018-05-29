@@ -1,6 +1,6 @@
 import { sigmoidal } from './sigmoidal.function';
 import { reLU } from './relu.function';
-import { hyperbolicTangent } from './hyperbolic-tangent.function';
+import { hyperbolicTangent, prime } from './hyperbolic-tangent.function';
 import { binary } from './binary.function';
 
 export enum ActivationFunctionType {
@@ -12,31 +12,33 @@ export enum ActivationFunctionType {
 
 export class ActivationFunction {
     protected default: string;
+    private callback: any;
 
     constructor(
         functionName: ActivationFunctionType = ActivationFunctionType.BINARY
     ) {
         this.default = functionName;
+        this.callback = this.getCallback();
     }
 
     /**
      * @static
-     * @param {string} functionName 
-     * @param {ActivationFunctionType} [defaultFunction] 
-     * @returns  
+     * @param {string} functionName
+     * @returns
      */
-    static process(
-        functionName: string,
-        defaultFunction?: ActivationFunctionType
-    ) {
-        return new ActivationFunction(defaultFunction).process(functionName);
+    static init(functionName: ActivationFunctionType) {
+        return new ActivationFunction(functionName);
     }
 
     /**
-     * @param {string} functionName 
-     * @returns  
+     * @param {number} synapse
+     * @returns
      */
-    process(functionName: string) {
+    process(synapse: number) {
+        return this.callback(synapse);
+    }
+
+    private getCallback(): any {
         const callback = {
             [ActivationFunctionType.BINARY]: binary,
             [ActivationFunctionType.RELU]: reLU,
@@ -44,6 +46,6 @@ export class ActivationFunction {
             [ActivationFunctionType.HYPERBOLIC_TANGENT]: hyperbolicTangent
         };
 
-        return callback[functionName] || callback[this.default];
+        this.callback = callback[this.default];
     }
 }
