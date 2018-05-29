@@ -1,7 +1,7 @@
-import { sigmoidal } from './sigmoidal.function';
-import { reLU } from './relu.function';
-import { hyperbolicTangent, prime } from './hyperbolic-tangent.function';
-import { binary } from './binary.function';
+import { Binary } from './binary.function';
+import { HyperbolicTangent } from './hyperbolic-tangent.function';
+import { ReLU } from './relu.function';
+import { Sigmoidal } from './sigmoidal.function';
 
 export enum ActivationFunctionType {
     BINARY = 'BINARY',
@@ -10,15 +10,24 @@ export enum ActivationFunctionType {
     HYPERBOLIC_TANGENT = 'HYPERBOLIC_TANGENT'
 }
 
+const callback = {
+    [ActivationFunctionType.BINARY]: Binary,
+    [ActivationFunctionType.RELU]: ReLU,
+    [ActivationFunctionType.SIGMOIDAL]: Sigmoidal,
+    [ActivationFunctionType.HYPERBOLIC_TANGENT]: HyperbolicTangent
+};
+
 export class ActivationFunction {
     protected default: string;
-    private callback: any;
+    private callback: Function;
+    private callbackPrime: Function;
 
     constructor(
         functionName: ActivationFunctionType = ActivationFunctionType.BINARY
     ) {
         this.default = functionName;
-        this.callback = this.getCallback();
+        this.setCallback();
+        this.setCallbackPrime();
     }
 
     /**
@@ -38,14 +47,19 @@ export class ActivationFunction {
         return this.callback(synapse);
     }
 
-    private getCallback(): any {
-        const callback = {
-            [ActivationFunctionType.BINARY]: binary,
-            [ActivationFunctionType.RELU]: reLU,
-            [ActivationFunctionType.SIGMOIDAL]: sigmoidal,
-            [ActivationFunctionType.HYPERBOLIC_TANGENT]: hyperbolicTangent
-        };
+    /**
+     * @param {number} synapse
+     * @returns
+     */
+    prime(synapse: number) {
+        return this.callbackPrime(synapse);
+    }
 
-        this.callback = callback[this.default];
+    private setCallback() {
+        this.callback = callback[this.default].activation;
+    }
+
+    private setCallbackPrime() {
+        this.callbackPrime = callback[this.default].prime;
     }
 }

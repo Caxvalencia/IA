@@ -1,9 +1,11 @@
-export function sigmoidal(synapse) {
-    return 1 / (1 + Math.pow(Math.E, -synapse));
-}
+export namespace Sigmoidal {
+    export function activation(synapse) {
+        return 1 / (1 + Math.pow(Math.E, -synapse));
+    }
 
-export function prime(synapse) {
-    const output = sigmoidal(synapse);
+    export function prime(synapse) {
+        const output = activation(synapse);
 
-    return output - output * output;
+        return output - output * output;
+    }
 }
