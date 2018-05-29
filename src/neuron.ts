@@ -50,12 +50,10 @@ export class Neuron extends Perceptron {
     }
 
     recalculateWeights() {
-        for (let i = 0; i < this.weights.length; i++) {
-            this.weights[i] +=
-                this.synapticProcessor.learningRate *
-                this.synapticProcessor.data[i] *
-                this.error;
+        const delta = this.synapticProcessor.learningRate * this.error;
 
+        for (let i = 0; i < this.weights.length; i++) {
+            this.weights[i] += this.synapticProcessor.data[i] * delta;
             this.weights[i] = parseFloat(this.weights[i].toFixed(4));
         }
     }
