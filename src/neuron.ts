@@ -67,7 +67,7 @@ export class Neuron extends Perceptron {
     calculateErrorOfOutput() {
         this.synapticProcessor.calculateError();
         this.error = this.synapticProcessor.error;
-        this.calculateErrorDerivated(this.synapticProcessor.error);
+        this.calculateErrorDerivated(this.error);
     }
 
     calculateHiddenError(neuronIndex) {
@@ -83,11 +83,17 @@ export class Neuron extends Perceptron {
     }
 
     calculateErrorDerivated(factorDelta) {
-        const output = this.output();
-        const errorComplement = output - output * output;
-
-        this.error = factorDelta * errorComplement;
+        this.error = factorDelta * this.prime();
 
         return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    prime(): number {
+        return this.synapticProcessor.activationFunction.prime(
+            this.synapticProcessor.synapse
+        );
     }
 }
