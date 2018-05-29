@@ -19,7 +19,7 @@ export class BackpropagationTest {
             .addLayer(1)
             .learn(data);
 
-        data.forEach(({input, output}) => {
+        data.forEach(({ input, output }) => {
             const outputActual = OR.process(input)[0];
 
             assert.equal(outputActual, output, input + ' -> ' + output);
@@ -27,31 +27,44 @@ export class BackpropagationTest {
     }
 
     // @test
+    public testAND() {
+        const data = [
+            { input: [0, 0], output: 0 },
+            { input: [0, 1], output: 0 },
+            { input: [1, 0], output: 0 },
+            { input: [1, 1], output: 1 }
+        ];
+
+        const AND = new Backpropagation();
+        AND.addLayer(2)
+            .addLayer(1)
+            .learn(data);
+
+        data.forEach(({ input, output }) => {
+            const outputActual = AND.process(input)[0];
+
+            assert.equal(outputActual, output, input + ' -> ' + output);
+        });
+    }
+
+    // @test
     public testXOR() {
-        let data = [
+        const data = [
             { input: [0, 0], output: 0 },
             { input: [0, 1], output: 1 },
             { input: [1, 0], output: 1 },
             { input: [1, 1], output: 0 }
         ];
 
-        let XOR = new Backpropagation();
-        XOR.addLayer(2) // Entrada o primer capa oculta
-            .addLayer(1) // Salida o ultima capa
+        const XOR = new Backpropagation();
+        XOR.addLayer(3)
+            .addLayer(1)
             .learn(data);
 
-        [
-            // Datas
-            [[0, 0], 0],
-            [[0, 1], 1],
-            [[1, 0], 1],
-            [[1, 1], 0]
-        ].forEach(dataForTest => {
-            const data = dataForTest[0];
-            const outputExpected = dataForTest[1];
-            const output = XOR.process(data)[0];
+        data.forEach(({ input, output }) => {
+            const outputActual = XOR.process(input)[0];
 
-            assert.equal(output, outputExpected, data + ' -> ' + output);
+            assert.equal(outputActual, output, input + ' -> ' + output);
         });
     }
 }
