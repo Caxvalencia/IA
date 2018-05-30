@@ -5,6 +5,8 @@ export class Neuron extends Perceptron {
     inputNeurons: Neuron[];
     outputNeurons: Neuron[];
 
+    beforeWeights: Float32Array;
+
     error: number;
     isHidden: boolean;
 
@@ -24,6 +26,7 @@ export class Neuron extends Perceptron {
     learn() {
         if (!this.weights) {
             this.assignWeights();
+            this.beforeWeights = this.weights.slice();
         }
 
         for (let i = 0; i < this.dataStack.length; i++) {
@@ -51,9 +54,17 @@ export class Neuron extends Perceptron {
 
     recalculateWeights() {
         const delta = this.synapticProcessor.learningRate * this.error;
+        const momentumFactor = 0.8;
+        let deltaWeights;
 
         for (let i = 0; i < this.weights.length; i++) {
-            this.weights[i] += this.synapticProcessor.data[i] * delta;
+            deltaWeights =
+                momentumFactor * (this.weights[i] - this.beforeWeights[i]);
+
+            this.beforeWeights[i] = this.weights[i];
+
+            this.weights[i] +=
+                this.synapticProcessor.data[i] * delta + deltaWeights;
             this.weights[i] = parseFloat(this.weights[i].toFixed(4));
         }
     }
