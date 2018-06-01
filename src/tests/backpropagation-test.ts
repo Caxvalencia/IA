@@ -14,7 +14,7 @@ export class BackpropagationTest {
             { input: [1, 1], output: 1 }
         ];
 
-        const OR = new Backpropagation();
+        const OR = new Backpropagation({ epochs: 1000 });
         OR.addLayer(2)
             .addLayer(1)
             .learn(data);
@@ -26,7 +26,7 @@ export class BackpropagationTest {
         });
     }
 
-    // @test
+    //@test
     public testAND() {
         const data = [
             { input: [0, 0], output: 0 },
@@ -35,7 +35,7 @@ export class BackpropagationTest {
             { input: [1, 1], output: 1 }
         ];
 
-        const AND = new Backpropagation();
+        const AND = new Backpropagation({ epochs: 1000 });
         AND.addLayer(2)
             .addLayer(1)
             .learn(data);
@@ -47,7 +47,7 @@ export class BackpropagationTest {
         });
     }
 
-    // @test
+    @test
     public testXOR() {
         const data = [
             { input: [0, 0], output: 0 },
@@ -56,8 +56,8 @@ export class BackpropagationTest {
             { input: [1, 1], output: 0 }
         ];
 
-        const XOR = new Backpropagation();
-        XOR.addLayer(3)
+        const XOR = new Backpropagation({ epochs: 10000 });
+        XOR.addLayer(2)
             .addLayer(1)
             .learn(data);
 

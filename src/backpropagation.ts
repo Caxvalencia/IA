@@ -1,21 +1,28 @@
-import { Neuron } from './neuron';
+import { ActivationFunctionType } from './activation-functions/activation-function';
 import { Layer } from './layer';
+import { Neuron } from './neuron';
+
+interface BackpropagationConfig {
+    epochs: number;
+    activationFunction?: ActivationFunctionType;
+}
 
 'use strict';
 export class Backpropagation {
     layers: Layer;
     LIMIT_ERRORS: number;
-    funcionActivacion: string;
+    activationFunction: string;
     error: number;
 
     /**
      * @construtor
      */
-    constructor() {
+    constructor(config: BackpropagationConfig) {
         this.layers = new Layer();
         this.error = 0;
-        this.funcionActivacion = 'sigmoidal';
-        this.LIMIT_ERRORS = 15000;
+        this.activationFunction =
+            config.activationFunction || ActivationFunctionType.SIGMOIDAL;
+        this.LIMIT_ERRORS = config.epochs;
     }
 
     forwardpropagation({ input, output }) {
