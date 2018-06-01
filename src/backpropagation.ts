@@ -5,7 +5,6 @@ import { Layer } from './layer';
 export class Backpropagation {
     layers: Layer;
     LIMIT_ERRORS: number;
-    counterErrors: number;
     funcionActivacion: string;
     error: number;
 
@@ -16,9 +15,7 @@ export class Backpropagation {
         this.layers = new Layer();
         this.error = 0;
         this.funcionActivacion = 'sigmoidal';
-
-        this.counterErrors = 0;
-        this.LIMIT_ERRORS = 5000;
+        this.LIMIT_ERRORS = 15000;
     }
 
     forwardpropagation({ input, output }) {
@@ -50,19 +47,23 @@ export class Backpropagation {
     }
 
     learn(datas: Array<{ input: number[]; output: number }>) {
+        let counterErrors = 0;
+
         this.runEpoch(datas);
 
         while (this.error > 0.001) {
-            this.counterErrors++;
+            counterErrors++;
 
-            if (this.counterErrors >= this.LIMIT_ERRORS) {
+            if (counterErrors % 1000 === 0) {
+                console.log(this.error, counterErrors);
+            }
+
+            if (counterErrors >= this.LIMIT_ERRORS) {
                 return this;
             }
 
             this.runEpoch(datas);
         }
-
-        this.counterErrors = 0;
 
         return this;
     }
@@ -121,9 +122,5 @@ export class Backpropagation {
         });
 
         this.setError(parseFloat(sumErrors.toFixed(4)));
-
-        if (this.counterErrors % 1000 === 0) {
-            console.log(this.error, this.counterErrors);
-        }
     }
 }
