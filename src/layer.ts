@@ -52,10 +52,9 @@ export class Layer {
      */
     private create(numberNeurons: number): Neuron[] {
         const layer: Neuron[] = [];
-        const isHidden: boolean = this.layers.length > 0;
 
         for (let i = 0; i < numberNeurons; i++) {
-            layer[i] = new Neuron(isHidden);
+            layer[i] = new Neuron();
         }
 
         return layer;
