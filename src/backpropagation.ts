@@ -31,14 +31,14 @@ export class Backpropagation {
 
     forwardpropagation({ input, output }) {
         let outputs = [];
-        let data = input;
+        let data = new Float32Array(input);
 
         this.layers.forEach((layer: Neuron[]) => {
             if (outputs.length > 0) {
-                data = outputs;
+                data = new Float32Array(outputs);
                 outputs = [];
             }
-
+            
             for (let index = 0; index < layer.length; index++) {
                 const neuron = layer[index];
 

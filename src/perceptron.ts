@@ -28,7 +28,7 @@ export class Perceptron {
         this.dataStack = [];
     }
 
-    addData(data: number[], output: number) {
+    addData(data: Float32Array, output: number) {
         this.dataStack.push([data, output]);
 
         return this;
@@ -93,8 +93,8 @@ export class Perceptron {
     }
 
     protected createWeight() {
+        const range = this.rangeWeight.MAX - this.rangeWeight.MIN;
         let weight = 0;
-        let range = this.rangeWeight.MAX - this.rangeWeight.MIN;
 
         while (!weight) {
             weight = parseFloat(
@@ -106,7 +106,7 @@ export class Perceptron {
     }
 
     protected assignWeights() {
-        const dataSize = this.dataStack[0][0].length;
+        const dataSize: number = this.dataStack[0][0].length;
         const weights = new Float32Array(dataSize);
 
         for (let i = 0; i < dataSize; i++) {
