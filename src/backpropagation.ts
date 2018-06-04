@@ -38,7 +38,7 @@ export class Backpropagation {
                 data = new Float32Array(outputs);
                 outputs = [];
             }
-            
+
             for (let index = 0; index < layer.length; index++) {
                 const neuron = layer[index];
 

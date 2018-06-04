@@ -13,17 +13,18 @@ export class Perceptron {
     rangeWeight: { MIN: number; MAX: number };
     synapticProcessor: SynapticProcessor;
 
-    public funcBack: () => void;
-    protected activationFunction: ActivationFunctionType;
+    funcBack: () => void;
 
-    constructor(callback?, activationFunction?: ActivationFunctionType) {
+    constructor(
+        activationFunction?: ActivationFunctionType,
+        callback = () => {}
+    ) {
         this.rangeWeight = { MIN: -0.5, MAX: 0.49 };
         this.counterErrors = 0;
         this.hasError = false;
         this.weights = null;
-        this.funcBack = callback || (() => {});
+        this.funcBack = callback;
 
-        this.activationFunction = activationFunction;
         this.synapticProcessor = new SynapticProcessor(activationFunction);
         this.dataStack = [];
     }
@@ -82,12 +83,6 @@ export class Perceptron {
 
     setWeights(weights: Float32Array) {
         this.weights = weights;
-
-        return this;
-    }
-
-    setActivationFunction(activationFunction: ActivationFunctionType) {
-        this.activationFunction = activationFunction;
 
         return this;
     }

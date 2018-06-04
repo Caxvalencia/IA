@@ -13,7 +13,7 @@ export class Neuron extends Perceptron {
     constructor(
         activationFunction: ActivationFunctionType = ActivationFunctionType.SIGMOIDAL
     ) {
-        super(null, activationFunction);
+        super(activationFunction);
 
         this.error = 0;
         this.outputNeurons = [];
