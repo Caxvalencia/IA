@@ -11,17 +11,21 @@ interface BackpropagationConfig {
 export class Backpropagation {
     layers: Layer;
     LIMIT_ERRORS: number;
-    activationFunction: string;
+    activationFunction: ActivationFunctionType;
     error: number;
 
     /**
      * @construtor
      */
-    constructor(config: BackpropagationConfig) {
-        this.layers = new Layer();
+    constructor(
+        config: BackpropagationConfig = {
+            epochs: 1000,
+            activationFunction: ActivationFunctionType.SIGMOIDAL
+        }
+    ) {
         this.error = 0;
-        this.activationFunction =
-            config.activationFunction || ActivationFunctionType.SIGMOIDAL;
+        this.activationFunction = config.activationFunction;
+        this.layers = new Layer(this.activationFunction);
         this.LIMIT_ERRORS = config.epochs;
     }
 

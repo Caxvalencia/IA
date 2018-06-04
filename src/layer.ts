@@ -1,9 +1,14 @@
 import { Neuron } from './neuron';
+import { ActivationFunctionType } from './activation-functions/activation-function';
 
 export class Layer {
     private layers: Neuron[][];
+    private activationFunction: ActivationFunctionType;
 
-    constructor() {
+    constructor(
+        activationFunction: ActivationFunctionType = ActivationFunctionType.SIGMOIDAL
+    ) {
+        this.activationFunction = activationFunction;
         this.layers = [];
     }
 
@@ -54,7 +59,7 @@ export class Layer {
         const layer: Neuron[] = [];
 
         for (let i = 0; i < numberNeurons; i++) {
-            layer[i] = new Neuron();
+            layer[i] = new Neuron(this.activationFunction);
         }
 
         return layer;
