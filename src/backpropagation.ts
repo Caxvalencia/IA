@@ -39,10 +39,12 @@ export class Backpropagation {
                 outputs = [];
             }
 
-            layer.forEach((neuron: Neuron) => {
+            for (let index = 0; index < layer.length; index++) {
+                const neuron = layer[index];
+
                 neuron.addData(data, output).learn();
-                outputs.push(neuron.output());
-            });
+                outputs[index] = neuron.output();
+            }
         });
 
         return this;
@@ -51,10 +53,12 @@ export class Backpropagation {
     backpropagation() {
         const lastLayer = this.layers.getLast();
 
-        lastLayer.forEach((neuron: Neuron) => {
+        for (let index = 0; index < lastLayer.length; index++) {
+            const neuron = lastLayer[index];
+
             neuron.calculateErrorOfOutput();
             neuron.backpropagation();
-        });
+        }
     }
 
     learn(datas: Array<{ input: number[]; output: number }>) {
@@ -96,9 +100,9 @@ export class Backpropagation {
                 outputs = [];
             }
 
-            layer.forEach((neuron: Neuron) => {
-                outputs.push(neuron.process(data));
-            });
+            for (let index = 0; index < layer.length; index++) {
+                outputs.push(layer[index].process(data));
+            }
         });
 
         // return outputs;
@@ -118,19 +122,21 @@ export class Backpropagation {
     private runEpoch(datas: Array<{ input: number[]; output: number }>) {
         let sumErrors = 0;
 
-        datas.forEach(data => {
-            this.forwardpropagation(data);
+        for (let jindex = 0; jindex < datas.length; jindex++) {
+            this.forwardpropagation(datas[jindex]);
             this.backpropagation();
 
             this.layers.forEach(layer => {
-                layer.forEach((neuron: Neuron) => {
+                for (let index = 0; index < layer.length; index++) {
+                    const neuron = layer[index];
+
                     sumErrors += neuron.error * neuron.error;
                     neuron.recalculateWeights();
-                });
+                }
             });
 
             sumErrors /= 2;
-        });
+        }
 
         this.setError(parseFloat(sumErrors.toFixed(4)));
     }

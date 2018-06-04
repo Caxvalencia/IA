@@ -39,8 +39,10 @@ export class Layer {
         return this;
     }
 
-    forEach(callback) {
-        return this.layers.forEach(callback);
+    forEach(callback: (layer: Neuron[]) => void) {
+        for (let idx = 0; idx < this.layers.length; idx++) {
+            callback(this.layers[idx]);
+        }
     }
 
     /**

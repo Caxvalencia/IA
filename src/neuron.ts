@@ -40,9 +40,9 @@ export class Neuron extends Perceptron {
      * Error on hidden layers
      */
     backpropagation() {
-        this.inputNeurons.forEach((neuron: Neuron, neuronIndex) => {
-            neuron.calculateHiddenError(neuronIndex);
-        });
+        for (let index = 0; index < this.inputNeurons.length; index++) {
+            this.inputNeurons[index].calculateHiddenError(index);
+        }
 
         if (this.inputNeurons.length > 0) {
             this.inputNeurons[0].backpropagation();
@@ -79,9 +79,10 @@ export class Neuron extends Perceptron {
     calculateHiddenError(neuronIndex) {
         let sumError = 0;
 
-        this.outputNeurons.forEach((neuron: Neuron) => {
+        for (let index = 0; index < this.outputNeurons.length; index++) {
+            const neuron = this.outputNeurons[index];
             sumError += neuron.weights[neuronIndex] * neuron.error;
-        });
+        }
 
         this.calculateErrorDerivated(sumError);
 
