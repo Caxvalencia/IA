@@ -2,7 +2,6 @@ import { ActivationFunctionType } from './activation-functions/activation-functi
 import { Perceptron } from './perceptron';
 
 export class Neuron extends Perceptron {
-    
     beforeWeights: Float32Array;
     error: number;
     inputNeurons: Neuron[];
@@ -11,8 +10,10 @@ export class Neuron extends Perceptron {
     /**
      * @construtor
      */
-    constructor() {
-        super(null, ActivationFunctionType.SIGMOIDAL);
+    constructor(
+        activationFunction: ActivationFunctionType = ActivationFunctionType.SIGMOIDAL
+    ) {
+        super(null, activationFunction);
 
         this.error = 0;
         this.outputNeurons = [];
