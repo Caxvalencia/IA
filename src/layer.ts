@@ -46,10 +46,18 @@ export class Layer {
     }
 
     /**
+     * @param {number} index
+     * @returns {Neuron[]}
+     */
+    get(index: number): Neuron[] {
+        return this.layers[index];
+    }
+
+    /**
      * @returns {Neuron[]}
      */
     getLast(): Neuron[] {
-        return this.layers[this.layers.length - 1];
+        return this.get(this.layers.length - 1);
     }
 
     /**

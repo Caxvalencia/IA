@@ -92,4 +92,35 @@ export class BackpropagationTest {
             assert.equal(outputActual, output, input + ' -> ' + output);
         });
     }
+
+    @test
+    public testImportConfiguration() {
+        const data = [
+            { input: [0, 0], output: 0 },
+            { input: [0, 1], output: 1 },
+            { input: [1, 0], output: 1 },
+            { input: [1, 1], output: 0 }
+        ];
+
+        const model = {
+            layers: [3, 1],
+            weights: [
+                [
+                    [5.747799873352051, -3.111999988555908],
+                    [-2.653899908065796, 3.5102999210357666],
+                    [5.576099872589111, 5.699999809265137]
+                ],
+                [[-9.125900268554688, -9.922599792480469, 12.401000022888184]]
+            ]
+        };
+
+        const XOR = new Backpropagation({ epochs: 5000 });
+        XOR.importModel(model).learn(data);
+
+        data.forEach(({ input, output }) => {
+            const outputActual = XOR.process(input)[0];
+
+            assert.equal(outputActual, output, input + ' -> ' + output);
+        });
+    }
 }

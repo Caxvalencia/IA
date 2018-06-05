@@ -23,7 +23,7 @@ export class Neuron extends Perceptron {
     learn() {
         if (!this.weights) {
             this.assignWeights();
-            this.beforeWeights = this.weights.slice();
+            this.setBeforeWeights(this.weights.slice());
         }
 
         for (let i = 0; i < this.dataStack.length; i++) {
@@ -102,5 +102,24 @@ export class Neuron extends Perceptron {
         return this.synapticProcessor.activationFunction.prime(
             this.synapticProcessor.synapse
         );
+    }
+
+    /**
+     * @param {Float32Array} beforeWeights
+     * @returns {this}
+     */
+    setBeforeWeights(beforeWeights: Float32Array): this {
+        this.beforeWeights = beforeWeights;
+
+        return this;
+    }
+
+    /**
+     * @returns {this}
+     */
+    initThreshold(): this {
+        this.synapticProcessor.threshold = this.createWeight();
+
+        return this;
     }
 }

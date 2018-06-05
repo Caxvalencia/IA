@@ -29,6 +29,27 @@ export class Backpropagation {
         this.LIMIT_ERRORS = config.epochs;
     }
 
+    /**
+     * @param {{ layers: number[]; weights: number[][] }} model
+     * @returns {this}
+     */
+    importModel(model: { layers: number[]; weights: number[][][] }): this {
+        model.layers.forEach(layer => {
+            this.addLayer(layer);
+        });
+
+        model.weights.forEach((layerWeights, index) => {
+            this.layers.get(index).forEach((neuron: Neuron, neuronIndex) => {
+                neuron
+                    .setWeights(new Float32Array(layerWeights[neuronIndex]))
+                    .setBeforeWeights(neuron.weights.slice())
+                    .initThreshold();
+            });
+        });
+
+        return this;
+    }
+
     forwardpropagation({ input, output }) {
         let outputs = [];
         let data = new Float32Array(input);
@@ -61,10 +82,10 @@ export class Backpropagation {
         }
     }
 
-    learn(datas: Array<{ input: number[]; output: number }>) {
+    learn(data: Array<{ input: number[]; output: number }>) {
         let counterErrors = 0;
 
-        this.runEpoch(datas);
+        this.runEpoch(data);
 
         while (this.error > 0.001) {
             counterErrors++;
@@ -77,7 +98,7 @@ export class Backpropagation {
                 return this;
             }
 
-            this.runEpoch(datas);
+            this.runEpoch(data);
         }
 
         return this;
@@ -119,11 +140,11 @@ export class Backpropagation {
         return this;
     }
 
-    private runEpoch(datas: Array<{ input: number[]; output: number }>) {
+    private runEpoch(data: Array<{ input: number[]; output: number }>) {
         let sumErrors = 0;
 
-        for (let jindex = 0; jindex < datas.length; jindex++) {
-            this.forwardpropagation(datas[jindex]);
+        for (let jindex = 0; jindex < data.length; jindex++) {
+            this.forwardpropagation(data[jindex]);
             this.backpropagation();
 
             this.layers.forEach(layer => {
