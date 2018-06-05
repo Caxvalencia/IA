@@ -41,7 +41,7 @@ export class Backpropagation {
         model.weights.forEach((layerWeights, index) => {
             this.layers.get(index).forEach((neuron: Neuron, neuronIndex) => {
                 neuron
-                    .setWeights(new Float32Array(layerWeights[neuronIndex]))
+                    .setWeights(new Float64Array(layerWeights[neuronIndex]))
                     .setBeforeWeights(neuron.weights.slice())
                     .initThreshold();
             });
@@ -52,11 +52,11 @@ export class Backpropagation {
 
     forwardpropagation({ input, output }) {
         let outputs = [];
-        let data = new Float32Array(input);
+        let data = new Float64Array(input);
 
         this.layers.forEach((layer: Neuron[]) => {
             if (outputs.length > 0) {
-                data = new Float32Array(outputs);
+                data = new Float64Array(outputs);
                 outputs = [];
             }
 

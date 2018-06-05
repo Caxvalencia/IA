@@ -7,7 +7,7 @@ export class SynapticProcessor {
     activationFunction: ActivationFunction;
     error: number;
     synapse: number;
-    data: Float32Array;
+    data: Float64Array;
     threshold: number;
     learningRate: number;
     delta: number;
@@ -15,7 +15,7 @@ export class SynapticProcessor {
 
     constructor(
         activationFunction: ActivationFunctionType,
-        data: Float32Array = null,
+        data: Float64Array = null,
         outputExpected: number = null,
         learningRate: number = 0.3
     ) {
@@ -35,9 +35,9 @@ export class SynapticProcessor {
     }
 
     /**
-     * @param {Float32Array} weights
+     * @param {Float64Array} weights
      */
-    recalculateWeights(weights: Float32Array) {
+    recalculateWeights(weights: Float64Array) {
         const error = this.outputExpected - this.output();
 
         this.calculateDelta(error);
@@ -53,21 +53,20 @@ export class SynapticProcessor {
     }
 
     /**
-     * @param {any} expectedOutput
-     * @param {*} output
-     * @returns this
+     * @param {number} error
+     * @returns
      */
-    calculateDelta(error) {
+    calculateDelta(error: number) {
         this.delta = this.learningRate * error;
 
         return this;
     }
 
     /**
-     * @param {Float32Array} weights
+     * @param {Float64Array} weights
      * @returns
      */
-    calculateSynapses(weights: Float32Array) {
+    calculateSynapses(weights: Float64Array) {
         this.synapse = 0;
 
         for (let i = 0; i < weights.length; i++) {
@@ -85,7 +84,7 @@ export class SynapticProcessor {
         return this;
     }
 
-    setData(data: Float32Array) {
+    setData(data: Float64Array) {
         if (data === null) {
             return this;
         }

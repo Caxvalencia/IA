@@ -5,7 +5,7 @@ export const LIMIT_ERRORS: number = 8000;
 
 export class Perceptron {
     dataStack: any[];
-    weights: Float32Array;
+    weights: Float64Array;
 
     counterErrors: number;
     hasError: boolean;
@@ -29,7 +29,7 @@ export class Perceptron {
         this.dataStack = [];
     }
 
-    addData(data: Float32Array, output: number) {
+    addData(data: Float64Array, output: number) {
         this.dataStack.push([data, output]);
 
         return this;
@@ -74,14 +74,14 @@ export class Perceptron {
         return this;
     }
 
-    process(data: Float32Array) {
+    process(data: Float64Array) {
         return this.synapticProcessor
             .setData(data)
             .calculateSynapses(this.weights)
             .output();
     }
 
-    setWeights(weights: Float32Array) {
+    setWeights(weights: Float64Array) {
         this.weights = weights;
 
         return this;
@@ -102,7 +102,7 @@ export class Perceptron {
 
     protected assignWeights() {
         const dataSize: number = this.dataStack[0][0].length;
-        const weights = new Float32Array(dataSize);
+        const weights = new Float64Array(dataSize);
 
         for (let i = 0; i < dataSize; i++) {
             weights[i] = this.createWeight();

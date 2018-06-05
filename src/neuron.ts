@@ -2,7 +2,7 @@ import { ActivationFunctionType } from './activation-functions/activation-functi
 import { Perceptron } from './perceptron';
 
 export class Neuron extends Perceptron {
-    beforeWeights: Float32Array;
+    beforeWeights: Float64Array;
     error: number;
     inputNeurons: Neuron[];
     outputNeurons: Neuron[];
@@ -62,7 +62,7 @@ export class Neuron extends Perceptron {
 
             this.weights[i] +=
                 this.synapticProcessor.data[i] * delta + deltaWeights;
-            this.weights[i] = parseFloat(this.weights[i].toFixed(4));
+            this.weights[i] = parseFloat(this.weights[i].toFixed(5));
         }
     }
 
@@ -105,10 +105,10 @@ export class Neuron extends Perceptron {
     }
 
     /**
-     * @param {Float32Array} beforeWeights
+     * @param {Float64Array} beforeWeights
      * @returns {this}
      */
-    setBeforeWeights(beforeWeights: Float32Array): this {
+    setBeforeWeights(beforeWeights: Float64Array): this {
         this.beforeWeights = beforeWeights;
 
         return this;
