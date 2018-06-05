@@ -83,19 +83,18 @@ export class Backpropagation {
     }
 
     learn(data: Array<{ input: number[]; output: number }>) {
-        let counterErrors = 0;
-
         this.runEpoch(data);
+        let counterEpochs = 1;
 
-        while (this.error > 0.001) {
-            counterErrors++;
+        while (counterEpochs <= this.LIMIT_ERRORS) {
+            counterEpochs++;
 
-            if (counterErrors % 1000 === 0) {
-                console.log(this.error, counterErrors);
+            if (counterEpochs % 1000 === 0) {
+                console.log(this.error, counterEpochs);
             }
 
-            if (counterErrors >= this.LIMIT_ERRORS) {
-                return this;
+            if (this.error < 0.0001) {
+                break;
             }
 
             this.runEpoch(data);
@@ -159,6 +158,6 @@ export class Backpropagation {
             sumErrors /= 2;
         }
 
-        this.setError(parseFloat(sumErrors.toFixed(4)));
+        this.setError(parseFloat(sumErrors.toFixed(8)));
     }
 }
