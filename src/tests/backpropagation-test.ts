@@ -105,16 +105,12 @@ export class BackpropagationTest {
         const model = {
             layers: [3, 1],
             weights: [
-                [
-                    [5.747799873352051, -3.111999988555908],
-                    [-2.653899908065796, 3.5102999210357666],
-                    [5.576099872589111, 5.699999809265137]
-                ],
-                [[-9.125900268554688, -9.922599792480469, 12.401000022888184]]
+                [[7.75334, -4.37023], [-3.47411, 5.22095], [6.5768, 7.7002]],
+                [[-10.63294, -10.88608, 14.2727]]
             ]
         };
 
-        const XOR = new Backpropagation({ epochs: 5000 });
+        const XOR = new Backpropagation({ epochs: 1500 });
         XOR.importModel(model).learn(data);
 
         data.forEach(({ input, output }) => {
