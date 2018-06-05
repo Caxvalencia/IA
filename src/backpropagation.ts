@@ -33,7 +33,11 @@ export class Backpropagation {
      * @param {{ layers: number[]; weights: number[][] }} model
      * @returns {this}
      */
-    importModel(model: { layers: number[]; weights: number[][][] }): this {
+    importModel(model: {
+        layers: number[];
+        thresholds: number[][];
+        weights: number[][][];
+    }): this {
         model.layers.forEach(layer => {
             this.addLayer(layer);
         });
@@ -43,7 +47,7 @@ export class Backpropagation {
                 neuron
                     .setWeights(new Float64Array(layerWeights[neuronIndex]))
                     .setBeforeWeights(neuron.weights.slice())
-                    .initThreshold();
+                    .setThreshold(model.thresholds[index][neuronIndex]);
             });
         });
 
