@@ -139,6 +139,31 @@ export class Backpropagation {
         });
     }
 
+    exportModel() {
+        let model: ModelType = {
+            layers: [],
+            thresholds: [],
+            weights: []
+        };
+
+        this.layers.forEach(layer => {
+            model.layers.push(layer.length);
+
+            const indexLayerThresholds = model.thresholds.push([]);
+            const indexLayerWeights = model.weights.push([]);
+
+            let layerThresholds = model.thresholds[indexLayerThresholds - 1];
+            let layerWeights = model.weights[indexLayerWeights - 1];
+
+            layer.forEach(neuron => {
+                layerWeights.push(Array.from(neuron.weights));
+                layerThresholds.push(neuron.synapticProcessor.threshold);
+            });
+        });
+
+        return model;
+    }
+
     setError(error) {
         this.error = error;
 
