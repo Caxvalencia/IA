@@ -2,6 +2,12 @@ import { ActivationFunctionType } from './activation-functions/activation-functi
 import { Layer } from './layer';
 import { Neuron } from './neuron';
 
+interface ModelType {
+    layers: number[];
+    thresholds: number[][];
+    weights: number[][][];
+}
+
 interface BackpropagationConfig {
     epochs: number;
     activationFunction?: ActivationFunctionType;
@@ -33,11 +39,7 @@ export class Backpropagation {
      * @param {{ layers: number[]; weights: number[][] }} model
      * @returns {this}
      */
-    importModel(model: {
-        layers: number[];
-        thresholds: number[][];
-        weights: number[][][];
-    }): this {
+    importModel(model: ModelType): this {
         model.layers.forEach(layer => {
             this.addLayer(layer);
         });
