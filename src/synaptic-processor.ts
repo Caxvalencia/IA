@@ -39,27 +39,12 @@ export class SynapticProcessor {
      */
     recalculateWeights(weights: Float64Array) {
         const error = this.outputExpected - this.output();
-
-        this.calculateDelta(error);
-        this.updateThreshold();
+        this.delta = this.learningRate * error;
+        this.threshold += this.delta;
 
         for (let i = 0; i < weights.length; i++) {
             weights[i] += this.data[i] * this.delta;
         }
-    }
-
-    updateThreshold() {
-        this.threshold += this.delta;
-    }
-
-    /**
-     * @param {number} error
-     * @returns
-     */
-    calculateDelta(error: number) {
-        this.delta = this.learningRate * error;
-
-        return this;
     }
 
     /**
