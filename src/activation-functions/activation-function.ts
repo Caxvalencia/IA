@@ -22,12 +22,18 @@ export class ActivationFunction {
     private callback: Function;
     private callbackPrime: Function;
 
+    private cache;
+    private cachePrime;
+
     constructor(
         functionName: ActivationFunctionType = ActivationFunctionType.BINARY
     ) {
         this.default = functionName;
         this.setCallback();
         this.setCallbackPrime();
+
+        this.cache = {};
+        this.cachePrime = {};
     }
 
     /**
@@ -44,7 +50,11 @@ export class ActivationFunction {
      * @returns
      */
     process(synapse: number) {
-        return this.callback(synapse);
+        if (!this.cache[synapse]) {
+            this.cache[synapse] = this.callback(synapse);
+        }
+
+        return this.cache[synapse];
     }
 
     /**
@@ -52,7 +62,11 @@ export class ActivationFunction {
      * @returns
      */
     prime(synapse: number) {
-        return this.callbackPrime(synapse);
+        if (!this.cachePrime[synapse]) {
+            this.cachePrime[synapse] = this.callbackPrime(synapse);
+        }
+
+        return this.cachePrime[synapse];
     }
 
     private setCallback() {
