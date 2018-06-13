@@ -16,7 +16,7 @@ interface BackpropagationConfig {
 'use strict';
 export class Backpropagation {
     layers: Layer;
-    LIMIT_ERRORS: number;
+    epochs: number;
     activationFunction: ActivationFunctionType;
     error: number;
 
@@ -32,7 +32,7 @@ export class Backpropagation {
         this.error = 0;
         this.activationFunction = config.activationFunction;
         this.layers = new Layer(this.activationFunction);
-        this.LIMIT_ERRORS = config.epochs;
+        this.epochs = config.epochs;
     }
 
     /**
@@ -92,7 +92,7 @@ export class Backpropagation {
         this.runEpoch(data);
         let counterEpochs = 1;
 
-        while (counterEpochs <= this.LIMIT_ERRORS) {
+        while (counterEpochs <= this.epochs) {
             counterEpochs++;
 
             if (counterEpochs % 1000 === 0) {
