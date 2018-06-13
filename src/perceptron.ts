@@ -1,16 +1,14 @@
 import { ActivationFunctionType } from './activation-functions/activation-function';
 import { SynapticProcessor } from './synaptic-processor';
 
-export const LIMIT_ERRORS: number = 8000;
+const LIMIT_ERRORS: number = 8000;
 
 export class Perceptron {
     dataStack: any[];
     weights: Float64Array;
-
     counterErrors: number;
     hasError: boolean;
 
-    rangeWeight: { MIN: number; MAX: number };
     synapticProcessor: SynapticProcessor;
 
     funcBack: () => void;
@@ -19,7 +17,6 @@ export class Perceptron {
         activationFunction?: ActivationFunctionType,
         callback = () => {}
     ) {
-        this.rangeWeight = { MIN: -0.5, MAX: 0.49 };
         this.counterErrors = 0;
         this.hasError = false;
         this.weights = null;
@@ -88,12 +85,13 @@ export class Perceptron {
     }
 
     protected createWeight() {
-        const range = this.rangeWeight.MAX - this.rangeWeight.MIN;
+        const rangeWeight = { MIN: -0.5, MAX: 0.49 };
+        const rangeDiff = rangeWeight.MAX - rangeWeight.MIN;
         let weight = 0;
 
         while (!weight) {
             weight = parseFloat(
-                (Math.random() * range + this.rangeWeight.MIN).toFixed(4)
+                (Math.random() * rangeDiff + rangeWeight.MIN).toFixed(4)
             );
         }
 
