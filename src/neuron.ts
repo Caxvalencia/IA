@@ -30,7 +30,7 @@ export class Neuron extends Perceptron {
             this.synapticProcessor
                 .setData(this.dataStack[i][0])
                 .setOutputExpected(this.dataStack[i][1])
-                .calculateSynapses(this.weights);
+                .calculateSynapses(this.weights, this.threshold);
         }
 
         return this;
@@ -50,7 +50,7 @@ export class Neuron extends Perceptron {
     }
 
     recalculateWeights() {
-        const delta = this.synapticProcessor.learningRate * this.error;
+        const delta = /*this.synapticProcessor.learningRate*/ 0.73 * this.error;
         const momentumFactor = 0.8;
         let deltaWeights;
 
@@ -62,7 +62,7 @@ export class Neuron extends Perceptron {
 
             this.weights[i] +=
                 this.synapticProcessor.data[i] * delta + deltaWeights;
-            this.weights[i] = parseFloat(this.weights[i].toFixed(5));
+            this.weights[i] = parseFloat(this.weights[i].toFixed(4));
         }
     }
 
@@ -118,7 +118,7 @@ export class Neuron extends Perceptron {
      * @returns {this}
      */
     setThreshold(threshold: number = this.createWeight()): this {
-        this.synapticProcessor.threshold = threshold;
+        this.threshold = threshold;
 
         return this;
     }

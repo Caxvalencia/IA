@@ -8,7 +8,6 @@ export class SynapticProcessor {
     error: number;
     synapse: number;
     data: Float64Array;
-    threshold: number;
     learningRate: number;
     delta: number;
     private outputExpected: number;
@@ -40,7 +39,6 @@ export class SynapticProcessor {
     recalculateWeights(weights: Float64Array) {
         const error = this.outputExpected - this.output();
         this.delta = this.learningRate * error;
-        this.threshold += this.delta;
 
         for (let i = 0; i < weights.length; i++) {
             weights[i] += this.data[i] * this.delta;
@@ -51,14 +49,14 @@ export class SynapticProcessor {
      * @param {Float64Array} weights
      * @returns
      */
-    calculateSynapses(weights: Float64Array) {
+    calculateSynapses(weights: Float64Array, threshold = 0) {
         this.synapse = 0;
 
         for (let i = 0; i < weights.length; i++) {
             this.synapse += this.data[i] * weights[i];
         }
 
-        this.synapse += this.threshold;
+        this.synapse += threshold;
 
         return this;
     }

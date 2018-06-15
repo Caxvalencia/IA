@@ -6,6 +6,7 @@ const LIMIT_ERRORS: number = 8000;
 export class Perceptron {
     dataStack: any[];
     weights: Float64Array;
+    threshold: number;
     counterErrors: number;
     hasError: boolean;
 
@@ -43,11 +44,12 @@ export class Perceptron {
             this.synapticProcessor
                 .setData(this.dataStack[i][0])
                 .setOutputExpected(this.dataStack[i][1])
-                .calculateSynapses(this.weights)
+                .calculateSynapses(this.weights, this.threshold)
                 .calculateError();
 
             if (this.synapticProcessor.error !== 0) {
                 this.synapticProcessor.recalculateWeights(this.weights);
+                this.threshold += this.synapticProcessor.delta;
 
                 this.hasError = true;
                 this.funcBack();
@@ -74,7 +76,7 @@ export class Perceptron {
     process(data: Float64Array) {
         return this.synapticProcessor
             .setData(data)
-            .calculateSynapses(this.weights)
+            .calculateSynapses(this.weights, this.threshold)
             .output();
     }
 
@@ -107,7 +109,7 @@ export class Perceptron {
         }
 
         this.setWeights(weights);
-        this.synapticProcessor.threshold = this.createWeight();
+        this.threshold = this.createWeight();
 
         this.funcBack();
 
