@@ -10,7 +10,7 @@ export class SynapticProcessor {
     data: Float64Array;
     learningRate: number;
     delta: number;
-    private outputExpected: number;
+    outputExpected: number;
 
     constructor(
         activationFunction: ActivationFunctionType,

@@ -66,10 +66,14 @@ export class Backpropagation {
                 outputs = [];
             }
 
+            this.layers.synapticProcessor
+                .setData(data)
+                .setOutputExpected(output);
+
             for (let index = 0; index < layer.length; index++) {
                 const neuron = layer[index];
 
-                neuron.addData(data, output).learn();
+                neuron.setData(data, output).learn();
                 outputs[index] = neuron.output();
             }
         });
@@ -88,8 +92,10 @@ export class Backpropagation {
         }
     }
 
-    learn(data: Array<{ input: number[]; output: number }>) {
-        this.runEpoch(data);
+    learn(dataset: Array<{ input: any; output: number }>) {
+        this.datasetInputToFloatArray(dataset);
+
+        this.runEpoch(dataset);
         let counterEpochs = 1;
 
         while (counterEpochs <= this.epochs) {
@@ -103,7 +109,7 @@ export class Backpropagation {
                 break;
             }
 
-            this.runEpoch(data);
+            this.runEpoch(dataset);
         }
 
         return this;
@@ -116,7 +122,7 @@ export class Backpropagation {
     }
 
     process(data) {
-        let outputs = [];
+        let outputs: number[] = [];
 
         console.log(data);
 
@@ -127,7 +133,8 @@ export class Backpropagation {
             }
 
             for (let index = 0; index < layer.length; index++) {
-                outputs.push(layer[index].process(data));
+                const neuron = layer[index];
+                outputs[index] = neuron.process(data);
             }
         });
 
@@ -157,7 +164,7 @@ export class Backpropagation {
 
             layer.forEach(neuron => {
                 layerWeights.push(Array.from(neuron.weights));
-                layerThresholds.push(neuron.synapticProcessor.threshold);
+                layerThresholds.push(neuron.threshold);
             });
         });
 
@@ -170,19 +177,28 @@ export class Backpropagation {
         return this;
     }
 
-    private runEpoch(data: Array<{ input: number[]; output: number }>) {
+    datasetInputToFloatArray(dataset: Array<{ input: any; output: number }>) {
+        for (let index = 0; index < dataset.length; index++) {
+            const data = dataset[index];
+            data.input = new Float64Array(data.input);
+        }
+    }
+
+    private runEpoch(dataset: Array<{ input: Float64Array; output: number }>) {
         let sumErrors = 0;
 
-        for (let jindex = 0; jindex < data.length; jindex++) {
-            this.forwardpropagation(data[jindex]);
+        for (let dataIdx = 0; dataIdx < dataset.length; dataIdx++) {
+            const data = dataset[dataIdx];
+
+            this.forwardpropagation(data);
             this.backpropagation();
 
             this.layers.forEach(layer => {
-                for (let index = 0; index < layer.length; index++) {
-                    const neuron = layer[index];
+                for (let layerIdx = 0; layerIdx < layer.length; layerIdx++) {
+                    const neuron = layer[layerIdx];
 
                     sumErrors += neuron.error * neuron.error;
-                    neuron.recalculateWeights();
+                    neuron.recalculateWeights(data.input);
                 }
             });
 

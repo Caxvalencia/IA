@@ -6,6 +6,7 @@ export class Neuron extends Perceptron {
     error: number;
     inputNeurons: Neuron[];
     outputNeurons: Neuron[];
+    synapse: number;
 
     /**
      * @construtor
@@ -26,12 +27,8 @@ export class Neuron extends Perceptron {
             this.setBeforeWeights(this.weights.slice());
         }
 
-        for (let i = 0; i < this.dataStack.length; i++) {
-            this.synapticProcessor
-                .setData(this.dataStack[i][0])
-                .setOutputExpected(this.dataStack[i][1])
-                .calculateSynapses(this.weights, this.threshold);
-        }
+        this.synapticProcessor.calculateSynapses(this.weights, this.threshold);
+        this.synapse = this.synapticProcessor.synapse;
 
         return this;
     }
@@ -49,10 +46,10 @@ export class Neuron extends Perceptron {
         }
     }
 
-    recalculateWeights() {
+    recalculateWeights(data: Float64Array) {
         const delta = /*this.synapticProcessor.learningRate*/ 0.73 * this.error;
         const momentumFactor = 0.8;
-        let deltaWeights;
+        let deltaWeights: number;
 
         for (let i = 0; i < this.weights.length; i++) {
             deltaWeights =
@@ -60,20 +57,33 @@ export class Neuron extends Perceptron {
 
             this.beforeWeights[i] = this.weights[i];
 
-            this.weights[i] +=
-                this.synapticProcessor.data[i] * delta + deltaWeights;
+            this.weights[i] += data[i] * delta + deltaWeights;
             this.weights[i] = parseFloat(this.weights[i].toFixed(4));
         }
     }
 
     output(): number {
-        return this.synapticProcessor.output();
+        return this.synapticProcessor.activationFunction.process(this.synapse);
+    }
+
+    process(data: Float64Array) {
+        this.synapticProcessor
+            .setData(data)
+            .calculateSynapses(this.weights, this.threshold);
+        this.synapse = this.synapticProcessor.synapse;
+
+        return this.output();
     }
 
     calculateErrorOfOutput() {
-        this.synapticProcessor.calculateError();
-        this.error = this.synapticProcessor.error;
+        this.calculateError();
         this.calculateErrorDerivated(this.error);
+    }
+
+    calculateError() {
+        this.error = this.synapticProcessor.outputExpected - this.output();
+
+        return this;
     }
 
     calculateHiddenError(neuronIndex) {
@@ -99,9 +109,7 @@ export class Neuron extends Perceptron {
      * @returns {number}
      */
     prime(): number {
-        return this.synapticProcessor.activationFunction.prime(
-            this.synapticProcessor.synapse
-        );
+        return this.synapticProcessor.activationFunction.prime(this.synapse);
     }
 
     /**
@@ -119,6 +127,12 @@ export class Neuron extends Perceptron {
      */
     setThreshold(threshold: number = this.createWeight()): this {
         this.threshold = threshold;
+
+        return this;
+    }
+
+    setData(data: Float64Array, output: number) {
+        this.dataStack = [[data, output]];
 
         return this;
     }
