@@ -81,13 +81,13 @@ export class Backpropagation {
         return this;
     }
 
-    backpropagation() {
+    backpropagation(output: number) {
         const lastLayer = this.layers.getLast();
 
         for (let index = 0; index < lastLayer.length; index++) {
             const neuron = lastLayer[index];
 
-            neuron.calculateErrorOfOutput();
+            neuron.calculateErrorOfOutput(output);
             neuron.backpropagation();
         }
     }
@@ -123,18 +123,21 @@ export class Backpropagation {
 
     process(data) {
         let outputs: number[] = [];
+        data = new Float64Array(data);
 
         console.log(data);
 
-        this.layers.forEach(layer => {
+        this.layers.forEach((layer: Neuron[]) => {
             if (outputs.length > 0) {
-                data = outputs;
+                data = new Float64Array(outputs);
                 outputs = [];
             }
 
+            this.layers.synapticProcessor.setData(data);
+
             for (let index = 0; index < layer.length; index++) {
                 const neuron = layer[index];
-                outputs[index] = neuron.process(data);
+                outputs[index] = neuron.process();
             }
         });
 
@@ -191,7 +194,7 @@ export class Backpropagation {
             const data = dataset[dataIdx];
 
             this.forwardpropagation(data);
-            this.backpropagation();
+            this.backpropagation(data.output);
 
             this.layers.forEach(layer => {
                 for (let layerIdx = 0; layerIdx < layer.length; layerIdx++) {

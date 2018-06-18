@@ -47,7 +47,7 @@ export class Neuron extends Perceptron {
     }
 
     recalculateWeights(data: Float64Array) {
-        const delta = /*this.synapticProcessor.learningRate*/ 0.73 * this.error;
+        const delta = this.synapticProcessor.learningRate * this.error;
         const momentumFactor = 0.8;
         let deltaWeights: number;
 
@@ -57,8 +57,9 @@ export class Neuron extends Perceptron {
 
             this.beforeWeights[i] = this.weights[i];
 
+            // IF DATA IN i is ZERO CONTINUE WITH NEXT PROCESS
             this.weights[i] += data[i] * delta + deltaWeights;
-            this.weights[i] = parseFloat(this.weights[i].toFixed(4));
+            this.weights[i] = parseFloat(this.weights[i].toFixed(6));
         }
     }
 
@@ -66,24 +67,17 @@ export class Neuron extends Perceptron {
         return this.synapticProcessor.activationFunction.process(this.synapse);
     }
 
-    process(data: Float64Array) {
-        this.synapticProcessor
-            .setData(data)
-            .calculateSynapses(this.weights, this.threshold);
+    process() {
+        this.synapticProcessor.calculateSynapses(this.weights, this.threshold);
         this.synapse = this.synapticProcessor.synapse;
 
         return this.output();
     }
 
-    calculateErrorOfOutput() {
-        this.calculateError();
-        this.calculateErrorDerivated(this.error);
-    }
+    calculateErrorOfOutput(outputExpected) {
+        const error = outputExpected - this.output();
 
-    calculateError() {
-        this.error = this.synapticProcessor.outputExpected - this.output();
-
-        return this;
+        this.calculateErrorDerivated(error);
     }
 
     calculateHiddenError(neuronIndex) {
