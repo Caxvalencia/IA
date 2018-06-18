@@ -1,15 +1,19 @@
-import { Neuron } from './neuron';
 import { ActivationFunctionType } from './activation-functions/activation-function';
+import { Neuron } from './neuron';
+import { SynapticProcessor } from './synaptic-processor';
 
 export class Layer {
     private layers: Neuron[][];
     private activationFunction: ActivationFunctionType;
 
+    synapticProcessor: SynapticProcessor;
+
     constructor(
         activationFunction: ActivationFunctionType = ActivationFunctionType.SIGMOIDAL
     ) {
-        this.activationFunction = activationFunction;
         this.layers = [];
+        this.activationFunction = activationFunction;
+        this.synapticProcessor = new SynapticProcessor(this.activationFunction);
     }
 
     /**
@@ -21,7 +25,6 @@ export class Layer {
         const indexNewLayer = this.layers.push(layer) - 1;
         const beforeLayer = this.layers[indexNewLayer - 1];
 
-        // Verificar si existe capa anterior
         if (beforeLayer === undefined) {
             return this;
         }
@@ -70,6 +73,7 @@ export class Layer {
 
         for (let i = 0; i < numberNeurons; i++) {
             layer[i] = new Neuron(this.activationFunction);
+            layer[i].synapticProcessor = this.synapticProcessor;
         }
 
         return layer;
