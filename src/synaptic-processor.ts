@@ -30,7 +30,7 @@ export class SynapticProcessor {
      * @returns {number}
      */
     output(): number {
-        return this.activationFunction.process(this.synapse);
+        return this.activationFunction.activation(this.synapse);
     }
 
     /**

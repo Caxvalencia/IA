@@ -64,7 +64,7 @@ export class Neuron extends Perceptron {
     }
 
     output(): number {
-        return this.synapticProcessor.activationFunction.process(this.synapse);
+        return this.synapticProcessor.activationFunction.activation(this.synapse);
     }
 
     process() {

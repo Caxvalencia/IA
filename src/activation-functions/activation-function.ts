@@ -49,7 +49,7 @@ export class ActivationFunction {
      * @param {number} synapse
      * @returns
      */
-    process(synapse: number) {
+    activation(synapse: number) {
         if (!this.cache[synapse]) {
             this.cache[synapse] = this.callback(synapse);
         }
