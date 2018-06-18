@@ -2,6 +2,9 @@
   "name": "artificial-intelligence",
   "version": "0.0.1",
   "description": "",
+  "engines": {
+    "node": ">=8.11.2"
+  },
   "scripts": {
     "pretest": "tsc",
     "prepare": "tsc",

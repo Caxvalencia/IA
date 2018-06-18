@@ -10,7 +10,7 @@
         "lib": ["es6"],
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "target": "es5",
+        "target": "es2017",
         "jsx": "react"
     },
     "exclude": ["node_modules", "demo", "dist"]
