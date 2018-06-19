@@ -42,9 +42,9 @@ export class Layer {
         return this;
     }
 
-    forEach(callback: (layer: Neuron[]) => void) {
+    forEach(callback: (layer: Neuron[], index?: number) => void) {
         for (let idx = 0; idx < this.layers.length; idx++) {
-            callback(this.layers[idx]);
+            callback(this.layers[idx], idx);
         }
     }
 
@@ -61,6 +61,10 @@ export class Layer {
      */
     getLast(): Neuron[] {
         return this.get(this.layers.length - 1);
+    }
+
+    length() {
+        return this.layers.length;
     }
 
     /**
