@@ -35,61 +35,6 @@ export class Backpropagation {
         this.epochs = config.epochs;
     }
 
-    /**
-     * @param {{ layers: number[]; weights: number[][] }} model
-     * @returns {this}
-     */
-    importModel(model: ModelType): this {
-        model.layers.forEach(layer => {
-            this.addLayer(layer);
-        });
-
-        model.weights.forEach((layerWeights, index) => {
-            this.layers.get(index).forEach((neuron: Neuron, neuronIndex) => {
-                neuron
-                    .setWeights(new Float64Array(layerWeights[neuronIndex]))
-                    .setBeforeWeights(neuron.weights.slice())
-                    .setThreshold(model.thresholds[index][neuronIndex]);
-            });
-        });
-
-        return this;
-    }
-
-    forwardpropagation({ input, output }) {
-        let outputs = [];
-        let data = new Float64Array(input);
-
-        this.layers.forEach((layer: Neuron[]) => {
-            if (outputs.length > 0) {
-                data = new Float64Array(outputs);
-                outputs = [];
-            }
-
-            this.layers.synapticProcessor.setData(data);
-
-            for (let index = 0; index < layer.length; index++) {
-                const neuron = layer[index];
-
-                neuron.setData(data, output).learn();
-                outputs[index] = neuron.output();
-            }
-        });
-
-        return this;
-    }
-
-    backpropagation(output: number) {
-        const lastLayer = this.layers.getLast();
-
-        for (let index = 0; index < lastLayer.length; index++) {
-            const neuron = lastLayer[index];
-
-            neuron.calculateErrorOfOutput(output);
-            neuron.backpropagation();
-        }
-    }
-
     learn(dataset: Array<{ input: any; output: number }>) {
         this.datasetInputToFloatArray(dataset);
 
@@ -109,12 +54,6 @@ export class Backpropagation {
 
             this.runEpoch(dataset);
         }
-
-        return this;
-    }
-
-    addLayer(numberNeurons: number) {
-        this.layers.add(numberNeurons);
 
         return this;
     }
@@ -147,7 +86,37 @@ export class Backpropagation {
         });
     }
 
-    exportModel() {
+    addLayer(numberNeurons: number) {
+        this.layers.add(numberNeurons);
+
+        return this;
+    }
+
+    /**
+     * @param {{ layers: number[]; weights: number[][] }} model
+     * @returns {this}
+     */
+    importModel(model: ModelType): this {
+        model.layers.forEach(layer => {
+            this.addLayer(layer);
+        });
+
+        model.weights.forEach((layerWeights, index) => {
+            this.layers.get(index).forEach((neuron: Neuron, neuronIndex) => {
+                neuron
+                    .setWeights(new Float64Array(layerWeights[neuronIndex]))
+                    .setBeforeWeights(neuron.weights.slice())
+                    .setThreshold(model.thresholds[index][neuronIndex]);
+            });
+        });
+
+        return this;
+    }
+
+    /**
+     * @returns {ModelType}
+     */
+    exportModel(): ModelType {
         let model: ModelType = {
             layers: [],
             thresholds: [],
@@ -172,12 +141,9 @@ export class Backpropagation {
         return model;
     }
 
-    setError(error) {
-        this.error = error;
-
-        return this;
-    }
-
+    /**
+     * @param {Array<{ input: any; output: number }>} dataset
+     */
     datasetInputToFloatArray(dataset: Array<{ input: any; output: number }>) {
         for (let index = 0; index < dataset.length; index++) {
             const data = dataset[index];
@@ -185,6 +151,10 @@ export class Backpropagation {
         }
     }
 
+    /**
+     * @private
+     * @param {Array<{ input: Float64Array; output: number }>} dataset
+     */
     private runEpoch(dataset: Array<{ input: Float64Array; output: number }>) {
         const layerLastIndex = this.layers.length() - 1;
         let sumErrors = 0;
@@ -209,7 +179,49 @@ export class Backpropagation {
         }
 
         sumErrors /= 2 * dataset.length;
+        this.error = parseFloat(sumErrors.toFixed(8));
+    }
 
-        this.setError(parseFloat(sumErrors.toFixed(8)));
+    /**
+     * @private
+     * @param {*} { input, output }
+     * @returns
+     */
+    private forwardpropagation({ input, output }) {
+        let outputs = [];
+        let data = new Float64Array(input);
+
+        this.layers.forEach((layer: Neuron[]) => {
+            if (outputs.length > 0) {
+                data = new Float64Array(outputs);
+                outputs = [];
+            }
+
+            this.layers.synapticProcessor.setData(data);
+
+            for (let index = 0; index < layer.length; index++) {
+                const neuron = layer[index];
+
+                neuron.setData(data, output).learn();
+                outputs[index] = neuron.output();
+            }
+        });
+
+        return this;
+    }
+
+    /**
+     * @private
+     * @param {number} output
+     */
+    private backpropagation(output: number) {
+        const lastLayer = this.layers.getLast();
+
+        for (let index = 0; index < lastLayer.length; index++) {
+            const neuron = lastLayer[index];
+
+            neuron.calculateErrorOfOutput(output);
+            neuron.backpropagation();
+        }
     }
 }
