@@ -100,8 +100,11 @@ export class Perceptron {
         return weight;
     }
 
-    protected assignWeights() {
-        const dataSize: number = this.dataStack[0][0].length;
+    protected assignWeights(dataSize: number = null) {
+        if (!dataSize) {
+            dataSize = this.dataStack[0][0].length;
+        }
+
         const weights = new Float64Array(dataSize);
 
         for (let i = 0; i < dataSize; i++) {

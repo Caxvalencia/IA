@@ -7,6 +7,7 @@ export class Neuron extends Perceptron {
     inputNeurons: Neuron[];
     outputNeurons: Neuron[];
     synapse: number;
+    currentData: Float64Array;
 
     /**
      * @construtor
@@ -22,8 +23,10 @@ export class Neuron extends Perceptron {
     }
 
     learn() {
+        this.currentData = this.synapticProcessor.data;
+
         if (!this.weights) {
-            this.assignWeights();
+            this.assignWeights(this.currentData.length);
             this.setBeforeWeights(this.weights.slice());
         }
 
@@ -47,13 +50,12 @@ export class Neuron extends Perceptron {
     }
 
     recalculateWeights() {
-        const data: Float64Array = this.dataStack[0][0];
         const delta = this.synapticProcessor.learningRate * this.error;
         const momentumFactor = 0.77;
         let deltaWeights: number = 0;
 
         for (let i = 0; i < this.weights.length; i++) {
-            if (data[i] === 0) {
+            if (this.currentData[i] === 0) {
                 continue;
             }
 
@@ -62,7 +64,7 @@ export class Neuron extends Perceptron {
 
             this.beforeWeights[i] = this.weights[i];
 
-            this.weights[i] += data[i] * delta + deltaWeights;
+            this.weights[i] += this.currentData[i] * delta + deltaWeights;
             this.weights[i] = parseFloat(this.weights[i].toFixed(6));
         }
 
@@ -129,12 +131,6 @@ export class Neuron extends Perceptron {
      */
     setThreshold(threshold: number = this.createWeight()): this {
         this.threshold = threshold;
-
-        return this;
-    }
-
-    setData(data: Float64Array, output: number) {
-        this.dataStack = [[data, output]];
 
         return this;
     }

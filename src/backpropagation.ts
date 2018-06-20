@@ -175,7 +175,7 @@ export class Backpropagation {
      * @param {*} { input, output }
      * @returns
      */
-    private forwardpropagation({ input, output }: any) {
+    private forwardpropagation({ input }: any) {
         let outputs = [];
         let data = new Float64Array(input);
 
@@ -189,9 +189,7 @@ export class Backpropagation {
 
             for (let index = 0; index < layer.length; index++) {
                 const neuron = layer[index];
-
-                neuron.setData(data, output).learn();
-                outputs[index] = neuron.output();
+                outputs[index] = neuron.learn().output();
             }
         });
 
