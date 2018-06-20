@@ -3,6 +3,11 @@ import { HyperbolicTangent } from './hyperbolic-tangent.function';
 import { ReLU } from './relu.function';
 import { Sigmoidal } from './sigmoidal.function';
 
+declare type CacheType = {
+    activation: { sypnase: number; value: number };
+    prime: { sypnase: number; value: number };
+};
+
 export enum ActivationFunctionType {
     BINARY = 'BINARY',
     RELU = 'RELU',
@@ -21,9 +26,7 @@ export class ActivationFunction {
     protected default: string;
     private callback: Function;
     private callbackPrime: Function;
-
-    private cache;
-    private cachePrime;
+    private cache: CacheType;
 
     constructor(
         functionName: ActivationFunctionType = ActivationFunctionType.BINARY
@@ -32,8 +35,10 @@ export class ActivationFunction {
         this.setCallback();
         this.setCallbackPrime();
 
-        this.cache = {};
-        this.cachePrime = {};
+        this.cache = {
+            activation: { sypnase: null, value: null },
+            prime: { sypnase: null, value: null }
+        };
     }
 
     /**
@@ -50,11 +55,12 @@ export class ActivationFunction {
      * @returns
      */
     activation(synapse: number) {
-        if (!this.cache[synapse]) {
-            this.cache[synapse] = this.callback(synapse);
+        if (this.cache.activation.sypnase !== synapse) {
+            this.cache.activation.sypnase = synapse;
+            this.cache.activation.value = this.callback(synapse);
         }
 
-        return this.cache[synapse];
+        return this.cache.activation.value;
     }
 
     /**
@@ -62,11 +68,12 @@ export class ActivationFunction {
      * @returns
      */
     prime(synapse: number) {
-        if (!this.cachePrime[synapse]) {
-            this.cachePrime[synapse] = this.callbackPrime(synapse);
+        if (this.cache.prime.sypnase !== synapse) {
+            this.cache.prime.sypnase = synapse;
+            this.cache.prime.value = this.callbackPrime(synapse);
         }
 
-        return this.cachePrime[synapse];
+        return this.cache.prime.value;
     }
 
     private setCallback() {
