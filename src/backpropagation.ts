@@ -164,7 +164,7 @@ export class Backpropagation {
             this.layers.forEach(layer => {
                 for (let neuronIdx = 0; neuronIdx < layer.length; neuronIdx++) {
                     const neuron = layer[neuronIdx];
-                    neuron.recalculateWeights(data.input);
+                    neuron.recalculateWeights();
                 }
             });
         }
@@ -175,7 +175,7 @@ export class Backpropagation {
      * @param {*} { input, output }
      * @returns
      */
-    private forwardpropagation({ input, output }) {
+    private forwardpropagation({ input, output }: any) {
         let outputs = [];
         let data = new Float64Array(input);
 
