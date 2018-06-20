@@ -15,13 +15,13 @@ export class BackpropagationTest {
             { input: [1, 1], output: 1 }
         ];
 
-        const OR = new Backpropagation({ epochs: 1000 });
+        const OR = new Backpropagation({ epochs: 1000, learningRate: 10 });
         OR.addLayer(2)
             .addLayer(1)
             .learn(dataset);
 
         dataset.forEach(({ input, output }) => {
-            const outputActual = OR.process(input)[0];
+            const outputActual = Math.round(OR.process(input)[0]);
 
             assert.equal(outputActual, output, input + ' -> ' + output);
         });
@@ -36,13 +36,13 @@ export class BackpropagationTest {
             { input: [1, 1], output: 1 }
         ];
 
-        const AND = new Backpropagation({ epochs: 1500 });
-        AND.addLayer(3)
+        const AND = new Backpropagation({ epochs: 1000 });
+        AND.addLayer(2)
             .addLayer(1)
             .learn(dataset);
 
         dataset.forEach(({ input, output }) => {
-            const outputActual = AND.process(input)[0];
+            const outputActual = Math.round(AND.process(input)[0]);
 
             assert.equal(outputActual, output, input + ' -> ' + output);
         });
@@ -57,13 +57,13 @@ export class BackpropagationTest {
             { input: [1, 1], output: 1 }
         ];
 
-        const XOR = new Backpropagation({ epochs: 5000 });
+        const XOR = new Backpropagation({ epochs: 15000 });
         XOR.addLayer(3)
             .addLayer(1)
             .learn(dataset);
 
         dataset.forEach(({ input, output }) => {
-            const outputActual = XOR.process(input)[0];
+            const outputActual = Math.round(XOR.process(input)[0]);
 
             assert.equal(outputActual, output, input + ' -> ' + output);
         });
@@ -87,7 +87,7 @@ export class BackpropagationTest {
             .learn(dataset);
 
         dataset.forEach(({ input, output }) => {
-            const outputActual = XOR.process(input)[0];
+            const outputActual = Math.round(XOR.process(input)[0]);
 
             assert.equal(outputActual, output, input + ' -> ' + output);
         });

@@ -50,9 +50,9 @@ export class Backpropagation {
                 console.log(this.error, counterEpochs);
             }
 
-            if (this.error < 0.0001) {
-                break;
-            }
+            // if (this.error < 0.0001) {
+            //     break;
+            // }
 
             this.runEpoch(dataset);
         }
