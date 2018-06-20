@@ -11,6 +11,7 @@ interface ModelType {
 interface BackpropagationConfig {
     epochs: number;
     activationFunction?: ActivationFunctionType;
+    learningRate?: number;
 }
 
 'use strict';
@@ -26,12 +27,13 @@ export class Backpropagation {
     constructor(
         config: BackpropagationConfig = {
             epochs: 1000,
-            activationFunction: ActivationFunctionType.SIGMOIDAL
+            activationFunction: ActivationFunctionType.SIGMOIDAL,
+            learningRate: 0.3
         }
     ) {
         this.error = 0;
         this.activationFunction = config.activationFunction;
-        this.layers = new Layer(this.activationFunction);
+        this.layers = new Layer(this.activationFunction, config.learningRate);
         this.epochs = config.epochs;
     }
 

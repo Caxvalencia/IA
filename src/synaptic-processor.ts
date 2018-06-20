@@ -14,16 +14,11 @@ export class SynapticProcessor {
 
     constructor(
         activationFunction: ActivationFunctionType,
-        data: Float64Array = null,
-        outputExpected: number = null,
         learningRate: number = 0.3
     ) {
         this.error = 0;
         this.activationFunction = ActivationFunction.init(activationFunction);
-
         this.setLearningFactor(learningRate);
-        this.setOutputExpected(outputExpected);
-        this.setData(data);
     }
 
     /**

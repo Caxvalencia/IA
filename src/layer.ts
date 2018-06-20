@@ -9,11 +9,15 @@ export class Layer {
     synapticProcessor: SynapticProcessor;
 
     constructor(
-        activationFunction: ActivationFunctionType = ActivationFunctionType.SIGMOIDAL
+        activationFunction: ActivationFunctionType = ActivationFunctionType.SIGMOIDAL,
+        learningRate: number
     ) {
         this.layers = [];
         this.activationFunction = activationFunction;
-        this.synapticProcessor = new SynapticProcessor(this.activationFunction);
+        this.synapticProcessor = new SynapticProcessor(
+            this.activationFunction,
+            learningRate
+        );
     }
 
     /**
