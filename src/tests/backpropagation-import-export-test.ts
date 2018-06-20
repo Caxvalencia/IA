@@ -32,16 +32,16 @@ export class BackpropagationImportExportTest {
         ];
 
         const resultExpected = [
-            { input: [0, 0], output: 0.9822183389766372 },
-            { input: [0, 1], output: 0.015593981668139112 },
-            { input: [1, 0], output: 0.015273412902442525 },
-            { input: [1, 1], output: 0.9951732837775824 }
+            { input: [0, 0], output: 0.9822190845688125 },
+            { input: [0, 1], output: 0.01560094500947688 },
+            { input: [1, 0], output: 0.015274557756339846 },
+            { input: [1, 1], output: 0.9951608411056504 }
         ];
 
         const XOR = new Backpropagation();
         XOR.importModel(model).learn(dataset);
 
-        assert.equal(XOR.error, 2.68879322274913e-10, 'error');
+        assert.equal(XOR.error, 2.716573664606519e-10, 'error');
 
         resultExpected.forEach(({ input, output }) => {
             const outputActual = XOR.process(input)[0];

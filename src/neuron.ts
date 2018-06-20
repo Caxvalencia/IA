@@ -63,9 +63,7 @@ export class Neuron extends Perceptron {
                 momentumFactor * (this.weights[i] - this.beforeWeights[i]);
 
             this.beforeWeights[i] = this.weights[i];
-
             this.weights[i] += this.currentData[i] * delta + deltaWeights;
-            this.weights[i] = parseFloat(this.weights[i].toFixed(6));
         }
 
         this.threshold += delta;
