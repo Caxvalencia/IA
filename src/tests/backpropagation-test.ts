@@ -79,7 +79,7 @@ export class BackpropagationTest {
         ];
 
         const XOR = new Backpropagation({
-            epochs: 5000,
+            epochs: 10000,
             activationFunction: ActivationFunctionType.HYPERBOLIC_TANGENT
         });
         XOR.addLayer(3)
