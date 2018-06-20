@@ -80,12 +80,9 @@ export class Backpropagation {
             }
         });
 
-        // return outputs;
         console.log(outputs);
 
-        return outputs.map(output => {
-            return Math.round(output);
-        });
+        return outputs;
     }
 
     addLayer(numberNeurons: number) {
@@ -158,30 +155,19 @@ export class Backpropagation {
      * @param {Array<{ input: Float64Array; output: number }>} dataset
      */
     private runEpoch(dataset: Array<{ input: Float64Array; output: number }>) {
-        const layerLastIndex = this.layers.length() - 1;
-        let sumErrors = 0;
-
         for (let dataIdx = 0; dataIdx < dataset.length; dataIdx++) {
             const data = dataset[dataIdx];
 
             this.forwardpropagation(data);
             this.backpropagation(data.output);
 
-            this.layers.forEach((layer, layerIdx) => {
+            this.layers.forEach(layer => {
                 for (let neuronIdx = 0; neuronIdx < layer.length; neuronIdx++) {
                     const neuron = layer[neuronIdx];
-
-                    if (layerIdx === layerLastIndex) {
-                        sumErrors += neuron.error * neuron.error;
-                    }
-
                     neuron.recalculateWeights(data.input);
                 }
             });
         }
-
-        sumErrors /= 2 * dataset.length;
-        this.error = parseFloat(sumErrors.toFixed(8));
     }
 
     /**
@@ -218,12 +204,17 @@ export class Backpropagation {
      */
     private backpropagation(output: number) {
         const lastLayer = this.layers.getLast();
+        let sumErrors = 0;
 
         for (let index = 0; index < lastLayer.length; index++) {
             const neuron = lastLayer[index];
 
             neuron.calculateErrorOfOutput(output);
             neuron.backpropagation();
+
+            sumErrors += neuron.error * neuron.error;
         }
+
+        this.error = sumErrors / 2;
     }
 }

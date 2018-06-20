@@ -67,10 +67,6 @@ export class Layer {
         return this.get(this.layers.length - 1);
     }
 
-    length() {
-        return this.layers.length;
-    }
-
     /**
      * @private
      * @param {number} numberNeurons
