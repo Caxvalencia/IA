@@ -48,19 +48,24 @@ export class Neuron extends Perceptron {
 
     recalculateWeights(data: Float64Array) {
         const delta = this.synapticProcessor.learningRate * this.error;
-        const momentumFactor = 0.8;
+        const momentumFactor = 0.77;
         let deltaWeights: number;
 
         for (let i = 0; i < this.weights.length; i++) {
+            if (data[i] === 0) {
+                continue;
+            }
+
             deltaWeights =
                 momentumFactor * (this.weights[i] - this.beforeWeights[i]);
 
             this.beforeWeights[i] = this.weights[i];
 
-            // IF DATA IN i is ZERO CONTINUE WITH NEXT PROCESS
             this.weights[i] += data[i] * delta + deltaWeights;
             this.weights[i] = parseFloat(this.weights[i].toFixed(6));
         }
+
+        this.threshold += delta;
     }
 
     output(): number {
