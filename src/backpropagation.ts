@@ -12,6 +12,7 @@ interface BackpropagationConfig {
     epochs: number;
     activationFunction?: ActivationFunctionType;
     learningRate?: number;
+    verbose?: boolean;
 }
 
 'use strict';
@@ -20,6 +21,7 @@ export class Backpropagation {
     epochs: number;
     activationFunction: ActivationFunctionType;
     error: number;
+    verbose: boolean;
 
     /**
      * @construtor
@@ -28,13 +30,15 @@ export class Backpropagation {
         config: BackpropagationConfig = {
             epochs: 1000,
             activationFunction: ActivationFunctionType.SIGMOIDAL,
-            learningRate: 0.3
+            learningRate: 0.3,
+            verbose: false
         }
     ) {
         this.error = 0;
         this.activationFunction = config.activationFunction;
         this.layers = new Layer(this.activationFunction, config.learningRate);
         this.epochs = config.epochs;
+        this.verbose = config.verbose;
     }
 
     learn(dataset: Array<{ input: any; output: number }>) {
@@ -46,7 +50,7 @@ export class Backpropagation {
         while (counterEpochs <= this.epochs) {
             counterEpochs++;
 
-            if (counterEpochs % 1000 === 0) {
+            if (this.verbose && counterEpochs % 1000 === 0) {
                 console.log(this.error, counterEpochs);
             }
 
@@ -64,7 +68,9 @@ export class Backpropagation {
         let outputs: number[] = [];
         data = new Float64Array(data);
 
-        console.log(data);
+        if (this.verbose) {
+            console.log(data);
+        }
 
         this.layers.forEach((layer: Neuron[]) => {
             if (outputs.length > 0) {
@@ -80,7 +86,9 @@ export class Backpropagation {
             }
         });
 
-        console.log(outputs);
+        if (this.verbose) {
+            console.log(outputs);
+        }
 
         return outputs;
     }

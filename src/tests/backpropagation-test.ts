@@ -15,7 +15,11 @@ export class BackpropagationTest {
             { input: [1, 1], output: 1 }
         ];
 
-        const OR = new Backpropagation({ epochs: 1000, learningRate: 10 });
+        const OR = new Backpropagation({
+            epochs: 1000,
+            learningRate: 10,
+            verbose: true
+        });
         OR.addLayer(2)
             .addLayer(1)
             .learn(dataset);
