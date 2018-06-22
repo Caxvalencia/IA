@@ -1,15 +1,11 @@
 import { ActivationFunctionType } from './activation-functions/activation-function';
 import { SynapticProcessor } from './synaptic-processor';
 
-const LIMIT_ERRORS: number = 8000;
-
 export class Perceptron {
     dataStack: any[];
     weights: Float64Array;
     threshold: number;
-    counterErrors: number;
     hasError: boolean;
-
     synapticProcessor: SynapticProcessor;
 
     funcBack: () => void;
@@ -18,7 +14,6 @@ export class Perceptron {
         activationFunction?: ActivationFunctionType,
         callback = () => {}
     ) {
-        this.counterErrors = 0;
         this.hasError = false;
         this.weights = null;
         this.funcBack = callback;
@@ -38,37 +33,44 @@ export class Perceptron {
             this.assignWeights();
         }
 
-        this.hasError = false;
+        const LIMIT_ERRORS: number = 8000;
+        let counterErrors = 0;
 
-        for (let i = 0; i < this.dataStack.length; i++) {
-            this.synapticProcessor
-                .setData(this.dataStack[i][0])
-                .setOutputExpected(this.dataStack[i][1])
-                .calculateSynapses(this.weights, this.threshold)
-                .calculateError();
+        const runEpochs = () => {
+            this.hasError = false;
 
-            if (this.synapticProcessor.error !== 0) {
-                this.synapticProcessor.recalculateWeights(this.weights);
-                this.threshold += this.synapticProcessor.delta;
+            for (let i = 0; i < this.dataStack.length; i++) {
+                this.synapticProcessor
+                    .setData(this.dataStack[i][0])
+                    .setOutputExpected(this.dataStack[i][1])
+                    .calculateSynapses(this.weights, this.threshold)
+                    .calculateError();
 
-                this.hasError = true;
-                this.funcBack();
-            }
-        }
+                if (this.synapticProcessor.error !== 0) {
+                    this.synapticProcessor.recalculateWeights(this.weights);
+                    this.threshold += this.synapticProcessor.delta;
 
-        if (this.hasError) {
-            this.counterErrors++;
-
-            if (this.counterErrors >= LIMIT_ERRORS) {
-                this.counterErrors = 0;
-
-                throw Error('Maximum error limit reached');
+                    this.hasError = true;
+                    this.funcBack();
+                }
             }
 
-            return this.learn();
-        }
+            if (this.hasError) {
+                counterErrors++;
 
-        this.counterErrors = 0;
+                if (counterErrors >= LIMIT_ERRORS) {
+                    counterErrors = 0;
+
+                    throw Error('Maximum error limit reached');
+                }
+
+                return runEpochs();
+            }
+
+            counterErrors = 0;
+        };
+
+        runEpochs();
 
         return this;
     }
