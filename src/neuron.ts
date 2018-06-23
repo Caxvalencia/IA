@@ -127,7 +127,7 @@ export class Neuron extends Perceptron {
     /**
      * @returns {this}
      */
-    setThreshold(threshold: number = this.createWeight()): this {
+    setThreshold(threshold: number): this {
         this.threshold = threshold;
 
         return this;

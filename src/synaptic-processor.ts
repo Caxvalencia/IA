@@ -44,7 +44,7 @@ export class SynapticProcessor {
      * @param {Float64Array} weights
      * @returns
      */
-    calculateSynapses(weights: Float64Array, threshold = 0) {
+    calculateSynapses(weights: Float64Array, threshold) {
         this.synapse = 0;
 
         for (let i = 0; i < weights.length; i++) {
@@ -63,10 +63,6 @@ export class SynapticProcessor {
     }
 
     setData(data: Float64Array) {
-        if (data === null) {
-            return this;
-        }
-
         this.data = data.slice();
 
         return this;
