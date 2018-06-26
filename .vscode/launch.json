@@ -3,17 +3,22 @@
     // Mantenga el puntero para ver las descripciones de los existentes atributos 
     // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [
-        {
+    "configurations": [{
             "type": "node",
             "request": "launch",
-            "preLaunchTask": "tsc",
-            "name": "Run Mocha",
-            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-            "args": ["dist/tests/*-test.js"],
-            "cwd": "${workspaceRoot}",
-            "sourceMaps": true,
-            "outFiles": ["${workspaceRoot}/dist/**/*.js"]
-        },
+            "name": "Run Tests",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "-u",
+                "tdd",
+                "--timeout",
+                "0",
+                "--colors",
+                "-r", "ts-node/register", "-r", "source-map-support/register",
+                "--recursive",
+                "${workspaceFolder}/src/tests/*-test.ts"
+            ],
+            "internalConsoleOptions": "openOnSessionStart"
+        }
     ]
 }
