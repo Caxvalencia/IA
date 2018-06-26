@@ -1,5 +1,3 @@
-/// <reference path="../../node_modules/mocha-typescript/globals.d.ts" />
-
 import { assert } from 'chai';
 import { suite, test } from 'mocha-typescript';
 

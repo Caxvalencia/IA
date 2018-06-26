@@ -5,7 +5,6 @@ export class Perceptron {
     dataStack: any[];
     weights: Float64Array;
     threshold: number;
-    hasError: boolean;
     synapticProcessor: SynapticProcessor;
 
     funcBack: () => void;
@@ -14,7 +13,6 @@ export class Perceptron {
         activationFunction?: ActivationFunctionType,
         callback = () => {}
     ) {
-        this.hasError = false;
         this.weights = null;
         this.funcBack = callback;
 
@@ -37,7 +35,7 @@ export class Perceptron {
         let counterErrors = 0;
 
         const runEpochs = () => {
-            this.hasError = false;
+            let hasError = false;
 
             for (let i = 0; i < this.dataStack.length; i++) {
                 this.synapticProcessor
@@ -50,12 +48,12 @@ export class Perceptron {
                     this.synapticProcessor.recalculateWeights(this.weights);
                     this.threshold += this.synapticProcessor.delta;
 
-                    this.hasError = true;
+                    hasError = true;
                     this.funcBack();
                 }
             }
 
-            if (this.hasError) {
+            if (hasError) {
                 counterErrors++;
 
                 if (counterErrors >= LIMIT_ERRORS) {
