@@ -1,15 +1,18 @@
 import { Binary } from './binary.function';
 import { HyperbolicTangent } from './hyperbolic-tangent.function';
 import { Sigmoidal } from './sigmoidal.function';
+import { ReLU } from './relu.function';
 
 export enum ActivationFunctionType {
     BINARY = 'BINARY',
+    RELU = 'RELU',
     SIGMOIDAL = 'SIGMOIDAL',
     HYPERBOLIC_TANGENT = 'HYPERBOLIC_TANGENT'
 }
 
 const callback = {
     [ActivationFunctionType.BINARY]: Binary,
+    [ActivationFunctionType.RELU]: ReLU,
     [ActivationFunctionType.SIGMOIDAL]: Sigmoidal,
     [ActivationFunctionType.HYPERBOLIC_TANGENT]: HyperbolicTangent
 };
