@@ -18,11 +18,16 @@ export class Neuron extends Perceptron {
         super(activationFunction);
 
         this.error = 0;
+        this.synapse = 0;
         this.outputNeurons = [];
         this.inputNeurons = [];
     }
 
-    learn() {
+    learn(currentData?: Float64Array) {
+        if (currentData) {
+            this.synapticProcessor.data = currentData;
+        }
+        
         this.currentData = this.synapticProcessor.data;
 
         if (!this.weights) {
