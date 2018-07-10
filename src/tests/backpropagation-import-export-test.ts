@@ -2,6 +2,8 @@ import { assert } from 'chai';
 import { suite, test } from 'mocha-typescript';
 
 import { Backpropagation } from '../backpropagation';
+import { Neuron } from '../neuron';
+import { ActivationFunctionType } from '../activation-functions/activation-function';
 
 @suite
 export class BackpropagationImportExportTest {
@@ -47,6 +49,133 @@ export class BackpropagationImportExportTest {
             const outputActual = XOR.process(input)[0];
 
             assert.equal(outputActual, output, input + ' -> ' + output);
+        });
+    }
+
+    // @test('given one new arquitecture should to learning one XOR logic')
+    // public givenOneNewAcquitectureShouldToLearningOneXorLogic() {
+    //     const dataset = [
+    //         { input: [0, 0], output: 1 },
+    //         { input: [0, 1], output: 0 },
+    //         { input: [1, 0], output: 0 },
+    //         { input: [1, 1], output: 1 }
+    //     ];
+
+    //     const neuronA = new Neuron(ActivationFunctionType.RELU);
+    //     const neuronB = new Neuron(ActivationFunctionType.RELU);
+    //     const neuronC = new Neuron(ActivationFunctionType.RELU);
+
+    //     neuronA.outputNeurons.push(neuronC);
+    //     neuronB.outputNeurons.push(neuronC);
+
+    //     neuronC.outputNeurons.push(neuronA);
+    //     neuronC.outputNeurons.push(neuronB);
+
+    //     function forwardpropagation(data) {
+    //         for (let index = 1; index <= 3; index++) {
+    //             data[2] = neuronC.output();
+
+    //             neuronA.learn(Float64Array.from(data));
+    //             neuronB.learn(Float64Array.from(data));
+    //             neuronC.learn(
+    //                 Float64Array.from([neuronA.output(), neuronB.output()])
+    //             );
+
+    //             if (neuronC.synapse <= neuronC.threshold) {
+    //                 break;
+    //             }
+    //         }
+
+    //         return neuronC.output();
+    //     }
+
+    //     function backpropagation(output) {
+    //         neuronC.error = output - neuronC.output();
+    //         neuronA.error = neuronC.error * neuronC.weights[0];
+    //         neuronB.error = neuronC.error * neuronC.weights[1];
+
+    //         neuronA.recalculateWeights();
+    //         neuronB.recalculateWeights();
+    //         neuronC.recalculateWeights();
+    //     }
+
+    //     const epochs = 2500;
+
+    //     for (let epoch = 1; epoch <= epochs; epoch++) {
+    //         console.log('\nEpoch: ' + epoch);
+
+    //         for (let index = 0; index < dataset.length; index++) {
+    //             const data = dataset[index];
+    //             forwardpropagation(data.input);
+    //             backpropagation(data.output);
+
+    //             console.log(neuronC.output(), data.output);
+    //         }
+    //     }
+    // }
+
+    @test('given one new arquitecture should to learning one NOT logic')
+    public givenOneNewAcquitectureShouldToLearningOneNotLogic() {
+        const dataset = [
+            { input: [0, 0], output: 1 },
+            { input: [0, 1], output: 0 },
+            { input: [1, 0], output: 0 },
+            { input: [1, 1], output: 1 }
+        ];
+
+        const neuronA = new Neuron(ActivationFunctionType.HYPERBOLIC_TANGENT);
+        neuronA.outputNeurons.push(neuronA);
+
+        // neuronA.output = function(): number {
+        //     return this.synapse;
+        // };
+
+        function forwardpropagation(data) {
+            data[2] = 0;
+
+            for (let index = 1; index <= 100; index++) {
+                neuronA.learn(Float64Array.from(data));
+
+                if (data[2] === neuronA.output()) {
+                    break;
+                }
+
+                data[2] = neuronA.output();
+
+                if (data[2] < neuronA.threshold) {
+                    break;
+                }
+            }
+
+            return neuronA.output();
+        }
+
+        function backpropagation(output) {
+            neuronA.error = output - neuronA.output();
+            neuronA.recalculateWeights();
+        }
+
+        const epochs = 200;
+
+        for (let epoch = 1; epoch <= epochs; epoch++) {
+            console.log('\nEpoch: ' + epoch);
+            console.log(neuronA.error);
+
+            for (let index = 0; index < dataset.length; index++) {
+                const data = dataset[index];
+                forwardpropagation(data.input);
+                backpropagation(data.output);
+            }
+        }
+
+        dataset.forEach(data => {
+            console.log(data, forwardpropagation(data.input));
+
+            assert.equal(
+                data.output,
+                Math.round(forwardpropagation(data.input)),
+                'input: ' + data.input + ' output: ' + data.output
+            );
         });
     }
 
