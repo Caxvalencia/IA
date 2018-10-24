@@ -3,54 +3,59 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Backpropagation - Capa</title>
+    <title>Backpropagation</title>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src='/dist/bundle.js'></script>
 </head>
 
 <body>
-
-    <script src='neuron.js'></script>
-    <script src='backpropagation.js'></script>
+    <div id="myDiv" style="width: 480px; height: 400px;"></div>
 
     <script>
-        /**
-         * Funcion XOR
-         */
-        var XOR = [
-            { 'valor': [0, 0], 'salida': 0 },
-            { 'valor': [0, 1], 'salida': 1 },
-            { 'valor': [1, 0], 'salida': 1 },
-            { 'valor': [1, 1], 'salida': 0 }
+        const dataset = [
+            { input: [0, 0], output: 1 },
+            { input: [0, 1], output: 0 },
+            { input: [1, 0], output: 0 },
+            { input: [1, 1], output: 1 }
         ];
 
-        var func_XOR = new Backpropagation();
+        const XOR = new Backpropagation({ epochs: 15000 });
 
-        func_XOR
-            .addCapa(2) // Entrada o primer capa oculta
-            .addCapa(1) // Salida o ultima capa
-            .aprender(XOR);
+        XOR.addLayer(3)
+            .addLayer(1)
+            .learn(dataset);
 
-        var results = [
-            func_XOR.procesar([0, 0])[0],
-            func_XOR.procesar([0, 1])[0],
-            func_XOR.procesar([1, 0])[0],
-            func_XOR.procesar([1, 1])[0]
-        ];
+        dataset.forEach(({ input, output }) => {
+            const outputActual = XOR.process(input)[0];
 
-        console.log('XOR' + '\n',
-            [0, 0], '->', results[0], results[0] === 0, '\n',
-            [0, 1], '->', results[1], results[1] === 1, '\n',
-            [1, 0], '->', results[2], results[2] === 1, '\n',
-            [1, 1], '->', results[3], results[3] === 0, '\n',
-            func_XOR
-        );
-
-        func_XOR.capas.forEach(function (capa, idxCapa) {
-            capa.forEach(function (neurona, idx) {
-                console.log(idxCapa, idx, neurona);
-            });
+            console.log(`expected (${input} -> ${output}), output ${outputActual}`);
         });
-    </script>
 
+        // Draw loss
+        const lossEach1000 = XOR.history.loss.filter((item, index) => index % 1000 === 0);
+
+        const data = [
+            {
+                x: [...Array(lossEach1000.length).keys()],
+                y: lossEach1000,
+                type: 'scatter'
+            }
+        ];
+
+        const layout = {
+            yaxis2: {
+                domain: [0.6, 0.95],
+                anchor: 'x2'
+            },
+            xaxis2: {
+                domain: [0.6, 0.95],
+                anchor: 'y2'
+            }
+        };
+
+        Plotly.newPlot('myDiv', data, layout);
+    </script>
 </body>
 
 </html>
