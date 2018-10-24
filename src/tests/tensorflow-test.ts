@@ -1,8 +1,8 @@
-import '@tensorflow/tfjs-node';
-
 import * as tf from '@tensorflow/tfjs';
 import { assert } from 'chai';
 import { suite, test } from 'mocha-typescript';
+
+import '@tensorflow/tfjs-node';
 
 // Or if running with GPU:
 // import '@tensorflow/tfjs-node-gpu';

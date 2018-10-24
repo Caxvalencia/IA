@@ -23,6 +23,8 @@ export class Backpropagation {
     error: number;
     verbose: boolean;
 
+    history: any;
+
     /**
      * @construtor
      */
@@ -39,6 +41,7 @@ export class Backpropagation {
         this.layers = new Layer(this.activationFunction, config.learningRate);
         this.epochs = config.epochs;
         this.verbose = config.verbose;
+        this.history = {loss: []};
     }
 
     learn(dataset: Array<{ input: any; output: number }>) {
@@ -48,6 +51,8 @@ export class Backpropagation {
         let counterEpochs = 1;
 
         while (counterEpochs <= this.epochs) {
+            this.history.loss.push(this.error);
+
             counterEpochs++;
 
             if (this.verbose && counterEpochs % 1000 === 0) {
