@@ -1,8 +1,6 @@
-import * as tf from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs-node'
 import { assert } from 'chai';
 import { suite, test } from 'mocha-typescript';
-
-import '@tensorflow/tfjs-node';
 
 // Or if running with GPU:
 // import '@tensorflow/tfjs-node-gpu';
@@ -37,24 +35,25 @@ export class TensorflowTest {
         const output = tf.tensor1d([1, 0, 0, 1]);
 
         await model.fit(input, output, {
-            // batchSize: 8,
+            verbose: 0,
             epochs: 1500,
-            callbacks: {
-                onEpochEnd: async (epoch, log) => {
-                    console.log(`Epoch ${epoch}: loss = ${log.loss}`);
-                }
-            }
+            // callbacks: {
+            //     onEpochEnd: async (epoch, log) => {
+            //         // console.log(`Epoch ${epoch}: loss = ${log.loss}`);
+            //     }
+            // }
         });
 
-        const predictions = (model.predict(input) as tf.Tensor).dataSync();
+        const predictionsArray = (model.predict(input) as tf.Tensor).dataSync();
+        const outputArray = output.dataSync();
 
-        for (let index = 0; index < predictions.length; index++) {
-            const prediction = predictions[index];
+        for (let index = 0; index < predictionsArray.length; index++) {
+            const prediction = Math.round(predictionsArray[index]);
 
             assert.equal(
-                output.get(index),
-                Math.round(prediction),
-                'input: ' + inputData[index] + ' output: ' + output.get(index)
+                outputArray[index],
+                prediction,
+                'input: ' + inputData[index] + ' output: ' + outputArray[index]
             );
         }
     }
